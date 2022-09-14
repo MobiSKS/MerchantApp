@@ -237,7 +237,7 @@ class _LoginPageState extends State<LoginPage> {
               Navigator.pushNamedAndRemoveUntil(
                   context, "/dashboard", (route) => false);
             } else {
-              alertPopUp(context, authViewM.userModel!.data![0].reason!);
+              alertPopUp(context, authViewM.userModel!.message!);
             }
           }
         },

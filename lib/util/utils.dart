@@ -2,12 +2,19 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../const/injection.dart';
 import '../preferences/shared_preference.dart';
 
 class Utils {
   static final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
+  static const int otpTypeForSale = 1;
+
+  static String merchantId =
+      _sharedPref.user!.data!.objGetMerchantDetail![0].merchantId!;
+  static String terminalId =
+      _sharedPref.user!.data!.objGetMerchantDetail![0].terminalId!;
 
   static void logout(BuildContext context) {
     _sharedPref.preferenceClear();
@@ -28,6 +35,7 @@ class Utils {
   static String convertDateFormatInYYMMDD(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }
+
 
   static Future<void> selectDatePopup(
     BuildContext context,

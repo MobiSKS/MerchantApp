@@ -1,7 +1,9 @@
-import 'package:dtplusmerchant/Screens/scan_qr.dart';
+import 'package:dtplusmerchant/Screens/Sale-Reload/type_of_sale_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../const/app_strings.dart';
+import '../../const/injection.dart';
+import '../../preferences/shared_preference.dart';
 import '../../util/uiutil.dart';
 
 class PaymentAcceptance extends StatefulWidget {
@@ -12,7 +14,7 @@ class PaymentAcceptance extends StatefulWidget {
 }
 
 class _PaymentAcceptanceState extends State<PaymentAcceptance> {
-  final List<String> _productList = ['xyz', 'abc', 'def'];
+  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   String _selectedProduct = "";
   final _amountController = TextEditingController();
   List<String> payMode = [AppStrings.generateQR, AppStrings.sale];
@@ -127,7 +129,9 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                         SizedBox(
                             width: screenWidth(context) * 0.75,
                             child: customButton(context, AppStrings.procced,
-                                onTap: generateQR))
+                                onTap: selectedMode == AppStrings.sale
+                                    ? sale
+                                    : generateQR))
                       ],
                     ),
                   )
@@ -138,11 +142,23 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
         });
   }
 
+  void sale() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => TypeOfSale(
+                amount: _amountController.text,
+                productId: int.parse(_selectedProduct),
+              )),
+    );
+  }
+
   void generateQR() {
     Navigator.pushNamed(context, "/scanQRcode");
   }
 
   Widget _selectProduct(BuildContext context) {
+    var productList = _sharedPref.user!.data!.objProduct;
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -160,17 +176,17 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
             padding: EdgeInsets.only(right: 8.0),
             child: Icon(Icons.keyboard_arrow_down),
           ),
-          hint: const Text('Select Product'),
+          hint: const Text(AppStrings.selectProduct),
           value: _selectedProduct.isEmpty ? null : _selectedProduct,
-          items: _productList.map((value) {
+          items: productList!.map((value) {
             return DropdownMenuItem(
-              value: value,
-              child: Text(value),
+              value: value.productId.toString(),
+              child: Text(value.productName!),
             );
           }).toList(),
           onChanged: (value) {
             setState(() {
-              _selectedProduct = value!;
+              _selectedProduct = value!.toString();
             });
           },
         ),

@@ -82,10 +82,10 @@ Widget driverTruckTextImage(BuildContext context) {
 }
 
 Widget otpTextField(BuildContext context, OtpFieldController controller,
-    {Color color = Colors.white}) {
+    {Color color = Colors.white,Function?onComplete}) {
   return OTPTextField(
     controller: controller,
-    length: 4,
+    length: 6,
     width: screenWidth(context),
     fieldWidth: 50,
     style: TextStyle(fontSize: 18, color: color),
@@ -95,7 +95,9 @@ Widget otpTextField(BuildContext context, OtpFieldController controller,
     otpFieldStyle: OtpFieldStyle(
         enabledBorderColor: color, disabledBorderColor: color //(here)
         ),
-    onCompleted: (pin) {},
+    onCompleted: (pin) {
+      
+    },
   );
 }
 
@@ -122,6 +124,14 @@ Widget customTextField(
   );
 }
 
+var buttonStyle = ButtonStyle(
+    foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
+    backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
+    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+            side: const BorderSide(color: Colors.red))));
+
 Widget customButton(BuildContext context, String? text, {Function? onTap}) {
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 40),
@@ -132,13 +142,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
         onPressed: () {
           onTap!();
         },
-        style: ButtonStyle(
-            foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: const BorderSide(color: Colors.red)))),
+        style: buttonStyle,
         child: Text(
           text!,
           style: const TextStyle(
@@ -226,8 +230,11 @@ showToast(String message, bool isError) {
 }
 
 Widget showLoader(BuildContext context) {
-  return const Scaffold(
-    body: Center(child: CircularProgressIndicator()),
+  return Scaffold(
+    body: Center(
+        child: CircularProgressIndicator(
+      color: Colors.indigo.shade900,
+    )),
   );
 }
 

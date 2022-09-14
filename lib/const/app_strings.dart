@@ -88,4 +88,5 @@ class AppStrings {
   static const String website = "Website";
   static const String hpPayLink = "https://www.hppay.in";
   static const String selectPAYType = "'Select Payment Type";
+  
 }

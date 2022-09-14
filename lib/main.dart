@@ -7,7 +7,7 @@ import 'package:dtplusmerchant/Screens/profile/edit_profile.dart';
 import 'package:dtplusmerchant/Screens/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transaction_details.dart';
-import 'package:dtplusmerchant/Screens/type_of_sale_screen.dart';
+import 'package:dtplusmerchant/Screens/Sale-Reload/type_of_sale_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +16,8 @@ import 'Screens/auth/login_page.dart';
 import 'const/injection.dart';
 import 'preferences/shared_preference.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+
+import 'provider/sale_reload_view_model.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,6 +56,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
+        ChangeNotifierProvider(create: (context) => SaleReloadViewModel()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -71,7 +74,7 @@ class _MyAppState extends State<MyApp> {
         routes: {
           "/login": (context) => const LoginPage(),
           "/dashboard": (context) => const Dashboard(),
-          "/typeofSale": (context) => const TypeOfSale(),
+          "/typeofSale": (context) => TypeOfSale(),
           "/editProfile": (context) => const EditProfile(),
           "/forgotPassword": (context) => ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),

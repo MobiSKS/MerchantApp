@@ -8,7 +8,6 @@ class SharedPref {
   late SharedPreferences _prefs;
    UserModel ? _user;
   static String isLogin = "isLogin";
-
   SharedPreferences get prefs => _prefs;
 
   init() async {

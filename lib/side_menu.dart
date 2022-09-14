@@ -31,9 +31,9 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 
   getNameId() {
-    String firstName = _sharedPref.user!.data![0].firstName!;
-    String lastName = _sharedPref.user!.data![0].lastName!;
-    String userId = _sharedPref.user!.data![0].userId!;
+    String firstName =   "";
+    String lastName =   "";
+    String userId =     "";
     setState(() {
       name = "$firstName $lastName";
       id = userId;
