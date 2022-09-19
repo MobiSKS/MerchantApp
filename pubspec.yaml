@@ -43,10 +43,13 @@ dependencies:
   timer_count_down: ^2.2.1
   fluttertoast: ^8.0.9
   http: ^0.13.5
-  device_info_plus: ^4.1.2
   intl: ^0.17.0
   responsive_framework: ^0.2.0
   url_launcher: ^6.1.5
+  image_gallery_saver: ^1.7.1
+  path_provider: ^2.0.11
+  screenshot: ^1.2.3
+  share_plus: ^4.1.0
 
 dev_dependencies:
   flutter_test:

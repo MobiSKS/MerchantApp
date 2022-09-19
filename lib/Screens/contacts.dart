@@ -1,10 +1,10 @@
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
+import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 import '../const/app_strings.dart';
 import '../const/image_resources.dart';
 
-class Contacts extends StatelessWidget {
+class Contacts extends StatelessWidget{
   const Contacts({super.key});
 
   @override
@@ -53,7 +53,7 @@ class Contacts extends StatelessWidget {
   Widget _contactNumber(String url, {bool isURl = false}) {
     return GestureDetector(
       onTap: () {
-        isURl ? UrlLauncher.launch(url) : UrlLauncher.launch('tel://$url');
+        isURl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
       },
       child: Row(
         children: [

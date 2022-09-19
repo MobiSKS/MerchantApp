@@ -1,7 +1,10 @@
+import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../const/image_resources.dart';
 import '../util/uiutil.dart';
+import '../util/utils.dart';
+import 'financials/settlement_screen.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,24 +14,36 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final List<GridOption> _gridOptions = [
+  final List<GridOption> _financialOptions = [
     GridOption(
-        optionName: AppStrings.profile, optionIcon: ImageResources.cardsImage),
+        optionName: AppStrings.summary, optionIcon: ImageResources.summaryIcon),
     GridOption(
-        optionName: AppStrings.unblockTerminalPin,
-        optionIcon: ImageResources.cardsImage),
-    GridOption(
-        optionName: AppStrings.transactionDetails,
-        optionIcon: ImageResources.transactionImage),
+        optionName: AppStrings.settlements,
+        optionIcon: ImageResources.settlementIcon),
     GridOption(
         optionName: AppStrings.receivablePayableDetail,
-        optionIcon: ImageResources.cardsImage),
+        optionIcon: ImageResources.recieveIcon),
     GridOption(
-        optionName: AppStrings.saleReloadDEarning,
-        optionIcon: ImageResources.cardsImage),
+        optionName: AppStrings.earningDetails,
+        optionIcon: ImageResources.earningIcon),
     GridOption(
-        optionName: AppStrings.hpRefuelCardPaymentConfirmation,
-        optionIcon: ImageResources.cardsImage),
+        optionName: AppStrings.creditSaleOuts,
+        optionIcon: ImageResources.creditSale),
+    GridOption(
+        optionName: AppStrings.cardBalance,
+        optionIcon: ImageResources.cardBalance),
+  ];
+  final List<GridOption> _transactionsOptions = [
+    GridOption(
+        optionName: AppStrings.sale, optionIcon: ImageResources.saleIcon),
+    GridOption(
+        optionName: AppStrings.payMerchant,
+        optionIcon: ImageResources.payMerchantIcon),
+    GridOption(
+        optionName: AppStrings.creditSaleComplete,
+        optionIcon: ImageResources.creditSettle),
+    GridOption(
+        optionName: AppStrings.cardFee, optionIcon: ImageResources.cardFee),
   ];
   @override
   Widget build(BuildContext context) {
@@ -38,20 +53,64 @@ class _HomeState extends State<Home> {
   }
 
   Widget _body(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Stack(
       children: [
         Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _banner(context),
-            SizedBox(height: screenHeight(context) * 0.03),
-            _gridViewOptions(context),
-            SizedBox(height: screenHeight(context) * 0.15),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _banner(context),
+                SizedBox(height: screenHeight(context) * 0.08),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: headerText(AppStrings.financials,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                SizedBox(height: screenHeight(context) * 0.02),
+                _financialgridView(context),
+                SizedBox(height: screenHeight(context) * 0.03),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: headerText(AppStrings.transactions,
+                      fontSize: 23,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                SizedBox(height: screenHeight(context) * 0.02),
+                _transactiongridView(context)
+              ],
+            ),
           ],
         ),
-        _bottomBanner(context),
+        Positioned(
+            top: screenHeight(context) * 0.14,
+            left: screenWidth(context) * 0.05,
+            child: _merchantId(context))
       ],
+    );
+  }
+
+  Widget _merchantId(context) {
+    return Container(
+      width: screenWidth(context) * 0.90,
+      height: screenHeight(context) * 0.07,
+      decoration: BoxDecoration(
+          color: Colors.indigo.shade200,
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          headerText(Utils.outletName,
+              fontWeight: FontWeight.bold, color: Colors.black),
+          headerText('Merchant Id  ${Utils.merchantId}',
+              fontWeight: FontWeight.normal, color: Colors.black),
+        ],
+      ),
     );
   }
 
@@ -66,48 +125,35 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _bottomBanner(BuildContext context) {
-    return Image.asset(
-      ImageResources.bottomBannnerImage,
-      width: screenWidth(context) * 100,
-      fit: BoxFit.cover,
-    );
-  }
-
-  Widget _gridViewOptions(BuildContext context) {
+  Widget _financialgridView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: GridView.count(
-          crossAxisCount: 3,
+          crossAxisCount: 4,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           crossAxisSpacing: 15,
           mainAxisSpacing: 15,
-          children: List.generate(_gridOptions.length, (index) {
-            return _gridWidget(context, index);
+          children: List.generate(_financialOptions.length, (index) {
+            return _financialgridWidget(context, index);
           })),
     );
   }
 
-  Widget _gridWidget(BuildContext context, int index) {
+  Widget _financialgridWidget(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        if (_gridOptions[index].optionName! == AppStrings.saleReloadDEarning) {
-          Navigator.pushNamed(context, "/paymentAcceptance");
-        } else if (_gridOptions[index].optionName! == AppStrings.profile) {
-          Navigator.pushNamed(context, "/editProfile");
-        } else if (_gridOptions[index].optionName! ==
-            AppStrings.transactionDetails) {
-          Navigator.pushNamed(context, "/transactionDetails");
-        } else if (_gridOptions[index].optionName! ==
-            AppStrings.receivablePayableDetail) {
-          Navigator.pushNamed(context, "/receivablePayable");
-        } else if (_gridOptions[index].optionName! ==
-            AppStrings.unblockTerminalPin) {
-          Navigator.pushNamed(context, "/erpDetail");
-        } else if (_gridOptions[index].optionName! ==
-            AppStrings.hpRefuelCardPaymentConfirmation) {
-          Navigator.pushNamed(context, "/batchDetails");
+        if (_financialOptions[index].optionName! == AppStrings.settlements) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SettlementScreen()),
+          );
+        } else if (_financialOptions[index].optionName! ==
+            AppStrings.earningDetails) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BatchDetails()),
+          );
         }
       },
       child: Container(
@@ -130,10 +176,63 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(_gridOptions[index].optionIcon!,
+              Image.asset(_financialOptions[index].optionIcon!,
                   height: screenHeight(context) * 0.04),
               const SizedBox(height: 10),
-              smallText(_gridOptions[index].optionName!, size: 13.0)
+              smallText(_financialOptions[index].optionName!, size: 15.0)
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _transactiongridView(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: GridView.count(
+          crossAxisCount: 4,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          crossAxisSpacing: 15,
+          mainAxisSpacing: 15,
+          children: List.generate(_transactionsOptions.length, (index) {
+            return _transactionsGridWidget(context, index);
+          })),
+    );
+  }
+
+  Widget _transactionsGridWidget(BuildContext context, int index) {
+    return GestureDetector(
+      onTap: () {
+        if (_transactionsOptions[index].optionName! == AppStrings.sale) {
+          Navigator.pushNamed(context, "/paymentAcceptance");
+        }
+      },
+      child: Container(
+        height: screenHeight(context) * 0.12,
+        width: screenWidth(context) * 0.15,
+        decoration: const BoxDecoration(
+          color: Color(0xffFFFFFF),
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              spreadRadius: 2,
+              blurRadius: 5,
+            )
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(_transactionsOptions[index].optionIcon!,
+                  height: screenHeight(context) * 0.04),
+              const SizedBox(height: 10),
+              smallText(_transactionsOptions[index].optionName!, size: 15.0)
             ],
           ),
         ),

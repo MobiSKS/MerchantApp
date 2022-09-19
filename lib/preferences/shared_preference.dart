@@ -8,6 +8,7 @@ class SharedPref {
   late SharedPreferences _prefs;
    UserModel ? _user;
   static String isLogin = "isLogin";
+  static String invoiceId = "invoiceID";
   SharedPreferences get prefs => _prefs;
 
   init() async {
@@ -33,6 +34,15 @@ class SharedPref {
 
   saveBool(String key, bool value) async {
     _prefs.setBool(key, value);
+  }
+   saveInt(String key, int value) async {
+    _prefs.setInt(key, value);
+  }
+
+   readInt(String key) {
+    final value = _prefs.getInt(key);
+    if (value != null) return value;
+    return null;
   }
 
   readBool(String key) async {

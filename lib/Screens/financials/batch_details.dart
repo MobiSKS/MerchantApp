@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../common/custom_list.dart';
-import '../const/app_strings.dart';
-import '../const/image_resources.dart';
-import '../util/uiutil.dart';
-import '../util/utils.dart';
+import '../../common/custom_list.dart';
+import '../../const/app_strings.dart';
+import '../../const/image_resources.dart';
+import '../../util/uiutil.dart';
+import '../../util/utils.dart';
 
 class BatchDetails extends StatefulWidget {
   const BatchDetails({super.key});

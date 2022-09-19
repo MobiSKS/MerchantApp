@@ -25,8 +25,6 @@ class Injection {
   }
 
   static Future<void> setupDioInterceptor() async {
-    _dio.options.headers['Authorization'] =
-        'Bearer ${_sharedPrefs.user!.data!.objGetMerchantDetail![0].token}';
     _dio.options.headers['API_Key'] = UrlConstant.apiKey;
     _dio.options.headers['Secret_Key'] = UrlConstant.secretKey;
   }

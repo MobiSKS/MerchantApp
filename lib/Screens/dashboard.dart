@@ -4,12 +4,10 @@ import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/side_menu.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-
 import 'contacts.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
-
   @override
   State<Dashboard> createState() => _DashboardState();
 }
@@ -21,16 +19,18 @@ class _DashboardState extends State<Dashboard> {
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
     Container(),
-    const Contacts()
+    const Contacts(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.indigo.shade50,
         key: _scaffoldKey,
         drawer: const NavDrawer(),
         bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed, // T
           backgroundColor: Colors.indigo.shade900,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
@@ -87,6 +87,22 @@ class _DashboardState extends State<Dashboard> {
                     height: 20, color: Colors.white),
               ),
             ),
+            BottomNavigationBarItem(
+              icon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Image.asset(
+                  ImageResources.notificationIcon,
+                  height: 20,
+                  color: Colors.white,
+                ),
+              ),
+              label: AppStrings.notification,
+              activeIcon: Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Image.asset(ImageResources.callIcon,
+                    height: 20, color: Colors.white),
+              ),
+            ),
           ],
           onTap: (index) {
             setState(() {
@@ -94,19 +110,10 @@ class _DashboardState extends State<Dashboard> {
             });
           },
         ),
-        body: Stack(
+        body: Column(
           children: [
-            Image.asset(
-              ImageResources.backgroundImage,
-              width: screenWidth(context) * 100,
-              fit: BoxFit.cover,
-            ),
-            Column(
-              children: [
-                _header(context),
-                _widgetOptions.elementAt(_selectedIndex),
-              ],
-            ),
+            _header(context),
+            _widgetOptions.elementAt(_selectedIndex),
           ],
         ),
       ),
@@ -114,33 +121,35 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget _header(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    _scaffoldKey.currentState!.openDrawer();
-                  },
-                  child: const Icon(Icons.menu, color: Colors.white, size: 30)),
-              SizedBox(width: screenWidth(context) * 0.04),
-              Image.asset(ImageResources.driveTruckPlusImage,
-                  height: screenHeight(context) * 0.032),
-            ],
-          ),
-          Row(
-            children: [
-              Image.asset(ImageResources.messageIcon,
-                  height: screenHeight(context) * 0.04),
-              SizedBox(width: screenWidth(context) * 0.05),
-              Image.asset(ImageResources.hpLogo,
-                  height: screenHeight(context) * 0.05),
-            ],
-          )
-        ],
+    return Container(
+      color: Colors.indigo.shade900,
+      child: Padding(
+        padding:
+            const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                GestureDetector(
+                    onTap: () {
+                      _scaffoldKey.currentState!.openDrawer();
+                    },
+                    child:
+                        const Icon(Icons.menu, color: Colors.white, size: 30)),
+                SizedBox(width: screenWidth(context) * 0.04),
+                Image.asset(ImageResources.driveTruckPlusImage,
+                    height: screenHeight(context) * 0.032),
+              ],
+            ),
+            Row(
+              children: [
+                Image.asset(ImageResources.hpLogo,
+                    height: screenHeight(context) * 0.05),
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

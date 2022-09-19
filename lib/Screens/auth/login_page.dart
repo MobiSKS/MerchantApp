@@ -16,9 +16,9 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late bool _passwordVisible;
   late bool _rememberVal;
-  final userNameController  = TextEditingController();
-  final passwordController  = TextEditingController();
-  final _scrollController   = ScrollController();
+  final userNameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _scrollController = ScrollController();
 
   bool validateAndSave() {
     final FormState? form = _formKey.currentState;
@@ -228,11 +228,9 @@ class _LoginPageState extends State<LoginPage> {
       child: TextButton(
         onPressed: () async {
           if (validateAndSave()) {
-            showLoader(context);
             await authViewM.loginApi(
                 context, userNameController.text, passwordController.text);
             if (authViewM.userModel!.internelStatusCode! == 1000) {
-              dismissLoader(context);
               showToast('LoggedIn', false);
               Navigator.pushNamedAndRemoveUntil(
                   context, "/dashboard", (route) => false);

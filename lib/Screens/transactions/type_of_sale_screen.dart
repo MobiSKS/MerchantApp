@@ -1,5 +1,8 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
+import 'package:dtplusmerchant/Screens/transactions/sale_receipt.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/provider/sale_reload_view_model.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +17,9 @@ import '../../preferences/shared_preference.dart';
 import '../../util/uiutil.dart';
 
 class TypeOfSale extends StatefulWidget {
-  String? amount;
-  int? productId;
-  TypeOfSale({super.key, this.amount, this.productId});
+  final String? amount;
+  final int? productId;
+  const TypeOfSale({super.key, this.amount, this.productId});
 
   @override
   State<TypeOfSale> createState() => _TypeOfSaleState();
@@ -29,7 +32,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   late String _selectedbank;
   late bool _otpSent;
   String otp = "";
-  final List<String> _bankList = ['SBI', 'ICICI', 'HDFC'];
+
   final _mobileController = TextEditingController();
   final paymentOtpController = OtpFieldController();
   final _timerController = CountdownController();
@@ -75,7 +78,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                               color: Colors.grey.shade600,
                               fontWeight: FontWeight.w500),
                           _selectPaymentType(context),
-                          _payType == AppStrings.fastTag
+                          _payType == '505'
                               ? _selectBank(context)
                               : Container(),
                           SizedBox(height: screenHeight(context) * 0.05),
@@ -93,39 +96,6 @@ class _TypeOfSaleState extends State<TypeOfSale> {
             );
           })),
     );
-  }
-
-  Future<void> _submitPayment(SaleReloadViewModel saleReloadViewM) async {
-    await saleReloadViewM.saleByTerminal(context,
-        invoiceAmount: double.parse(widget.amount!),
-        mobileNo: _mobileController.text,
-        otp: otp,
-        transType: int.parse(_payType),
-        productId: widget.productId);
-     if(saleReloadViewM.saleByTeminalResponse!.internelStatusCode==1000){
-      alertPopUp(context, 'Payment Successfull');
-     }else{
-      alertPopUp(context,saleReloadViewM.saleByTeminalResponse!.message! );
-     }   
-  }
-
-  Future<void> sendOTP(SaleReloadViewModel saleReloadViewM) async {
-    if (validateMobile() && _payType.isNotEmpty) {
-      showLoader(context);
-      await saleReloadViewM.generateOTPSale(context,
-          mobileNo: _mobileController.text,
-          invoiceAmount: double.parse(widget.amount!),
-          transType: int.parse(_payType));
-      if (saleReloadViewM.otpResponseSale!.internelStatusCode == 1000) {
-        print(saleReloadViewM.otpResponseSale!.data![0].oTP!);
-        showToast('OTP sent successfully', false);
-        setState(() {
-          _otpSent = true;
-        });
-      } else {
-        alertPopUp(context, saleReloadViewM.otpResponseSale!.message!);
-      }
-    }
   }
 
   Widget sendOTPButton(
@@ -292,6 +262,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }
 
   Widget _selectBankList(BuildContext context) {
+    var banklList = _sharedPref.user!.data!.objBanks;
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -311,15 +282,15 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           ),
           hint: const Text('Select Bank'),
           value: _selectedbank.isEmpty ? null : _selectedbank,
-          items: _bankList.map((value) {
+          items: banklList!.map((value) {
             return DropdownMenuItem(
-              value: value,
-              child: Text(value),
+              value: value.fastagId,
+              child: Text(value.fastagName!),
             );
           }).toList(),
           onChanged: (value) {
             setState(() {
-              _selectedbank = value!;
+              _selectedbank = value!.toString();
               _mobileController.clear();
               _otpSent = false;
             });
@@ -368,5 +339,47 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         ],
       ),
     );
+  }
+
+  Future<void> _submitPayment(SaleReloadViewModel saleReloadViewM) async {
+    await saleReloadViewM.saleByTerminal(context,
+        invoiceAmount: double.parse(widget.amount!),
+        mobileNo: _mobileController.text,
+        otp: otp,
+        transType: int.parse(_payType),
+        productId: widget.productId);
+    if (saleReloadViewM.saleByTeminalResponse!.internelStatusCode == 1000) {
+      showToast('Payment Successfull', false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SaleReceipt(
+                  saleResponse: saleReloadViewM.saleByTeminalResponse!,
+                  mobileNo: _mobileController.text,
+                )),
+      );
+    } else {
+      setState(() {
+        _otpSent = false;
+      });
+    }
+  }
+
+  Future<void> sendOTP(SaleReloadViewModel saleReloadViewM) async {
+    if (validateMobile() && _payType.isNotEmpty) {
+      await saleReloadViewM.generateOTPSale(context,
+          mobileNo: _mobileController.text,
+          invoiceAmount: double.parse(widget.amount!),
+          transType: int.parse(_payType));
+      if (saleReloadViewM.otpResponseSale!.internelStatusCode == 1000) {
+        log('===========> OTP ${saleReloadViewM.otpResponseSale!.data![0].oTP!}');
+        showToast('OTP sent successfully', false);
+        setState(() {
+          _otpSent = true;
+        });
+      } else {
+        alertPopUp(context, saleReloadViewM.otpResponseSale!.message!);
+      }
+    }
   }
 }

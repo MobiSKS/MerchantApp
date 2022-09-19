@@ -7,13 +7,15 @@ import 'package:otp_text_field/style.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../const/image_resources.dart';
+import 'utils.dart';
 
 Widget headerText(String text,
     {FontWeight fontWeight = FontWeight.w300,
     Color color = Colors.white,
-    double fontSize = 18.0}) {
+    double fontSize = 18.0,
+    TextAlign textAlign = TextAlign.start}) {
   return Text(text,
-      textAlign: TextAlign.start,
+      textAlign: textAlign,
       style: TextStyle(
           color: color,
           fontSize: fontSize,
@@ -82,7 +84,7 @@ Widget driverTruckTextImage(BuildContext context) {
 }
 
 Widget otpTextField(BuildContext context, OtpFieldController controller,
-    {Color color = Colors.white,Function?onComplete}) {
+    {Color color = Colors.white, Function? onComplete}) {
   return OTPTextField(
     controller: controller,
     length: 6,
@@ -95,9 +97,7 @@ Widget otpTextField(BuildContext context, OtpFieldController controller,
     otpFieldStyle: OtpFieldStyle(
         enabledBorderColor: color, disabledBorderColor: color //(here)
         ),
-    onCompleted: (pin) {
-      
-    },
+    onCompleted: (pin) {},
   );
 }
 
@@ -229,32 +229,13 @@ showToast(String message, bool isError) {
       timeInSecForIosWeb: 1);
 }
 
-Widget showLoader(BuildContext context) {
-  return Scaffold(
-    body: Center(
-        child: CircularProgressIndicator(
-      color: Colors.indigo.shade900,
-    )),
-  );
-}
-
 dismissLoader(BuildContext context) {
   Navigator.pop(context);
 }
 
-String? checkOs() {
-  String? os;
-  if (Platform.isAndroid) {
-    os = "Android";
-  } else if (Platform.isIOS) {
-    os = "IOS";
-  } else if (Platform.isWindows) {
-    os = "Windows";
-  }
-  return os;
-}
 
-alertPopUp(BuildContext context, String message) {
+
+alertPopUp(BuildContext context, String message,{bool doLogout =false}) {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -275,6 +256,7 @@ alertPopUp(BuildContext context, String message) {
                     headerText(message, fontSize: 18, color: Colors.black),
                     const SizedBox(height: 20),
                     customButton(context, 'OK', onTap: () {
+                    doLogout? Utils.logout(context):
                       Navigator.pop(context);
                     })
                   ],
@@ -347,5 +329,42 @@ Widget simpleTextField(
           hintText: hintText,
           hintStyle: const TextStyle(fontWeight: FontWeight.bold)),
     ),
+  );
+}
+
+showLoader(context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => SizedBox(
+            height: screenHeight(context) * 35,
+            child: Center(
+                child: Theme(
+                    data: Theme.of(context).copyWith(
+                        colorScheme: ColorScheme.fromSwatch()
+                            .copyWith(primary: Colors.transparent)),
+                    child: CircularProgressIndicator(
+                      color: Colors.indigo.shade700,
+                    ))),
+          ));
+}
+
+AppBar normalAppBar(BuildContext context, {required String title}) {
+  return AppBar(
+    backgroundColor: Colors.white,
+    leading: GestureDetector(
+        onTap: () {
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.arrow_back_ios_new,
+            color: Colors.black, size: 24)),
+    title: headerText(title,
+        color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+    centerTitle: true,
+    actions: [
+      IconButton(
+          onPressed: () {},
+          icon: const Icon(Icons.notifications, color: Colors.grey, size: 26))
+    ],
   );
 }

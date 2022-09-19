@@ -169,7 +169,7 @@ class _ERPDetailState extends State<ERPDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText(AppStrings.saleReloadDEarning,
+                          smallText(AppStrings.sale,
                               color: Colors.black,
                               align: TextAlign.start,
                               fontWeight: FontWeight.normal),

@@ -14,6 +14,7 @@ class ImageResources {
   static const String statementImage = "assets/images/statement.png";
   static const String transactionImage = "assets/images/transactions.png";
   static const String backgroundImage = "assets/images/bg.png";
+  static const String hpLogoReceipt = "assets/images/hplogoprint.png";
 
 //==================App Icon Name=========================
 
@@ -36,4 +37,14 @@ class ImageResources {
   static const String otherDetailsBlue = "assets/icons/otherDetailsBlue.png";
   static const String otherDetailsWhite = "assets/icons/otherDetailsWhite.png";
   static const String webIcon = "assets/icons/web.png";
+  static const String cardBalance = "assets/icons/card-balance.png";
+  static const String cardFee = "assets/icons/card-fee.png";
+  static const String creditSettle = "assets/icons/credi-s.png";
+  static const String creditSale = "assets/icons/credit-sale.png";
+  static const String earningIcon = "assets/icons/earning.png";
+  static const String payMerchantIcon = "assets/icons/pay-marchant.png";
+  static const String recieveIcon = "assets/icons/recieve.png";
+  static const String saleIcon = "assets/icons/sale.png";
+  static const String settlementIcon = "assets/icons/settlement.png";
+  static const String summaryIcon = "assets/icons/summary.png";
 }

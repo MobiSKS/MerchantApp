@@ -12,10 +12,8 @@ class AppStrings {
   static const String search = "Search";
   static const String contact = "Contact";
   static const String profile = "Profile";
-  static const String unblockTerminalPin = "Unblock Terminal Pin";
   static const String transactionDetails = "Transaction Details";
-  static const String receivablePayableDetail = "Receivable Payable Detail";
-  static const String saleReloadDEarning = "Sale/Reload/Earnings";
+  static const String receivablePayableDetail = "Receivable & Payable";
   static const String hpRefuelCardPaymentConfirmation =
       "HP Re-Fuel Card Payment Confirmation";
   static const String userNameEmptyMsg = "UserName can't be empty";
@@ -48,7 +46,7 @@ class AppStrings {
   static const String typeOfSale = "Type of Sale";
   static const String paymentAcceptance = "Payment Acceptance";
   static const String statement = "Statement";
-  static const String fastTag = "FastTag";
+  static const String fastTag = "FastTag Sale";
   static const String ccms = "CCMS";
   static const String selectType = "Select Type";
   static const String welcome = "Welcome";
@@ -88,5 +86,29 @@ class AppStrings {
   static const String website = "Website";
   static const String hpPayLink = "https://www.hppay.in";
   static const String selectPAYType = "'Select Payment Type";
-  
+  static const String batchNum = "BATCH NO.";
+  static const String rocNum = "ROC NO.";
+  static const String mobileNo = "MOBILE";
+  static const String amount = "AMOUNT";
+  static const String rsp = "RSP";
+  static const String volume = "VOLUME";
+  static const String balance = "BALANCE";
+  static const String txnID = "TXN ID";
+  static const String dateTime = "DATE/TIME";
+  static const String customerCopy = "CUSTOMER COPY";
+  static const String product = "PRODUCT";
+  static const String summary = "Summary";
+  static const String settlements = "Settlements";
+  static const String earningDetails = "Earning Details";
+  static const String creditSaleOuts = "Credit Sale Outstanding";
+  static const String cardBalance = "Card Balance";
+  static const String transactions = "Transactions";
+  static const String payMerchant = "Pay Merchant";
+  static const String creditSaleComplete = "Credit Sale Complete";
+  static const String cardFee = "Card Fee";
+  static const String financials = "Financials";
+  static const String scanQrCodeForNextStep = "Proceed for next step after scanning QR code";
+  static const String qrPayment = "QR Payment";
+    static const String paymentNsettlement = "Payment & Settlement";
+    static const String  payments = "Payments";
 }

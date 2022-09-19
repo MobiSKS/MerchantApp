@@ -2,17 +2,14 @@ import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 
+import '../../const/injection.dart';
+import '../../preferences/shared_preference.dart';
 import 'merchant_profile.dart';
 
 class BusinessDetail extends StatelessWidget {
   BusinessDetail({super.key});
-  final List<MerchantDetail> _detail = [
-    MerchantDetail(question: 'Zonal Office', ans: 'ZO Detail'),
-    MerchantDetail(question: 'Regional Office', ans: 'RO Detail'),
-    MerchantDetail(question: 'Erp code', ans: 'ERP code'),
-    MerchantDetail(question: 'Sales Area', ans: 'Sales'),
- 
-  ];
+  final _sharedPref = Injection.injector.get<SharedPref>();
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,6 +24,19 @@ class BusinessDetail extends StatelessWidget {
   }
 
   Widget _listView(BuildContext context) {
+    var data = _sharedPref.user!.data;
+    final List<MerchantDetail> _detail = [
+      MerchantDetail(
+          question: 'Zonal Office',
+          ans: data!.objOutletDetails![0].zonalOfficeName),
+      MerchantDetail(
+          question: 'Regional Office',
+          ans: data.objOutletDetails![0].regionalOfficeName),
+      MerchantDetail(
+          question: 'Erp code', ans: data.objOutletDetails![0].erpCode),
+      MerchantDetail(
+          question: 'Sales Area', ans: data.objOutletDetails![0].salesArea),
+    ];
     return SizedBox(
       height: screenHeight(context) * 0.50,
       child: ListView.builder(
@@ -38,8 +48,8 @@ class BusinessDetail extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   smallText(_detail[index].question!,
-                      fontWeight: FontWeight.bold, size: 14.0),
-                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal)
+                      fontWeight: FontWeight.bold, size: 16.0),
+                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal,size:16.0)
                 ],
               ),
               SizedBox(height: 10),
@@ -51,4 +61,3 @@ class BusinessDetail extends StatelessWidget {
     );
   }
 }
-

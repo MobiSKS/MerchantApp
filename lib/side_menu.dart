@@ -31,9 +31,9 @@ class _NavDrawerState extends State<NavDrawer> {
   }
 
   getNameId() {
-    String firstName =   "";
-    String lastName =   "";
-    String userId =     "";
+    String firstName = "";
+    String lastName = "";
+    String userId = "";
     setState(() {
       name = "$firstName $lastName";
       id = userId;
@@ -84,20 +84,14 @@ class _NavDrawerState extends State<NavDrawer> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.input),
-            title: headerText(AppStrings.dashboard, color: Colors.black),
-            onTap: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Receipt()),
-              )
-            },
-          ),
-          const Divider(color: Colors.grey),
-          ListTile(
             leading: Image.asset(ImageResources.profileIcon, height: 23),
             title: headerText(AppStrings.myProfile, color: Colors.black),
-            onTap: () => {Navigator.of(context).pop()},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EditProfile()),
+              );
+            },
           ),
           const Divider(color: Colors.grey),
           ListTile(

@@ -1,8 +1,7 @@
 import 'dart:io';
 
+import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import '../const/injection.dart';
 import '../preferences/shared_preference.dart';
@@ -15,27 +14,21 @@ class Utils {
       _sharedPref.user!.data!.objGetMerchantDetail![0].merchantId!;
   static String terminalId =
       _sharedPref.user!.data!.objGetMerchantDetail![0].terminalId!;
+  static String outletName =
+      _sharedPref.user!.data!.objOutletDetails![0].retailOutletName!;
+  static String userToken =
+      'Bearer ${_sharedPref.user!.data!.objGetMerchantDetail![0].token!}';
 
   static void logout(BuildContext context) {
+    showLoader(context);
     _sharedPref.preferenceClear();
+    dismissLoader(context);
     Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
-  }
-
-  static Future<String?> getDeviceToken() async {
-    var deviceInfo = DeviceInfoPlugin();
-    if (Platform.isIOS) {
-      var iosDeviceInfo = await deviceInfo.iosInfo;
-      return iosDeviceInfo.identifierForVendor;
-    } else {
-      var androidDeviceInfo = await deviceInfo.androidInfo;
-      return androidDeviceInfo.id;
-    }
   }
 
   static String convertDateFormatInYYMMDD(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
   }
-
 
   static Future<void> selectDatePopup(
     BuildContext context,
@@ -68,5 +61,17 @@ class Utils {
 
       controller.text = formatedDate;
     }
+  }
+
+  static String? checkOs() {
+    String? os;
+    if (Platform.isAndroid) {
+      os = "Android";
+    } else if (Platform.isIOS) {
+      os = "IOS";
+    } else if (Platform.isWindows) {
+      os = "Windows";
+    }
+    return os;
   }
 }

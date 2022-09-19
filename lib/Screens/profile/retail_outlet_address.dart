@@ -1,22 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../const/app_strings.dart';
+import '../../const/injection.dart';
+import '../../preferences/shared_preference.dart';
 import '../../util/uiutil.dart';
 import 'merchant_profile.dart';
 
 class RetailOutletAddress extends StatelessWidget {
-   RetailOutletAddress({super.key});
-
- final List<MerchantDetail> _detail = [
-    MerchantDetail(question: 'Addrtess 1', ans: '503,Vibgyor Tower'),
-    MerchantDetail(question: 'Addrtess 2', ans: 'Opp Hotel Trident Hill '),
-    MerchantDetail(question: 'Addrtess 3', ans: 'Bandra Kurla Complex'),
-    MerchantDetail(question: 'City', ans: 'Mumbai'),
-    MerchantDetail(question: 'District', ans: 'Mumbai'),
-    MerchantDetail(question: 'State', ans: 'Maharashta'),
-    MerchantDetail(question: 'Pin Code', ans: '400051'),
-    MerchantDetail(question: 'Office Phone', ans: '011-2343654'),
-  ];
+  RetailOutletAddress({super.key});
+  final _sharedPref = Injection.injector.get<SharedPref>();
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -24,13 +16,24 @@ class RetailOutletAddress extends StatelessWidget {
       children: [
         headerText(AppStrings.retailOutletAddress,
             fontWeight: FontWeight.bold, color: Colors.black),
-        const SizedBox(height: 20),
+        const SizedBox(height: 25),
         _listView(context),
       ],
     );
   }
 
   Widget _listView(BuildContext context) {
+    var data = _sharedPref.user!.data;
+    final List<MerchantDetail> _detail = [
+    MerchantDetail(question: 'Addrtess 1', ans: data!.objOutletDetails![0].retailOutletAddress1),
+    MerchantDetail(question: 'Addrtess 2', ans: data.objOutletDetails![0].retailOutletAddress2),
+    MerchantDetail(question: 'Addrtess 3', ans: data.objOutletDetails![0].retailOutletAddress3),
+    MerchantDetail(question: 'City', ans: data.objOutletDetails![0].retailOutletCity),
+    MerchantDetail(question: 'District', ans: 'Mumbai'),
+    MerchantDetail(question: 'State', ans: 'Maharashta'),
+    MerchantDetail(question: 'Pin Code', ans: data.objOutletDetails![0].retailOutletPinNumber),
+    MerchantDetail(question: 'Office Phone', ans: data.objOutletDetails![0].retailOutletPhoneNumber),
+  ];
     return SizedBox(
       height: screenHeight(context) * 0.50,
       child: ListView.builder(
@@ -42,11 +45,11 @@ class RetailOutletAddress extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   smallText(_detail[index].question!,
-                      fontWeight: FontWeight.bold, size: 14.0),
-                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal)
+                      fontWeight: FontWeight.bold, size: 16.0),
+                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal,size:16.0)
                 ],
               ),
-            const  SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Divider(color: Colors.grey),
             ],
           );

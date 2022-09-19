@@ -1,13 +1,13 @@
 import 'package:dtplusmerchant/Screens/auth/forgot_password_screen.dart';
-import 'package:dtplusmerchant/Screens/batch_details.dart';
+import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/dashboard.dart';
 import 'package:dtplusmerchant/Screens/erp_detail.dart';
-import 'package:dtplusmerchant/Screens/Sale-Reload/payment_acceptance.dart';
+import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/Screens/profile/edit_profile.dart';
 import 'package:dtplusmerchant/Screens/receivable_payable.dart';
-import 'package:dtplusmerchant/Screens/scan_qr.dart';
+import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transaction_details.dart';
-import 'package:dtplusmerchant/Screens/Sale-Reload/type_of_sale_screen.dart';
+import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -78,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           "/editProfile": (context) => const EditProfile(),
           "/forgotPassword": (context) => ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
-          "/scanQRcode": (context) => const ScanQRCode(),
+          "/scanQRcode": (context) =>  ScanQRCode(),
           "/transactionDetails": (context) => const TransactionDetails(),
           "/receivablePayable": (context) => const ReceivablePayable(),
           "/erpDetail": (context) => const ERPDetail(),
