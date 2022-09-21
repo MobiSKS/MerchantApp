@@ -20,6 +20,7 @@ class _DashboardState extends State<Dashboard> {
     const Home(),
     Container(),
     const Contacts(),
+    Container(),
   ];
 
   @override

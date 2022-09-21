@@ -107,8 +107,16 @@ class AppStrings {
   static const String creditSaleComplete = "Credit Sale Complete";
   static const String cardFee = "Card Fee";
   static const String financials = "Financials";
-  static const String scanQrCodeForNextStep = "Proceed for next step after scanning QR code";
+  static const String scanQrCodeForNextStep =
+      "Proceed for next step after scanning QR code";
   static const String qrPayment = "QR Payment";
-    static const String paymentNsettlement = "Payment & Settlement";
-    static const String  payments = "Payments";
+  static const String paymentNsettlement = "Payment & Settlement";
+  static const String payments = "Payments";
+  static const String enterFormNo = "Enter Form No.";
+  static const String formNo = "Form Number";
+  static const String enterCardNo = "Enter no. of Cards";
+  static const String cardFeeTransaction = "Card Fee Transaction";
+  static const String results = "Results";
+  static const String numberOfCards = "Number of Cards";
+  
 }

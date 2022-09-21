@@ -1,4 +1,5 @@
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
+import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../const/image_resources.dart';
@@ -100,8 +101,8 @@ class _HomeState extends State<Home> {
       width: screenWidth(context) * 0.90,
       height: screenHeight(context) * 0.07,
       decoration: BoxDecoration(
-          color: Colors.indigo.shade200,
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+          color: Colors.blue.shade200,
+          borderRadius: const BorderRadius.all(Radius.circular(12))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -159,16 +160,10 @@ class _HomeState extends State<Home> {
       child: Container(
         height: screenHeight(context) * 0.12,
         width: screenWidth(context) * 0.15,
-        decoration: const BoxDecoration(
-          color: Color(0xffFFFFFF),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 2,
-              blurRadius: 5,
-            )
-          ],
+        decoration: BoxDecoration(
+          color: const Color(0xffFFFFFF),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          border: Border.all(color: Colors.blueGrey.shade100),
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -177,9 +172,9 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(_financialOptions[index].optionIcon!,
-                  height: screenHeight(context) * 0.04),
-              const SizedBox(height: 10),
-              smallText(_financialOptions[index].optionName!, size: 15.0)
+                  height: screenHeight(context) * 0.036),
+              const SizedBox(height: 6),
+              smallText(_financialOptions[index].optionName!, size: 14.0)
             ],
           ),
         ),
@@ -207,21 +202,23 @@ class _HomeState extends State<Home> {
       onTap: () {
         if (_transactionsOptions[index].optionName! == AppStrings.sale) {
           Navigator.pushNamed(context, "/paymentAcceptance");
+        } else if (_transactionsOptions[index].optionName! ==
+            AppStrings.cardFee) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CardFee()),
+          );
         }
       },
       child: Container(
         height: screenHeight(context) * 0.12,
         width: screenWidth(context) * 0.15,
-        decoration: const BoxDecoration(
-          color: Color(0xffFFFFFF),
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey,
-              spreadRadius: 2,
-              blurRadius: 5,
-            )
-          ],
+        decoration: BoxDecoration(
+          color: const Color(0xffFFFFFF),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(8),
+          ),
+          border: Border.all(color: Colors.blueGrey.shade100),
         ),
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
@@ -230,9 +227,9 @@ class _HomeState extends State<Home> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(_transactionsOptions[index].optionIcon!,
-                  height: screenHeight(context) * 0.04),
+                  height: screenHeight(context) * 0.038),
               const SizedBox(height: 10),
-              smallText(_transactionsOptions[index].optionName!, size: 15.0)
+              smallText(_transactionsOptions[index].optionName!, size: 14.0)
             ],
           ),
         ),

@@ -1,7 +1,6 @@
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
-import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
@@ -11,11 +10,12 @@ import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 
 // ignore: must_be_immutable
-class SaleReceipt extends StatelessWidget {
-  final SaleByTeminalResponse saleResponse;
-  final String mobileNo;
-  final String transType;
-  SaleReceipt({super.key, required this.saleResponse, required this.mobileNo,required this.transType});
+class CardFeeReceipt extends StatelessWidget {
+  final String? formNum;
+  final double? amount;
+  final String? cardNumber;
+  final String ?txnId;
+  CardFeeReceipt({super.key, this.formNum, this.amount, this.cardNumber,this.txnId});
   final _sharedPref = Injection.injector.get<SharedPref>();
   final ScreenshotController screenshotController = ScreenshotController();
   final GlobalKey _key = GlobalKey();
@@ -29,7 +29,7 @@ class SaleReceipt extends StatelessWidget {
           children: [
             header(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            title(context, 'Sale Receipt'),
+            title(context, 'Card Fee Receipt'),
             SizedBox(height: screenHeight(context) * 0.04),
             _body(context)
           ],
@@ -45,22 +45,13 @@ class SaleReceipt extends StatelessWidget {
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: '1'),
-      ReceiptDetail(title: AppStrings.mobileNo, value: mobileNo),
+      ReceiptDetail(title: AppStrings.rocNum, value: '2'),
+      ReceiptDetail(title: AppStrings.formNo, value: formNum),
     ];
     List<ReceiptDetail> receptDetail2 = [
-      ReceiptDetail(
-          title: AppStrings.product,
-          value: saleResponse.data![0].productName ?? ''),
-      ReceiptDetail(
-          title: AppStrings.amount, value: saleResponse.data![0].invAmt),
-      ReceiptDetail(title: AppStrings.rsp, value: saleResponse.data![0].rSP),
-      ReceiptDetail(
-          title: AppStrings.volume, value: saleResponse.data![0].volume),
-      ReceiptDetail(
-          title: AppStrings.balance, value: saleResponse.data![0].balance),
-      ReceiptDetail(
-          title: AppStrings.txnID, value: saleResponse.data![0].refNo),
+      ReceiptDetail(title: 'CARD COUNT', value:cardNumber),
+      ReceiptDetail(title: AppStrings.amount, value: '$amount'),
+      ReceiptDetail(title: AppStrings.txnID, value: txnId),
     ];
 
     return Screenshot(
@@ -91,14 +82,16 @@ class SaleReceipt extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(saleResponse.data![0].retailOutletName!,
+                  headerText(
+                      _sharedPref
+                          .user!.data!.objOutletDetails![0].retailOutletName!,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.02),
                   _merchantDetail1(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.04),
-                  headerText('$transType(CARD)',
+                  headerText('CARD FEE(DTP)',
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),

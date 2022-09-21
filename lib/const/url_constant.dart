@@ -7,6 +7,9 @@ class UrlConstant {
   static const String generateOtpForSale = "transaction/generate_otp";
   static const String saleByTerminal = "transaction/sale_by_terminal";
   static const String generateQR = "Mobile/generate_QR_code";
+  static const String otpForFastTag = "Fastag/fastag_get_otp";
+  static const String cardFeePayment = "transaction/card_fee_payment";
+  static const String confirmFastTagOtp = "Fastag/fastag_confirm_otp";
 
 //==============================api_key && secret_key=================================
 

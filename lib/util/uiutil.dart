@@ -253,7 +253,7 @@ alertPopUp(BuildContext context, String message,{bool doLogout =false}) {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 25),
-                    headerText(message, fontSize: 18, color: Colors.black),
+                    headerText(message, fontSize: 18, color: Colors.black,textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     customButton(context, 'OK', onTap: () {
                     doLogout? Utils.logout(context):
