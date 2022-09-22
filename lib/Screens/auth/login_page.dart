@@ -130,6 +130,7 @@ class _LoginPageState extends State<LoginPage> {
       width: screenWidth(context),
       child: TextFormField(
         controller: userNameController,
+        keyboardType: TextInputType.number,
         validator: (val) => val!.isEmpty ? AppStrings.userNameEmptyMsg : null,
         decoration: InputDecoration(
             prefixIcon: const Icon(Icons.person, size: 20),
@@ -139,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             filled: true,
+        
             hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13),
             hintText: AppStrings.userName,
             fillColor: Colors.white),

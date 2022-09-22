@@ -26,24 +26,7 @@ class _CardFeeState extends State<CardFee> {
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.grey,
-        centerTitle: true,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.black, size: 24)),
-        title: headerText(AppStrings.cardFee,
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 24),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Image.asset(ImageResources.notificationIcon))
-        ],
-      ),
+      appBar: normalAppBar(context, title: AppStrings.cardFee),
       body: _body(context),
     ));
   }

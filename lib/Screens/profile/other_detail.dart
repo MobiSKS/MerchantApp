@@ -28,8 +28,8 @@ class OtherDetail extends StatelessWidget {
     final List<MerchantDetail> _detail = [
       MerchantDetail(
           question: 'Name', ans: data!.objGetMerchantDetail![0].merchantName),
-      MerchantDetail(question: 'Mobile No.', ans: '9995467843'),
-      MerchantDetail(question: 'Email Id', ans: 'abc@gmailcom'),
+      MerchantDetail(question: 'Mobile No.', ans: data.objGetMerchantDetail![0].mobileNo),
+      MerchantDetail(question: 'Email Id', ans: data.objGetMerchantDetail![0].emailId),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.50,

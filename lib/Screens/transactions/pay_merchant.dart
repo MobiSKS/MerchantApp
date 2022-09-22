@@ -72,21 +72,23 @@ class _PayMerchantState extends State<PayMerchant> {
   }
 
   Future<void> submitOTPSale() async {
-    var transactionPro =
-        Provider.of<TransactionsProvider>(context, listen: false);
-    await transactionPro.payByPaycode(
-      context,
-      payCode: _payCodeController.text,
-    );
-    if (transactionPro.paycodeResponseModel!.internelStatusCode == 1000) {
-      showToast('Payment Successfull', false);
-      Navigator.pushReplacement(
+    if (_validate()) {
+      var transactionPro =
+          Provider.of<TransactionsProvider>(context, listen: false);
+      await transactionPro.payByPaycode(
         context,
-        MaterialPageRoute(
-            builder: (context) => PayCodeReceipt(
-                  payCodeResp: transactionPro.paycodeResponseModel!,
-                )),
+        payCode: _payCodeController.text,
       );
+      if (transactionPro.paycodeResponseModel!.internelStatusCode == 1000) {
+        showToast('Payment Successfull', false);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => PayCodeReceipt(
+                    payCodeResp: transactionPro.paycodeResponseModel!,
+                  )),
+        );
+      }
     }
   }
 

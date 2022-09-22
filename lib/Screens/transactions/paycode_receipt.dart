@@ -13,7 +13,7 @@ import '../../preferences/shared_preference.dart';
 
 // ignore: must_be_immutable
 class PayCodeReceipt extends StatelessWidget {
- final PaycodeResponseModel payCodeResp;
+  final PaycodeResponseModel payCodeResp;
   PayCodeReceipt({super.key, required this.payCodeResp});
   final _sharedPref = Injection.injector.get<SharedPref>();
   final ScreenshotController screenshotController = ScreenshotController();
@@ -45,12 +45,11 @@ class PayCodeReceipt extends StatelessWidget {
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
       ReceiptDetail(title: AppStrings.rocNum, value: '1'),
-      ReceiptDetail(title: AppStrings.mobileNo, value:'9582922934'),
+      ReceiptDetail(title: AppStrings.mobileNo, value: '9582922934'),
     ];
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
-          title: AppStrings.product,
-          value: payCodeResp.data![0].productName),
+          title: AppStrings.product, value: payCodeResp.data![0].productName),
       ReceiptDetail(
           title: AppStrings.amount, value: payCodeResp.data![0].invAmt),
       ReceiptDetail(title: AppStrings.rsp, value: payCodeResp.data![0].rSP),
@@ -58,8 +57,7 @@ class PayCodeReceipt extends StatelessWidget {
           title: AppStrings.volume, value: payCodeResp.data![0].volume),
       ReceiptDetail(
           title: AppStrings.balance, value: payCodeResp.data![0].balance),
-      ReceiptDetail(
-          title: AppStrings.txnID, value: payCodeResp.data![0].refNo),
+      ReceiptDetail(title: AppStrings.txnID, value: payCodeResp.data![0].refNo),
     ];
 
     return Screenshot(
@@ -131,8 +129,11 @@ class PayCodeReceipt extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w500),
-              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w500),
+              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
+              smallText(data.value!,
+                  size: 16.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.blueGrey),
             ],
           );
         });
@@ -149,8 +150,11 @@ class PayCodeReceipt extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w500),
-              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w500),
+              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
+              smallText(data.value!,
+                  size: 16.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.blueGrey),
             ],
           );
         });

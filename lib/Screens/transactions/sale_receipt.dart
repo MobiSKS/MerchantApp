@@ -51,7 +51,7 @@ class SaleReceipt extends StatelessWidget {
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
       ReceiptDetail(title: AppStrings.rocNum, value: '1'),
-      ReceiptDetail(title: AppStrings.mobileNo, value: mobileNo),
+      ReceiptDetail(title: AppStrings.mobileNo, value: custDetail.mobileNo),
     ];
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
@@ -136,8 +136,8 @@ class SaleReceipt extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w500),
-              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w500),
+              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
+              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w400,color: Colors.blueGrey),
             ],
           );
         });
@@ -154,8 +154,8 @@ class SaleReceipt extends StatelessWidget {
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w500),
-              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w500),
+              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
+               smallText(data.value!, size: 16.0, fontWeight: FontWeight.w400,color: Colors.blueGrey),
             ],
           );
         });

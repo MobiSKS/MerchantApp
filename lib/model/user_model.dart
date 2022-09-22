@@ -154,6 +154,8 @@ class ObjGetMerchantDetail {
   String? cardFeeAmount;
   int? statusId;
   String? statusName;
+  String? emailId;
+  String? mobileNo;
   int? status;
   String? reason;
 
@@ -177,6 +179,8 @@ class ObjGetMerchantDetail {
       this.cardFeeAmount,
       this.statusId,
       this.statusName,
+      this.emailId,
+      this.mobileNo,
       this.status,
       this.reason});
 
@@ -200,12 +204,15 @@ class ObjGetMerchantDetail {
     cardFeeAmount = json['CardFeeAmount'];
     statusId = json['StatusId'];
     statusName = json['StatusName'];
+    emailId = json['EmailId'];
+    mobileNo = json['MobileNo'];
     status = json['Status'];
     reason = json['Reason'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Token'] = this.token;
     data['MerchantId'] = this.merchantId;
     data['TerminalId'] = this.terminalId;
     data['MerchantName'] = this.merchantName;
@@ -224,6 +231,8 @@ class ObjGetMerchantDetail {
     data['CardFeeAmount'] = this.cardFeeAmount;
     data['StatusId'] = this.statusId;
     data['StatusName'] = this.statusName;
+    data['EmailId'] = this.emailId;
+    data['MobileNo'] = this.mobileNo;
     data['Status'] = this.status;
     data['Reason'] = this.reason;
     return data;

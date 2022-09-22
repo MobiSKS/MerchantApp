@@ -294,7 +294,7 @@ class TransactionsProvider extends ChangeNotifier {
     String? payCode,
   }) async {
     showLoader(context);
-
+    var ip = await Utils.getIp();
     Map param = {
       "Bankname": "",
       "Gatewayname": "",
@@ -313,7 +313,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Invoiceid": "",
       "Latitude": "1133.2323.23",
       "Longitude": "11.2.12.2",
-      "Userip": "10.101.10.10",
+      "Userip": ip,
       "Odometerreading": "",
       "Mobileno": "9582922934",
       "Pin": "",

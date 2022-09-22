@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
@@ -183,7 +182,7 @@ Widget title(context, String text) {
     color: Colors.indigo.shade300,
     child: Center(
         child:
-            headerText(text, fontWeight: FontWeight.w500, color: Colors.black)),
+            headerText(text, fontWeight: FontWeight.w500, color: Colors.white)),
   );
 }
 
@@ -232,9 +231,7 @@ dismissLoader(BuildContext context) {
   Navigator.pop(context);
 }
 
-
-
-alertPopUp(BuildContext context, String message,{bool doLogout =false}) {
+alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -252,11 +249,13 @@ alertPopUp(BuildContext context, String message,{bool doLogout =false}) {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 25),
-                    headerText(message, fontSize: 18, color: Colors.black,textAlign: TextAlign.center),
+                    headerText(message,
+                        fontSize: 18,
+                        color: Colors.black,
+                        textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     customButton(context, 'OK', onTap: () {
-                    doLogout? Utils.logout(context):
-                      Navigator.pop(context);
+                      doLogout ? Utils.logout(context) : Navigator.pop(context);
                     })
                   ],
                 )),

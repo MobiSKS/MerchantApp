@@ -284,8 +284,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
               value: value.transType.toString(),
               child: Text(value.transName!),
             );
-          }
-            ).toList(),
+          }).toList(),
           onChanged: (value) {
             setState(() {
               _payType = value!;
@@ -477,7 +476,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       txnTime: fastTagdata.txnNo,
       vehicleNo: fastTagdata.vRN,
     );
-    if (transProvider.fastTagOtpConfirmModel!.internelStatusCode == 1000) {
+    if (transProvider.fastTagOtpConfirmModel != null &&
+        transProvider.fastTagOtpConfirmModel!.internelStatusCode == 1000) {
       showToast('Payment Successfull', false);
       Navigator.pushReplacement(
         context,
