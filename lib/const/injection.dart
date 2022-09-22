@@ -15,6 +15,7 @@ class Injection {
 
   static Future initInjection() async {
     await _sharedPrefs.init();
+    await _sharedPrefs.storeFastTagData();
     if (_sharedPrefs.user != null) {
       await setupDioInterceptor();
     }
@@ -25,6 +26,7 @@ class Injection {
   }
 
   static Future<void> setupDioInterceptor() async {
+
     _dio.options.headers['API_Key'] = UrlConstant.apiKey;
     _dio.options.headers['Secret_Key'] = UrlConstant.secretKey;
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,8 +9,6 @@ import '../preferences/shared_preference.dart';
 
 class Utils {
   static final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
-  static const int otpTypeForSale = 1;
-
   static String merchantId =
       _sharedPref.user!.data!.objGetMerchantDetail![0].merchantId!;
   static String terminalId =
@@ -19,15 +18,25 @@ class Utils {
   static String userToken =
       'Bearer ${_sharedPref.user!.data!.objGetMerchantDetail![0].token!}';
 
+  static const int otpTypeForSale = 1;
+  static const int otpTypeForCreditSaleComplete = 9;
+
+  
   static void logout(BuildContext context) {
     showLoader(context);
     _sharedPref.preferenceClear();
     dismissLoader(context);
     Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
   }
+//=======date format ===== exp: 2022-09-16================
 
   static String convertDateFormatInYYMMDD(DateTime date) {
     return DateFormat('yyyy-MM-dd').format(date);
+  }
+
+//===========date format ======== exp: 2022-09-17 18:08:23============
+  static String dateTimeFormat() {
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
   }
 
   static Future<void> selectDatePopup(
@@ -74,5 +83,12 @@ class Utils {
     }
     return os;
   }
- 
+
+  static String isoDateTimeFormat() {
+    return "${DateTime.now().toIso8601String()}Z";
+  }
+
+  static Future<String> getIp() async {
+    return await Ipify.ipv4();
+  }
 }

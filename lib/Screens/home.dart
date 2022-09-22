@@ -1,5 +1,7 @@
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
+import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
+import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:flutter/material.dart';
 import '../const/image_resources.dart';
@@ -207,6 +209,18 @@ class _HomeState extends State<Home> {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const CardFee()),
+          );
+        } else if (_transactionsOptions[index].optionName! ==
+            AppStrings.payMerchant) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const PayMerchant()),
+          );
+        } else if (_transactionsOptions[index].optionName! ==
+            AppStrings.creditSaleComplete) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const CreditSaleComplete()),
           );
         }
       },

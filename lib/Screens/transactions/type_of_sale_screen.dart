@@ -1,10 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-
 import 'package:dtplusmerchant/Screens/transactions/sale_receipt.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/provider/sale_reload_view_model.dart';
+import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:otp_text_field/otp_field.dart';
@@ -16,11 +15,13 @@ import '../../const/image_resources.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 import '../../util/uiutil.dart';
+import 'fastag_receipt.dart';
 
 class TypeOfSale extends StatefulWidget {
   final String? amount;
   final int? productId;
-  const TypeOfSale({super.key, this.amount, this.productId});
+  final String? product;
+  const TypeOfSale({super.key, this.amount, this.productId, this.product});
 
   @override
   State<TypeOfSale> createState() => _TypeOfSaleState();
@@ -30,7 +31,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   final _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late String _payType;
- late String transType;
+  late String transType;
   late String _selectedbank;
   late bool _otpSent;
   String otp = "";
@@ -63,7 +64,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
-          body: BaseView<SaleReloadViewModel>(
+          body: BaseView<TransactionsProvider>(
               builder: (context, saleReloadViewM, child) {
             return SingleChildScrollView(
               child: Form(
@@ -96,8 +97,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                                 fontWeight: FontWeight.w500),
                             _enterMobileNo(context),
                             _otpSent ? enterOTP(context) : Container(),
-                            SizedBox(height: screenHeight(context) * 0.15),
-                            sendOTPButton(context, saleReloadViewM)
+                            SizedBox(height: screenHeight(context) * 0.10),
+                            submitButton(context, saleReloadViewM)
                           ],
                         ))
                   ],
@@ -108,8 +109,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     );
   }
 
-  Widget sendOTPButton(
-      BuildContext context, SaleReloadViewModel saleReloadViewM) {
+  Widget submitButton(
+      BuildContext context, TransactionsProvider saleReloadViewM) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 40),
       child: SizedBox(
@@ -124,9 +125,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                     : alertPopUp(context, 'Please enter otp');
           },
           style: buttonStyle,
-          child: Text(
-            _otpSent ? AppStrings.submit : AppStrings.sendOTP,
-            style: const TextStyle(
+          child: const Text(
+            AppStrings.submit,
+            style: TextStyle(
                 fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
           ),
         ),
@@ -242,6 +243,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           width: screenWidth(context),
           child: TextFormField(
             controller: _vehicleNoController,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(4),
+            ],
+            keyboardType: TextInputType.number,
             validator: (val) =>
                 val!.isEmpty ? 'Please enter vehicle number' : null,
             decoration: const InputDecoration(
@@ -279,13 +284,17 @@ class _TypeOfSaleState extends State<TypeOfSale> {
               value: value.transType.toString(),
               child: Text(value.transName!),
             );
-          }).toList(),
+          }
+            ).toList(),
           onChanged: (value) {
             setState(() {
               _payType = value!;
               _mobileController.clear();
               _otpSent = false;
-           transType =  paymentTypeList.where((e) => e.transType==int.parse(_payType)).toList()[0].transName!;
+              transType = paymentTypeList
+                  .where((e) => e.transType == int.parse(_payType))
+                  .toList()[0]
+                  .transName!;
             });
           },
         ),
@@ -378,58 +387,39 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     );
   }
 
-  Future<void> _submitPayment(SaleReloadViewModel saleReloadViewM) async {
-    await saleReloadViewM.saleByTerminal(context,
-        invoiceAmount: double.parse(widget.amount!),
-        mobileNo: _mobileController.text,
-        otp: otp,
-        transType: int.parse(_payType),
-        productId: widget.productId);
-    if (saleReloadViewM.saleByTeminalResponse!.internelStatusCode == 1000) {
-      showToast('Payment Successfull', false);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SaleReceipt(
-                  saleResponse: saleReloadViewM.saleByTeminalResponse!,
-                  mobileNo: _mobileController.text,
-                  transType: transType,
-                )),
-      );
-    } else {
-      setState(() {
-        _otpSent = false;
-      });
-    }
-  }
-
-  Future<void> sendOTP(SaleReloadViewModel saleReloadViewM) async {
+  Future<void> _submitPayment(TransactionsProvider transProvider) async {
     _payType == "505"
-        ? await sendOTPforFastTag(saleReloadViewM)
-        : await sendOTPforCCM(saleReloadViewM);
+        ? await submitOTPFastTag(transProvider)
+        : await submitOTPSale(transProvider);
   }
 
-  Future<void> sendOTPforCCM(SaleReloadViewModel saleReloadViewM) async {
+  Future<void> sendOTP(TransactionsProvider transProvider) async {
+    _payType == "505"
+        ? await sendOTPforFastTag(transProvider)
+        : await sendOTPforSale(transProvider);
+  }
+
+  Future<void> sendOTPforSale(TransactionsProvider transProvider) async {
     if (validateMobile() && _payType.isNotEmpty) {
-      await saleReloadViewM.generateOTPSale(context,
+      await transProvider.generateOTPSale(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           transType: int.parse(_payType));
-      if (saleReloadViewM.otpResponseSale!.internelStatusCode == 1000) {
-        log('===========> OTP ${saleReloadViewM.otpResponseSale!.data![0].oTP!}');
-        showToast('OTP sent successfully', false);
+      if (transProvider.otpResponseSale!.internelStatusCode == 1000) {
+        log('===========> OTP ${transProvider.otpResponseSale!.data![0].oTP!}');
+        showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
         setState(() {
           _otpSent = true;
         });
       } else {
-        alertPopUp(context, saleReloadViewM.otpResponseSale!.message!);
+        alertPopUp(context, transProvider.otpResponseSale!.message!);
       }
     }
   }
 
-  Future<void> sendOTPforFastTag(SaleReloadViewModel saleReloadViewM) async {
+  Future<void> sendOTPforFastTag(TransactionsProvider saleReloadViewM) async {
     if (validateMobile() && _payType.isNotEmpty) {
-      await saleReloadViewM.generateOtpFastTAG(context,
+      var resp = await saleReloadViewM.generateOtpFastTAG(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           bankId: bankId,
@@ -442,6 +432,67 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       } else {
         alertPopUp(context, saleReloadViewM.fastTagOTPResponse!.message!);
       }
+    }
+  }
+
+  Future<void> submitOTPSale(TransactionsProvider transPro) async {
+    await transPro.saleByTerminal(context,
+        invoiceAmount: double.parse(widget.amount!),
+        mobileNo: _mobileController.text,
+        otp: otp,
+        transType: int.parse(_payType),
+        productId: widget.productId!);
+    if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
+      showToast('Payment Successfull', false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SaleReceipt(
+                  saleResponse: transPro.saleByTeminalResponse!,
+                  mobileNo: _mobileController.text,
+                  transType: transType,
+                  productName: widget.product!,
+                )),
+      );
+    } else {
+      setState(() {
+        _otpSent = false;
+      });
+    }
+  }
+
+  Future<void> submitOTPFastTag(TransactionsProvider transProvider) async {
+    await _sharedPref.storeFastTagData();
+    var fastTagdata = _sharedPref.fastTagData!.data;
+    await transProvider.submitFastTagPayment(
+      context,
+      amount: double.parse(widget.amount!),
+      bankId: bankId,
+      mobile: _mobileController.text,
+      invoiceDate: '2022-09-22T14:29:35.436Z',
+      oTp: otp,
+      tagId: fastTagdata!.tagId,
+      txnID: fastTagdata.txnId,
+      txnNo: fastTagdata.txnNo,
+      txnTime: fastTagdata.txnNo,
+      vehicleNo: fastTagdata.vRN,
+    );
+    if (transProvider.fastTagOtpConfirmModel!.internelStatusCode == 1000) {
+      showToast('Payment Successfull', false);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => FasTagReceipt(
+                  bankNAme: _selectedbank,
+                  fastTagDetail: transProvider.fastTagOtpConfirmModel,
+                  mobileNum: _mobileController.text,
+                  productName: widget.product,
+                )),
+      );
+    } else {
+      setState(() {
+        _otpSent = false;
+      });
     }
   }
 }

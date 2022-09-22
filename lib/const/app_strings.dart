@@ -35,7 +35,7 @@ class AppStrings {
   static const String selectPaymentType = "Select Payment Type";
   static const String selectBank = "Select Your Bank";
   static const String mobileNum = "Mobile Number";
-  static const String sendOTP = "Send OTP";
+  static const String receiveOTP = "Receive OTP";
   static const String enterOTP = "Enter OTP";
   static const String selectProduct = "Select Product";
   static const String enterAmount = "Enter Amount";
@@ -118,5 +118,6 @@ class AppStrings {
   static const String cardFeeTransaction = "Card Fee Transaction";
   static const String results = "Results";
   static const String numberOfCards = "Number of Cards";
+  static const String enterPayCode ="Enter Pay Code";
   
 }

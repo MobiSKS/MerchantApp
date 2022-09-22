@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
-import 'package:dtplusmerchant/provider/sale_reload_view_model.dart';
+import 'package:dtplusmerchant/provider/transactions_provider.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +23,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _selectedProduct = "";
+  String ?_productName;
   final _amountController = TextEditingController();
   List<String> payMode = [AppStrings.generateQR, AppStrings.sale];
   late String selectedMode;
@@ -112,15 +116,18 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                                   SizedBox(
                                     height: 35,
                                     width: 35,
-                                    child: Radio<String>(
-                                      value: payThrough,
-                                      activeColor: Colors.red,
-                                      groupValue: selectedMode,
-                                      onChanged: (value) {
-                                        setState(() {
-                                          selectedMode = value!;
-                                        });
-                                      },
+                                    child: Transform.scale(
+                                      scale: 1.4,
+                                      child: Radio<String>(
+                                        value: payThrough,
+                                        activeColor: Colors.red,
+                                        groupValue: selectedMode,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            selectedMode = value!;
+                                          });
+                                        },
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(
@@ -167,12 +174,13 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           builder: (context) => TypeOfSale(
                 amount: _amountController.text,
                 productId: int.parse(_selectedProduct),
+                product: _productName,
               )),
     );
   }
 
   void generateQR() async {
-    var saleViewM = Provider.of<SaleReloadViewModel>(context, listen: false);
+    var saleViewM = Provider.of<TransactionsProvider>(context, listen: false);
     if (_validate() && _amountController.text.isNotEmpty) {
       await saleViewM.generateQR(context,
           amount: double.parse(_amountController.text),
@@ -219,6 +227,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           onChanged: (value) {
             setState(() {
               _selectedProduct = value!.toString();
+              _productName = productList.where((e) => e.productId==int.parse(_selectedProduct)).toList()[0].productName;
             });
           },
         ),

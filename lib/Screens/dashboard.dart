@@ -27,6 +27,7 @@ class _DashboardState extends State<Dashboard> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.indigo.shade50,
         key: _scaffoldKey,
         drawer: const NavDrawer(),

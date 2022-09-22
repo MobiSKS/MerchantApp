@@ -1,21 +1,33 @@
 import 'dart:convert';
+import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/user_model.dart';
 
 class SharedPref {
   static String userDetails = "userstore";
+  static String fastTagDetail = "fastTagDetail";
   late SharedPreferences _prefs;
-   UserModel ? _user;
+  UserModel? _user;
+  FastTagOTPResponse? _fastTagData;
+
   static String isLogin = "isLogin";
   static String invoiceId = "invoiceID";
   SharedPreferences get prefs => _prefs;
 
   init() async {
     _prefs = await SharedPreferences.getInstance();
-    final  user = await read(userDetails);
+    final user = await read(userDetails);
     if (user != null && user is Map) {
-    _user = UserModel.fromJson(user);
+      _user = UserModel.fromJson(user);
+    }
+  }
+
+  storeFastTagData() async {
+    _prefs = await SharedPreferences.getInstance();
+    final fastTagData = await read(fastTagDetail);
+    if (fastTagData != null && fastTagData is Map) {
+      _fastTagData = FastTagOTPResponse.fromJson(fastTagData);
     }
   }
 
@@ -35,11 +47,12 @@ class SharedPref {
   saveBool(String key, bool value) async {
     _prefs.setBool(key, value);
   }
-   saveInt(String key, int value) async {
+
+  saveInt(String key, int value) async {
     _prefs.setInt(key, value);
   }
 
-   readInt(String key) {
+  readInt(String key) {
     final value = _prefs.getInt(key);
     if (value != null) return value;
     return null;
@@ -61,4 +74,5 @@ class SharedPref {
   }
 
   UserModel? get user => _user;
+  FastTagOTPResponse? get fastTagData => _fastTagData;
 }

@@ -17,7 +17,7 @@ import 'const/injection.dart';
 import 'preferences/shared_preference.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-import 'provider/sale_reload_view_model.dart';
+import 'provider/transactions_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +35,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool isLogin = false;
-
   SharedPref sharedPref = Injection.injector.get<SharedPref>();
 
   @override
@@ -56,7 +55,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
-        ChangeNotifierProvider(create: (context) => SaleReloadViewModel()),
+        ChangeNotifierProvider(create: (context) => TransactionsProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -74,11 +73,11 @@ class _MyAppState extends State<MyApp> {
         routes: {
           "/login": (context) => const LoginPage(),
           "/dashboard": (context) => const Dashboard(),
-          "/typeofSale": (context) => TypeOfSale(),
+          "/typeofSale": (context) => const TypeOfSale(),
           "/editProfile": (context) => const EditProfile(),
           "/forgotPassword": (context) => ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
-          "/scanQRcode": (context) =>  ScanQRCode(),
+          "/scanQRcode": (context) =>  const ScanQRCode(),
           "/transactionDetails": (context) => const TransactionDetails(),
           "/receivablePayable": (context) => const ReceivablePayable(),
           "/erpDetail": (context) => const ERPDetail(),

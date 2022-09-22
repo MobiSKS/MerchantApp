@@ -10,12 +10,17 @@ import '../../common/share_widget.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 
-// ignore: must_be_immutable
 class SaleReceipt extends StatelessWidget {
   final SaleByTeminalResponse saleResponse;
   final String mobileNo;
   final String transType;
-  SaleReceipt({super.key, required this.saleResponse, required this.mobileNo,required this.transType});
+  final String productName;
+  SaleReceipt(
+      {super.key,
+      required this.saleResponse,
+      required this.mobileNo,
+      required this.transType,
+      required this.productName});
   final _sharedPref = Injection.injector.get<SharedPref>();
   final ScreenshotController screenshotController = ScreenshotController();
   final GlobalKey _key = GlobalKey();
@@ -51,7 +56,7 @@ class SaleReceipt extends StatelessWidget {
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
           title: AppStrings.product,
-          value: saleResponse.data![0].productName ?? ''),
+          value: saleResponse.data![0].productName ?? productName),
       ReceiptDetail(
           title: AppStrings.amount, value: saleResponse.data![0].invAmt),
       ReceiptDetail(title: AppStrings.rsp, value: saleResponse.data![0].rSP),
@@ -62,7 +67,6 @@ class SaleReceipt extends StatelessWidget {
       ReceiptDetail(
           title: AppStrings.txnID, value: saleResponse.data![0].refNo),
     ];
-
     return Screenshot(
       controller: screenshotController,
       child: RepaintBoundary(

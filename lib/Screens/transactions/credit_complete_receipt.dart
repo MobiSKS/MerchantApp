@@ -1,6 +1,7 @@
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
+import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
@@ -10,12 +11,9 @@ import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 
 // ignore: must_be_immutable
-class CardFeeReceipt extends StatelessWidget {
-  final String? formNum;
-  final double? amount;
-  final String? cardNumber;
-  final String ?txnId;
-  CardFeeReceipt({super.key, this.formNum, this.amount, this.cardNumber,this.txnId});
+class CreditCompleteReceipt extends StatelessWidget {
+  final SaleByTeminalResponse creditCompResp;
+  CreditCompleteReceipt({super.key, required this.creditCompResp});
   final _sharedPref = Injection.injector.get<SharedPref>();
   final ScreenshotController screenshotController = ScreenshotController();
   final GlobalKey _key = GlobalKey();
@@ -29,7 +27,7 @@ class CardFeeReceipt extends StatelessWidget {
           children: [
             header(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            title(context, 'Card Fee Receipt'),
+            title(context, 'Receipt'),
             SizedBox(height: screenHeight(context) * 0.04),
             _body(context)
           ],
@@ -40,18 +38,25 @@ class CardFeeReceipt extends StatelessWidget {
 
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
+    var outletcity =
+        _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity;
     List<ReceiptDetail> receptDetail1 = [
       ReceiptDetail(title: AppStrings.dateTime, value: '14/09/22 12:57:08'),
+      ReceiptDetail(title: 'OPERATOR', value: '1'),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: '2'),
-      ReceiptDetail(title: AppStrings.formNo, value: formNum),
+      ReceiptDetail(title: AppStrings.rocNum, value: '1'),
+      ReceiptDetail(
+          title: 'CTRL CARD NO.', value: creditCompResp.data![0].cardNoOutput),
     ];
     List<ReceiptDetail> receptDetail2 = [
-      ReceiptDetail(title: 'CARD COUNT', value:cardNumber),
-      ReceiptDetail(title: AppStrings.amount, value: '₹ $amount'),
-      ReceiptDetail(title: AppStrings.txnID, value: txnId),
+      ReceiptDetail(
+          title: AppStrings.amount, value: creditCompResp.data![0].invAmt),
+      ReceiptDetail(
+          title: AppStrings.balance, value: creditCompResp.data![0].balance),
+      ReceiptDetail(
+          title: AppStrings.txnID, value: creditCompResp.data![0].refNo),
     ];
 
     return Screenshot(
@@ -82,16 +87,19 @@ class CardFeeReceipt extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(
-                      _sharedPref
-                          .user!.data!.objOutletDetails![0].retailOutletName!,
+                  headerText(creditCompResp.data![0].retailOutletName!,
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.02),
+                  SizedBox(height: screenHeight(context) * 0.01),
+                  headerText(outletcity!,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20.0),
+                  SizedBox(height: screenHeight(context) * 0.05),
                   _merchantDetail1(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.04),
-                  headerText('CARD FEE(DTP)',
+                  headerText('CREDIT SALE COMPLETE',
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20.0),

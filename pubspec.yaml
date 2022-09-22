@@ -50,6 +50,7 @@ dependencies:
   path_provider: ^2.0.11
   screenshot: ^1.2.3
   share_plus: ^4.1.0
+  dart_ipify: ^1.1.1
 
 dev_dependencies:
   flutter_test:

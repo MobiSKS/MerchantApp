@@ -7,8 +7,8 @@ import '../../util/uiutil.dart';
 import 'auth_view_model.dart';
 
 class ForgotPassword extends StatefulWidget {
-  bool isChangePassword;
-  ForgotPassword({
+ final bool isChangePassword;
+  const ForgotPassword({
     super.key,
     this.isChangePassword = false,
   });
@@ -73,24 +73,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
   }
 
-  void sendOTP(AuthViewModel authViewM) async {
-    if (_formKey.currentState!.validate()) {
-      await authViewM.sendOTP(context, _monbileController.text);
-      if (authViewM.otpResponseModel!.internelStatusCode == 1000) {
-        showToast(authViewM.otpResponseModel!.data![0].oTP!, false);
-        setState(() {
-          _otpSent = true;
-        });
-      } else if (authViewM.otpResponseModel!.internelStatusCode == 1001 &&
-          authViewM.otpResponseModel!.statusCode != 200) {
-        // ignore: use_build_context_synchronously
-        alertPopUp(context, authViewM.otpResponseModel!.message!);
-      } else {
-        // ignore: use_build_context_synchronously
-        alertPopUp(context, authViewM.otpResponseModel!.data![0].reason!);
-      }
-    }
-  }
+  void sendOTP(AuthViewModel authViewM) async {}
 
   Widget _forgetPasswordForm(BuildContext context) {
     return Column(

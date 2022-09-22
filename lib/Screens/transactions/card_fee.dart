@@ -1,5 +1,5 @@
 import 'package:dtplusmerchant/Screens/transactions/card_fee_receipt.dart';
-import 'package:dtplusmerchant/provider/sale_reload_view_model.dart';
+import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/custom_list.dart';
@@ -100,7 +100,7 @@ class _CardFeeState extends State<CardFee> {
 
   Future<void> submit() async {
     var cardFeeProvider =
-        Provider.of<SaleReloadViewModel>(context, listen: false);
+        Provider.of<TransactionsProvider>(context, listen: false);
     await cardFeeProvider.cardFeePaynment(context,
         formNumber: _formNoController.text,
         numberOfCards: int.parse(_cardnumberController.text),

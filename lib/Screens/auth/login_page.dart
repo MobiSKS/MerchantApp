@@ -99,7 +99,6 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     _submitButton(authViewM),
                     SizedBox(height: screenHeight(context) * 0.07),
-                    _trackButton(),
                   ],
                 ),
               ),
@@ -251,31 +250,6 @@ class _LoginPageState extends State<LoginPage> {
           AppStrings.submit,
           style: TextStyle(
               fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
-        ),
-      ),
-    );
-  }
-
-  Widget _trackButton() {
-    return SizedBox(
-      width: screenWidth(context),
-      height: screenHeight(context) * 0.06,
-      child: TextButton(
-        onPressed: () {},
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(Colors.white),
-            foregroundColor:
-                MaterialStateProperty.all<Color>(Colors.blue.shade900),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0),
-                    side: BorderSide(color: Colors.blue.shade900)))),
-        child: Text(
-          AppStrings.trackApplicationForm,
-          style: TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w700,
-              color: Colors.blue.shade900),
         ),
       ),
     );
