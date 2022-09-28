@@ -24,7 +24,7 @@ class _EditProfileState extends State<EditProfile> {
         children: [
           header(context),
           SizedBox(height: screenHeight(context) * 0.02),
-          title(context, AppStrings.editProfile),
+          title(context, AppStrings.profile),
           SizedBox(height: screenHeight(context) * 0.06),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -109,7 +109,7 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.basicInfoBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          smallText(AppStrings.merchantprofile, fontWeight: FontWeight.normal)
+          normalText(AppStrings.merchantprofile, )
         ],
       ),
     );
@@ -133,8 +133,8 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.addressBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          smallText(AppStrings.retailOutletAddress,
-              fontWeight: FontWeight.normal)
+          normalText(AppStrings.retailOutletAddress,
+            )
         ],
       ),
     );
@@ -158,7 +158,7 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.officialDetailsBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          smallText(AppStrings.keyOfficialDetail, fontWeight: FontWeight.normal)
+          normalText(AppStrings.keyOfficialDetail,)
         ],
       ),
     );
@@ -182,12 +182,11 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.otherDetailsBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          smallText(
+          normalText(
               index == 3
                   ? AppStrings.contactPersonDetail
                   : AppStrings.otherDetails,
-              fontWeight: FontWeight.normal,
-              size: 12.0)
+              fontSize: 12.0)
         ],
       ),
     );

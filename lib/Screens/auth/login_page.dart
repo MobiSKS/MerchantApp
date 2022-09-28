@@ -1,5 +1,6 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import '../../base/base_view.dart';
@@ -115,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          headerText(AppStrings.welcomeBack),
+          semiBoldText(AppStrings.welcomeBack),
           SizedBox(height: screenHeight(context) * 0.030),
           _userNameField(),
           SizedBox(height: screenHeight(context) * 0.030),
@@ -141,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             filled: true,
         
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13),
+            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 14,fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.userName,
             fillColor: Colors.white),
       ),
@@ -172,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             filled: true,
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13),
+            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13,fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.password,
             fillColor: Colors.white),
       ),
@@ -193,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
                 });
               }),
         ),
-        smallText(AppStrings.rememberMe)
+        semiBoldText(AppStrings.rememberMe,color: Colors.black)
       ],
     );
   }
@@ -202,6 +203,7 @@ class _LoginPageState extends State<LoginPage> {
     var textStyle = const TextStyle(
         decoration: TextDecoration.underline,
         color: Colors.white,
+        fontFamily: FontFamilyHelper.sourceSansRegular,
         fontSize: 16);
     return Padding(
       padding:
@@ -251,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
         child: const Text(
           AppStrings.submit,
           style: TextStyle(
-              fontSize: 15, fontWeight: FontWeight.w700, color: Colors.white),
+              fontSize: 16, fontFamily: FontFamilyHelper.sourceSansBold, color: Colors.white),
         ),
       ),
     );

@@ -14,8 +14,8 @@ class Merchantprofile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        headerText(AppStrings.merchantprofile,
-            fontWeight: FontWeight.bold, color: Colors.black),
+        boldText(AppStrings.merchantprofile,
+       color: Colors.black),
         const SizedBox(height: 30),
         _listView(context),
       ],
@@ -54,9 +54,9 @@ class Merchantprofile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  smallText(_detail[index].question!,
-                      fontWeight: FontWeight.bold, size: 16.0),
-                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal,size:16.0)
+                  boldText(_detail[index].question!,
+                      fontSize: 16.0),
+                  normalText(_detail[index].ans!, fontSize:16.0)
                 ],
               ),
               const SizedBox(height: 10),

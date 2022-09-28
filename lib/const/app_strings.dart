@@ -119,5 +119,6 @@ class AppStrings {
   static const String results = "Results";
   static const String numberOfCards = "Number of Cards";
   static const String enterPayCode ="Enter Pay Code";
+  static const String merchantCopy= "MERCHANT COPY";
   
 }

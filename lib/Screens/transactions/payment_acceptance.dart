@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
-import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
@@ -61,14 +57,14 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
-                        headerText(AppStrings.selectProduct,
+                        boldText(AppStrings.selectProduct,
                             color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w500),
+                           ),
                         _selectProduct(context),
                         SizedBox(height: screenHeight(context) * 0.05),
-                        headerText(AppStrings.enterAmount,
+                        boldText(AppStrings.enterAmount,
                             color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w500),
+                        ),
                         _enterAmount(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.next, onTap: () {
@@ -97,9 +93,8 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                       const SizedBox(height: 20),
                       Padding(
                         padding: const EdgeInsets.only(left: 40, bottom: 20),
-                        child: headerText(AppStrings.selectType,
+                        child: boldText(AppStrings.selectType,
                             color: Colors.black,
-                            fontWeight: FontWeight.bold,
                             fontSize: 20),
                       ),
                       Divider(
@@ -133,7 +128,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                  smallText(payThrough, size: 20.0)
+                                boldText(payThrough, fontSize: 20.0,color: Colors.black)
                                 ],
                               ),
                             );

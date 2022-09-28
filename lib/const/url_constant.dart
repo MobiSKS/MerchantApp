@@ -10,6 +10,7 @@ class UrlConstant {
   static const String otpForFastTag = "Fastag/fastag_get_otp";
   static const String cardFeePayment = "transaction/card_fee_payment";
   static const String confirmFastTagOtp = "Fastag/fastag_confirm_otp";
+  static const String creditSaleOutstandingDetail ="dealercredit/get_credit_sale_outstanding_details";
 
 //==============================api_key && secret_key=================================
 

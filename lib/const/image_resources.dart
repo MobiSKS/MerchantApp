@@ -14,7 +14,7 @@ class ImageResources {
   static const String statementImage = "assets/images/statement.png";
   static const String transactionImage = "assets/images/transactions.png";
   static const String backgroundImage = "assets/images/bg.png";
-  static const String hpLogoReceipt = "assets/images/hplogoprint.png";
+  static const String hpLogoReceipt = "assets/images/hp_logo.jpg";
 
 //==================App Icon Name=========================
 

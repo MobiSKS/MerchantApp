@@ -24,22 +24,23 @@ class Contacts extends StatelessWidget{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: screenHeight(context) * 0.06),
-              headerText(AppStrings.forPetrolDieselQueries,
-                  color: Colors.black, fontWeight: FontWeight.normal),
+              normalText(AppStrings.forPetrolDieselQueries,
+                  color: Colors.black, 
+                  ),
               SizedBox(height: screenHeight(context) * 0.02),
               _contactNumber(AppStrings.forPetrolDieselCS),
               SizedBox(height: screenHeight(context) * 0.02),
               const Divider(color: Colors.blueGrey),
               SizedBox(height: screenHeight(context) * 0.02),
-              headerText(AppStrings.forHpGasQueries,
-                  color: Colors.black, fontWeight: FontWeight.normal),
+              normalText(AppStrings.forHpGasQueries,
+                  color: Colors.black, ),
               SizedBox(height: screenHeight(context) * 0.02),
               _contactNumber(AppStrings.forHPgasORLPGQCS),
               SizedBox(height: screenHeight(context) * 0.02),
               const Divider(color: Colors.blueGrey),
               SizedBox(height: screenHeight(context) * 0.02),
-              headerText(AppStrings.website,
-                  color: Colors.black, fontWeight: FontWeight.normal),
+              normalText(AppStrings.website,
+                  color: Colors.black, ),
               SizedBox(height: screenHeight(context) * 0.02),
               _contactNumber(AppStrings.hpPayLink, isURl: true),
               SizedBox(height: screenHeight(context) * 0.02),
@@ -63,8 +64,8 @@ class Contacts extends StatelessWidget{
             color: Colors.black,
           ),
           const SizedBox(width: 10),
-          headerText(url, color: Colors.black, fontWeight: FontWeight.bold)
-        ],
+          boldText(url, color: Colors.black, )
+        ]
       ),
     );
   }

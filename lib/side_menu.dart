@@ -1,7 +1,5 @@
 import 'package:dtplusmerchant/Screens/auth/forgot_password_screen.dart';
-import 'package:dtplusmerchant/Screens/notification_screen.dart';
-import 'package:dtplusmerchant/Screens/profile/edit_profile.dart';
-import 'package:dtplusmerchant/Screens/receipt.dart';
+import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
@@ -59,14 +57,14 @@ class _NavDrawerState extends State<NavDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: screenHeight(context) * 0.02),
-                      headerText(AppStrings.welcome, fontSize: 21),
+                      boldText(AppStrings.welcome, fontSize: 21),
                       SizedBox(height: screenHeight(context) * 0.01),
-                      headerText(name!,
-                          fontSize: 24, fontWeight: FontWeight.bold),
+                      boldText(name!,
+                          fontSize: 24, ),
                       SizedBox(height: screenHeight(context) * 0.01),
                       Row(
                         children: [
-                          headerText('Id : $id', fontSize: 20),
+                          boldText('Id : $id', fontSize: 20),
                           const SizedBox(width: 20),
                           GestureDetector(
                               onTap: () {},
@@ -85,7 +83,7 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           ListTile(
             leading: Image.asset(ImageResources.profileIcon, height: 23),
-            title: headerText(AppStrings.myProfile, color: Colors.black),
+            title: semiBoldText(AppStrings.myProfile, color: Colors.black),
             onTap: () {
               Navigator.push(
                 context,
@@ -96,33 +94,33 @@ class _NavDrawerState extends State<NavDrawer> {
           const Divider(color: Colors.grey),
           ListTile(
             leading: Image.asset(ImageResources.notificationIcon, height: 20),
-            title: headerText(AppStrings.notification, color: Colors.black),
+            title: boldText(AppStrings.notification, color: Colors.black,fontSize:22),
             onTap: () => {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const NotificationScreen()),
-              )
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //       builder: (context) => const NotificationScreen()),
+              // )
             },
           ),
           const Divider(color: Colors.grey),
           ListTile(
             leading:
                 Image.asset(ImageResources.changePasswortdIcon, height: 20),
-            title: headerText(AppStrings.changepassword, color: Colors.black),
+            title: semiBoldText(AppStrings.changepassword, color: Colors.black),
             onTap: () => {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        ForgotPassword(isChangePassword: true)),
+                       const ForgotPassword(isChangePassword: true)),
               )
             },
           ),
           const Divider(color: Colors.grey),
           ListTile(
             leading: Image.asset(ImageResources.logoutIcon, height: 20),
-            title: headerText(AppStrings.logout, color: Colors.black),
+            title: semiBoldText(AppStrings.logout, color: Colors.black),
             onTap: () => {Utils.logout(context)},
           ),
         ],

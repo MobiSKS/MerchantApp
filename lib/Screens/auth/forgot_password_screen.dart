@@ -79,13 +79,12 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        headerText(AppStrings.newPassword,
-            fontWeight: FontWeight.bold,
+        boldText(AppStrings.newPassword,
             color: Colors.indigo.shade900,
             fontSize: 23),
         SizedBox(height: screenHeight(context) * 0.02),
-        smallText(AppStrings.enterOTPforNewPassword,
-            color: Colors.white, align: TextAlign.start, size: 15.0),
+        normalText(AppStrings.enterOTPforNewPassword,
+            color: Colors.white, textAlign: TextAlign.start, fontSize: 15.0),
         SizedBox(height: screenHeight(context) * 0.02),
         otpTextField(context, _otpController),
         SizedBox(height: screenHeight(context) * 0.03),
@@ -111,10 +110,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               });
             },
             child:
-                smallText(AppStrings.resendOTP, color: Colors.red, size: 13.0)),
+                normalText(AppStrings.resendOTP, color: Colors.red, fontSize: 13.0)),
         Row(
           children: [
-            smallText(AppStrings.resendOTPIn, color: Colors.white, size: 13.0),
+            normalText(AppStrings.resendOTPIn, color: Colors.white, fontSize: 13.0),
             const SizedBox(width: 5),
             countDownTimer(context, 30, _countDownController)
           ],

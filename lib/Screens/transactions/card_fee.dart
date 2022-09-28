@@ -1,5 +1,6 @@
 import 'package:dtplusmerchant/Screens/transactions/card_fee_receipt.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../common/custom_list.dart';
@@ -40,11 +41,11 @@ class _CardFeeState extends State<CardFee> {
           child: Container(
             width: screenWidth(context),
             height: screenHeight(context) * 0.06,
-            color: Colors.indigo.shade200,
+            color: Colors.blue.shade100,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: headerText(AppStrings.results,
-                  color: Colors.black, fontWeight: FontWeight.w500),
+              child: boldText(AppStrings.results,
+                  color: Colors.black, ),
             ),
           ),
         ),
@@ -121,10 +122,10 @@ class _CardFeeState extends State<CardFee> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  headerText(AppStrings.cardFeeTransaction,
+                  boldText(AppStrings.cardFeeTransaction,
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                      ),
                 ],
               ),
               Divider(color: Colors.indigo.shade400),
@@ -138,13 +139,13 @@ class _CardFeeState extends State<CardFee> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText(AppStrings.formNo,
+                          boldText(AppStrings.formNo,
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText(_formNoController.text,
+                              textAlign: TextAlign.start,
+                              fontFamily: FontFamilyHelper.sourceSansRegular
+                              ),
+                          boldText(_formNoController.text,
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ],
                       ),
@@ -152,14 +153,14 @@ class _CardFeeState extends State<CardFee> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText(AppStrings.numberOfCards,
+                          normalText(AppStrings.numberOfCards,
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText(_cardnumberController.text,
+                              textAlign: TextAlign.start,
+                              ),
+                          boldText(_cardnumberController.text,
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                              ),
                         ],
                       ),
                     ],
@@ -170,14 +171,14 @@ class _CardFeeState extends State<CardFee> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText('Total Amount',
+                          semiBoldText('Total Amount',
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('₹${_totalAmount().toString()}',
+                              textAlign: TextAlign.start,
+                              ),
+                          boldText('₹${_totalAmount().toString()}',
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                              ),
                         ],
                       ),
                       const SizedBox(width: 25),

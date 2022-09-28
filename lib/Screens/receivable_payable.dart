@@ -39,8 +39,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
             },
             child: const Icon(Icons.arrow_back_ios_new,
                 color: Colors.black, size: 24)),
-        title: headerText(AppStrings.receivablePayableDetail,
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+        title: boldText(AppStrings.receivablePayableDetail,
+            color: Colors.black, fontSize: 20),
         actions: [
           IconButton(
               onPressed: () {},
@@ -63,8 +63,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
             color: Colors.indigo.shade200,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: headerText('Search Results',
-                  color: Colors.black, fontWeight: FontWeight.w500),
+              child: boldText('Search Results',
+                  color: Colors.black, ),
             ),
           ),
         ),
@@ -130,13 +130,13 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  headerText('Transaction Summary',
+                  boldText('Transaction Summary',
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                     ),
                   Row(
                     children: [
-                      smallText('View Detail', fontWeight: FontWeight.normal),
+                      normalText('View Detail', ),
                       const SizedBox(
                         width: 5,
                       ),
@@ -152,13 +152,12 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  smallText('Settlement Date',
+                  normalText('Settlement Date',
                       color: Colors.black,
-                      align: TextAlign.start,
-                      fontWeight: FontWeight.normal),
-                  headerText('25-06-2021',
+                      textAlign: TextAlign.start,
+                    ),
+                  boldText('25-06-2021',
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
                       fontSize: 16),
                   SizedBox(height: screenHeight(context) * 0.01),
                   Row(
@@ -166,28 +165,28 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText('Receivable Amount',
+                          normalText('Receivable Amount',
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('₹3000',
+                              textAlign: TextAlign.start,
+                           ),
+                          boldText('₹3000',
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                          ),
                         ],
                       ),
                       const SizedBox(width: 25),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText('Payable Amount',
+                          normalText('Payable Amount',
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('₹3000',
+                              textAlign: TextAlign.start,
+                           ),
+                          boldText('₹3000',
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                              ),
                         ],
                       ),
                     ],
@@ -214,10 +213,10 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          smallText('Batch ID: BIDI1234',
-              color: Colors.black, fontWeight: FontWeight.normal),
-          smallText('Terminal ID: TRMID123456',
-              color: Colors.black, fontWeight: FontWeight.normal),
+          normalText('Batch ID: BIDI1234',
+              color: Colors.black, ),
+          normalText('Terminal ID: TRMID123456',
+              color: Colors.black, ),
         ],
       ),
     );

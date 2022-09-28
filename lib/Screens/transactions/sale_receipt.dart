@@ -1,29 +1,37 @@
-import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
-import '../../common/share_widget.dart';
 import '../../const/injection.dart';
+import '../../model/receipt_detal.dart';
 import '../../preferences/shared_preference.dart';
 
-class SaleReceipt extends StatelessWidget {
+class SaleReceipt extends StatefulWidget {
   final SaleByTeminalResponse saleResponse;
   final String mobileNo;
   final String transType;
   final String productName;
-  SaleReceipt(
+  const SaleReceipt(
       {super.key,
       required this.saleResponse,
       required this.mobileNo,
       required this.transType,
       required this.productName});
+
+  @override
+  State<SaleReceipt> createState() => _SaleReceiptState();
+}
+
+class _SaleReceiptState extends State<SaleReceipt> {
   final _sharedPref = Injection.injector.get<SharedPref>();
+
   final ScreenshotController screenshotController = ScreenshotController();
+
   final GlobalKey _key = GlobalKey();
+  String _copyType = AppStrings.customerCopy;
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,9 +42,12 @@ class SaleReceipt extends StatelessWidget {
           children: [
             header(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            title(context, 'Sale Receipt'),
-            SizedBox(height: screenHeight(context) * 0.04),
-            _body(context)
+            receiptTitle(context, _key),
+            _body(context),
+            SizedBox(height: screenHeight(context) * 0.02),
+            customButton(context, 'Download Merchant Copy', onTap: () {
+              _downLoadMerchantCopy();
+            })
           ],
         ),
       ),
@@ -56,16 +67,19 @@ class SaleReceipt extends StatelessWidget {
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
           title: AppStrings.product,
-          value: saleResponse.data![0].productName ?? productName),
+          value:
+              widget.saleResponse.data![0].productName ?? widget.productName),
       ReceiptDetail(
-          title: AppStrings.amount, value: saleResponse.data![0].invAmt),
-      ReceiptDetail(title: AppStrings.rsp, value: saleResponse.data![0].rSP),
+          title: AppStrings.amount, value: widget.saleResponse.data![0].invAmt),
       ReceiptDetail(
-          title: AppStrings.volume, value: saleResponse.data![0].volume),
+          title: AppStrings.rsp, value: widget.saleResponse.data![0].rSP),
       ReceiptDetail(
-          title: AppStrings.balance, value: saleResponse.data![0].balance),
+          title: AppStrings.volume, value: widget.saleResponse.data![0].volume),
       ReceiptDetail(
-          title: AppStrings.txnID, value: saleResponse.data![0].refNo),
+          title: AppStrings.balance,
+          value: widget.saleResponse.data![0].balance),
+      ReceiptDetail(
+          title: AppStrings.txnID, value: widget.saleResponse.data![0].refNo),
     ];
     return Screenshot(
       controller: screenshotController,
@@ -74,50 +88,23 @@ class SaleReceipt extends StatelessWidget {
         child: Container(
           color: Colors.white,
           child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
+              padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(ImageResources.hpLogoReceipt, height: 100),
+                  receiptHeader(context,
+                      copyType: _copyType,
+                      custDetail: custDetail,
+                      outletName:
+                          widget.saleResponse.data![0].retailOutletName),
+                  receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.02),
-                  headerText(AppStrings.customerCopy,
+                  boldText('${widget.transType}(CARD)',
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(custDetail.header1!,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(custDetail.header2!,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(saleResponse.data![0].retailOutletName!,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
                       fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.02),
-                  _merchantDetail1(context, receptDetail1),
-                  SizedBox(height: screenHeight(context) * 0.04),
-                  headerText('$transType(CARD)',
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.02),
-                  _merchantDetail2(context, receptDetail2),
-                  SizedBox(height: screenHeight(context) * 0.05),
-                  headerText(custDetail.footer1!,
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  headerText(custDetail.footer2!,
-                      color: Colors.black,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 20.0),
+                  receiptDetail(context, receptDetail2),
+                  receiptFooter(context, custDetail: custDetail),
                 ],
               )),
         ),
@@ -125,96 +112,14 @@ class SaleReceipt extends StatelessWidget {
     );
   }
 
-  Widget _merchantDetail1(
-    BuildContext context,
-    List<ReceiptDetail> receptDetail1,
-  ) {
-    return CustomList(
-        list: receptDetail1,
-        itemSpace: 10,
-        child: (ReceiptDetail data, index) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
-              smallText(data.value!, size: 16.0, fontWeight: FontWeight.w400,color: Colors.blueGrey),
-            ],
-          );
-        });
+  void _downLoadMerchantCopy() {
+    setState(() {
+      _copyType = AppStrings.merchantCopy;
+    });
+    showLoader(context);
+    Future.delayed(const Duration(milliseconds: 500), () {
+      captureAndSharePng(context, _key, pop: false);
+    });
+    dismissLoader(context);
   }
-
-  Widget _merchantDetail2(
-    BuildContext context,
-    List<ReceiptDetail> receptDetail2,
-  ) {
-    return CustomList(
-        list: receptDetail2,
-        itemSpace: 10,
-        child: (ReceiptDetail data, index) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              smallText(data.title!, size: 16.0, fontWeight: FontWeight.w700),
-               smallText(data.value!, size: 16.0, fontWeight: FontWeight.w400,color: Colors.blueGrey),
-            ],
-          );
-        });
-  }
-
-  Widget title(context, String text) {
-    return Container(
-      width: screenWidth(context),
-      height: screenHeight(context) * 0.06,
-      color: Colors.indigo.shade300,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          headerText(text, fontWeight: FontWeight.w500, color: Colors.black),
-          SizedBox(width: screenWidth(context) * 0.20),
-          InkWell(
-            child: CircleAvatar(
-              backgroundColor: Colors.indigo.shade900,
-              radius: 15,
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.share_rounded,
-                    size: 20, color: Colors.indigo.shade900),
-              ),
-            ),
-            onTap: () {
-              sharePng(context, _key);
-            },
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .04,
-          ),
-          InkWell(
-            child: CircleAvatar(
-              backgroundColor: Colors.indigo.shade900,
-              radius: 15,
-              child: CircleAvatar(
-                radius: 14,
-                backgroundColor: Colors.white,
-                child: Icon(Icons.download_rounded,
-                    size: 20, color: Colors.indigo.shade900),
-              ),
-            ),
-            onTap: () {
-              captureAndSharePng(context, _key, pop: false);
-            },
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * .06,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ReceiptDetail {
-  String? title;
-  String? value;
-  ReceiptDetail({this.title, this.value});
 }

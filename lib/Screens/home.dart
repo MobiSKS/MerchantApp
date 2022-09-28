@@ -1,9 +1,11 @@
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/financials/card_balance_screen.dart';
+import 'package:dtplusmerchant/Screens/financials/credit_sale_outstanding.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import '../const/image_resources.dart';
 import '../util/uiutil.dart';
@@ -70,19 +72,16 @@ class _HomeState extends State<Home> {
                 SizedBox(height: screenHeight(context) * 0.08),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: headerText(AppStrings.financials,
-                      fontSize: 23,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                  child: boldText(AppStrings.financials,
+                      fontSize: 23, color: Colors.black),
                 ),
                 SizedBox(height: screenHeight(context) * 0.02),
                 _financialgridView(context),
                 SizedBox(height: screenHeight(context) * 0.03),
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
-                  child: headerText(AppStrings.transactions,
+                  child: boldText(AppStrings.transactions,
                       fontSize: 23,
-                      fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
                 SizedBox(height: screenHeight(context) * 0.02),
@@ -109,10 +108,12 @@ class _HomeState extends State<Home> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          headerText(Utils.outletName,
-              fontWeight: FontWeight.bold, color: Colors.black),
-          headerText('Merchant Id  ${Utils.merchantId}',
-              fontWeight: FontWeight.normal, color: Colors.black),
+          boldText(Utils.outletName, fontSize: 20, color: Colors.black),
+          const SizedBox(height: 5),
+          semiBoldText('Merchant Id  ${Utils.merchantId}',
+              fontSize: 18,
+              color: Colors.black,
+              fontFamily: FontFamilyHelper.sourceSansRegular),
         ],
       ),
     );
@@ -147,24 +148,7 @@ class _HomeState extends State<Home> {
   Widget _financialgridWidget(BuildContext context, int index) {
     return GestureDetector(
       onTap: () {
-        if (_financialOptions[index].optionName! == AppStrings.settlements) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const SettlementScreen()),
-          );
-        } else if (_financialOptions[index].optionName! ==
-            AppStrings.earningDetails) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const BatchDetails()),
-          );
-        } else if (_financialOptions[index].optionName! ==
-            AppStrings.cardBalance) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const CardBalanceScreen()),
-          );
-        }
+        _navigateToFinancialScreens(index);
       },
       child: Container(
         height: screenHeight(context) * 0.12,
@@ -183,7 +167,11 @@ class _HomeState extends State<Home> {
               Image.asset(_financialOptions[index].optionIcon!,
                   height: screenHeight(context) * 0.036),
               const SizedBox(height: 6),
-              smallText(_financialOptions[index].optionName!, size: 14.0)
+              semiBoldText(_financialOptions[index].optionName!,
+                  color: Colors.black,
+                  fontFamily: FontFamilyHelper.sourceSansBold,
+                  fontSize: 15.0,
+                  textAlign: TextAlign.center)
             ],
           ),
         ),
@@ -250,12 +238,42 @@ class _HomeState extends State<Home> {
               Image.asset(_transactionsOptions[index].optionIcon!,
                   height: screenHeight(context) * 0.038),
               const SizedBox(height: 10),
-              smallText(_transactionsOptions[index].optionName!, size: 14.0)
+                semiBoldText(_transactionsOptions[index].optionName!,
+                  color: Colors.black,
+                  fontFamily: FontFamilyHelper.sourceSansBold,
+                  fontSize: 15.0,
+                  textAlign: TextAlign.center)
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _navigateToFinancialScreens(int index) {
+    if (_financialOptions[index].optionName! == AppStrings.settlements) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SettlementScreen()),
+      );
+    } else if (_financialOptions[index].optionName! ==
+        AppStrings.earningDetails) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BatchDetails()),
+      );
+    } else if (_financialOptions[index].optionName! == AppStrings.cardBalance) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CardBalanceScreen()),
+      );
+    } else if (_financialOptions[index].optionName! ==
+        AppStrings.creditSaleOuts) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const CreditSaleOutStanding()),
+      );
+    }
   }
 }
 

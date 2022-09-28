@@ -2,6 +2,7 @@ import 'package:dtplusmerchant/Screens/home.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/side_menu.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'contacts.dart';
@@ -41,9 +42,10 @@ class _DashboardState extends State<Dashboard> {
           showUnselectedLabels: true,
           unselectedLabelStyle: const TextStyle(
               fontSize: 12.0,
-              fontWeight: FontWeight.normal,
+            fontFamily: FontFamilyHelper.sourceSansRegular,
               color: Colors.white),
           selectedLabelStyle: const TextStyle(
+             fontFamily: FontFamilyHelper.sourceSansRegular,
               fontSize: 12.0, fontWeight: FontWeight.bold, color: Colors.white),
           items: [
             BottomNavigationBarItem(
@@ -101,7 +103,7 @@ class _DashboardState extends State<Dashboard> {
               label: AppStrings.notification,
               activeIcon: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: Image.asset(ImageResources.callIcon,
+                child: Image.asset(ImageResources.notificationIcon,
                     height: 20, color: Colors.white),
               ),
             ),

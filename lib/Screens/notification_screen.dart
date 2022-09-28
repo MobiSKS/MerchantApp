@@ -5,10 +5,10 @@ import '../util/uiutil.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
-
   @override
   State<NotificationScreen> createState() => _NotificationScreenState();
 }
+
 
 class _NotificationScreenState extends State<NotificationScreen> {
   final List<Notification> _noti = [
@@ -56,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            headerText(data.date!, color: Colors.black),
+            boldText(data.date!, color: Colors.black),
           ],
         ),
         Row(
@@ -67,7 +67,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 color: Colors.red,
                 width: 2),
             const    SizedBox(width:20),
-          smallText(data.notif!)
+          normalText(data.notif!)
           ],
         )
       ],

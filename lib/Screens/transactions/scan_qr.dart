@@ -21,10 +21,9 @@ class ScanQRCode extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: screenWidth(context) * 0.60,
-                    child: headerText(AppStrings.scanQrCodeForNextStep,
+                    child: semiBoldText(AppStrings.scanQrCodeForNextStep,
                         color: Colors.blueGrey.shade300,
                         fontSize: 21,
-                        fontWeight: FontWeight.w500,
                         textAlign: TextAlign.center),
                   ),
                 ],

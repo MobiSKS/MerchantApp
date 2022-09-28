@@ -36,8 +36,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             },
             child: const Icon(Icons.arrow_back_ios_new,
                 color: Colors.black, size: 24)),
-        title: headerText(AppStrings.transactionDetails,
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+        title: boldText(AppStrings.transactionDetails,
+            color: Colors.black, fontSize: 20),
         actions: [
           IconButton(
               onPressed: () {},
@@ -60,8 +60,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             color: Colors.indigo.shade200,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: headerText('Search Results',
-                  color: Colors.black, fontWeight: FontWeight.w500),
+              child: boldText(
+                'Search Results',
+                color: Colors.black,
+              ),
             ),
           ),
         ),
@@ -130,13 +132,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  headerText('Transaction Summary',
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  boldText('Transaction Summary',
+                      color: Colors.black, fontSize: 16),
                   Row(
                     children: [
-                      smallText('View Detail', fontWeight: FontWeight.normal),
+                      normalText('View Detail'),
                       const SizedBox(
                         width: 5,
                       ),
@@ -152,23 +152,22 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  smallText('Customer Mobile no./Vehicle No./',
-                      color: Colors.black,
-                      align: TextAlign.start,
-                      fontWeight: FontWeight.normal),
-                  headerText('9998088987',
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16),
+                  normalText(
+                    'Customer Mobile no./Vehicle No./',
+                    color: Colors.black,
+                    textAlign: TextAlign.start,
+                  ),
+                  boldText('9998088987', color: Colors.black, fontSize: 16),
                   SizedBox(height: screenHeight(context) * 0.01),
-                  smallText('Amount',
-                      color: Colors.black,
-                      align: TextAlign.start,
-                      fontWeight: FontWeight.normal),
-                  headerText('₹3000',
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  normalText(
+                    'Amount',
+                    color: Colors.black,
+                  ),
+                  boldText(
+                    '₹3000',
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                   SizedBox(height: screenHeight(context) * 0.01),
                 ],
               ),
@@ -191,10 +190,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          smallText('25-06-2022',
-              color: Colors.black, fontWeight: FontWeight.normal),
-          smallText('Terminal ID: TRMID123456',
-              color: Colors.black, fontWeight: FontWeight.normal),
+          normalText(
+            '25-06-2022',
+            color: Colors.black,
+          ),
+          normalText(
+            'Terminal ID: TRMID123456',
+            color: Colors.black,
+          ),
         ],
       ),
     );

@@ -52,8 +52,8 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: screenHeight(context) * 0.05),
-              headerText('Mobile Number',
-                  color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+              semiBoldText('Mobile Number',
+                  color: Colors.grey.shade600,),
               _enterMobileNo(
                 context,
               ),
@@ -72,8 +72,8 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
               color: Colors.indigo.shade200,
               child: Padding(
                 padding: const EdgeInsets.only(left: 30, top: 15),
-                child: headerText('Card Balance Detail',
-                    color: Colors.black, fontWeight: FontWeight.w500),
+                child: semiBoldText('Card Balance Detail',
+                    color: Colors.black, ),
               ),
             ),
           ),
@@ -89,8 +89,8 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
-        headerText(AppStrings.enterOTP,
-            color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+        semiBoldText(AppStrings.enterOTP,
+            color: Colors.grey.shade600, ),
         _otpTextField(context, otpController, color: Colors.grey.shade600),
         const SizedBox(height: 10),
       ],
@@ -167,25 +167,26 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: CustomList(
             list: _cardBalanceEntity,
-            itemSpace: 15,
+          //  itemSpace: 15,
             child: (CommonList data, index) {
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      headerText(data.key!,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.black,
-                          fontSize: 16),
-                      headerText(data.value!,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                          fontSize: 16)
-                    ],
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        boldText(data.key!,
+                            color: Colors.black,
+                            fontSize: 16),
+                        boldText(data.value!,
+                            color: Colors.blueGrey,
+                            fontSize: 16)
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 5),
-                  const Divider(color: Colors.blueGrey)
+                 // const SizedBox(height: 15),
+               index != _cardBalanceEntity.length-1?   const Divider(color: Colors.blueGrey):Container()
                 ],
               );
             }));

@@ -1,49 +1,31 @@
+import 'package:dtplusmerchant/model/user_model.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:timer_count_down/timer_count_down.dart';
+import '../common/custom_list.dart';
+import '../common/download_widget.dart';
+import '../common/separator.dart';
+import '../common/share_widget.dart';
 import '../const/image_resources.dart';
+import '../model/receipt_detal.dart';
 import 'utils.dart';
 
-Widget headerText(String text,
-    {FontWeight fontWeight = FontWeight.w300,
-    Color color = Colors.white,
-    double fontSize = 18.0,
-    TextAlign textAlign = TextAlign.start}) {
-  return Text(text,
-      textAlign: textAlign,
-      style: TextStyle(
-          color: color,
-          fontSize: fontSize,
-          fontStyle: FontStyle.normal,
-          fontWeight: fontWeight));
-}
 
-Widget smallText(String text,
-    {dynamic size = 12.0,
-    Color color = Colors.black,
-    TextAlign align = TextAlign.center,
-    FontWeight fontWeight = FontWeight.bold}) {
-  return Text(text,
-      textAlign: align,
-      style: TextStyle(
-          color: color,
-          fontSize: size,
-          fontStyle: FontStyle.normal,
-          fontWeight: fontWeight));
-}
+
+
 
 Widget underlinedText(String text,
-    {Color color = Colors.black, double fontSize = 12.0}) {
+    {Color color = Colors.black, double fontSize = 14.0}) {
   return Text(text,
       style: TextStyle(
           decoration: TextDecoration.underline,
           color: color,
           fontSize: fontSize,
-          fontStyle: FontStyle.normal,
-          fontWeight: FontWeight.bold));
+          fontFamily: FontFamilyHelper.sourceSansRegular));
 }
 
 double screenWidth(BuildContext context) {
@@ -141,11 +123,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
           onTap!();
         },
         style: buttonStyle,
-        child: Text(
-          text!,
-          style: const TextStyle(
-              fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
-        ),
+        child: boldText(text!, fontSize: 20),
       ),
     ),
   );
@@ -157,8 +135,8 @@ Widget countDownTimer(BuildContext context, int seconds, controller,
     seconds: seconds,
     controller: controller,
     build: (context, double time) {
-      return smallText('${time.toInt().toString()}: 00',
-          color: color, size: 13.0);
+      return boldText('${time.toInt().toString()}: 00',
+          color: color, fontSize: 13.0);
     },
     interval: const Duration(seconds: 1),
     onFinished: () {},
@@ -179,10 +157,8 @@ Widget title(context, String text) {
   return Container(
     width: screenWidth(context),
     height: screenHeight(context) * 0.06,
-    color: Colors.indigo.shade300,
-    child: Center(
-        child:
-            headerText(text, fontWeight: FontWeight.w500, color: Colors.white)),
+    color: Colors.blue.shade100,
+    child: Center(child: boldText(text, color: Colors.black, fontSize: 22)),
   );
 }
 
@@ -249,7 +225,7 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 25),
-                    headerText(message,
+                    boldText(message,
                         fontSize: 18,
                         color: Colors.black,
                         textAlign: TextAlign.center),
@@ -356,8 +332,11 @@ AppBar normalAppBar(BuildContext context, {required String title}) {
         },
         child: const Icon(Icons.arrow_back_ios_new,
             color: Colors.black, size: 24)),
-    title: headerText(title,
-        color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
+    title: boldText(
+      title,
+      color: Colors.black,
+      fontSize: 24,
+    ),
     centerTitle: true,
     actions: [
       IconButton(
@@ -365,4 +344,147 @@ AppBar normalAppBar(BuildContext context, {required String title}) {
           icon: const Icon(Icons.notifications, color: Colors.grey, size: 26))
     ],
   );
+}
+
+Widget receiptHeader(BuildContext context,
+    {String? copyType, ObjGetMerchantDetail? custDetail, String? outletName}) {
+  return Column(
+    children: [
+      SizedBox(height: screenHeight(context) * 0.02),
+      Image.asset(ImageResources.hpLogoReceipt, height: 100),
+      SizedBox(height: screenHeight(context) * 0.015),
+      boldText(copyType!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.004),
+      boldText(custDetail!.header1!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.004),
+      boldText(custDetail.header2!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.004),
+      boldText(outletName!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.02),
+    ],
+  );
+}
+
+Widget receiptFooter(context, {ObjGetMerchantDetail? custDetail}) {
+  return Column(
+    children: [
+      SizedBox(height: screenHeight(context) * 0.020),
+      const Separator(
+        color: Colors.blueGrey,
+      ),
+      SizedBox(height: screenHeight(context) * 0.020),
+      normalText(custDetail!.footer1!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.01),
+      normalText(custDetail.footer2!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.020),
+      const Separator(
+        color: Colors.blueGrey,
+      ),
+      SizedBox(height: screenHeight(context) * 0.020),
+    ],
+  );
+}
+
+Widget receiptTitle(context, GlobalKey key) {
+  return Container(
+    width: screenWidth(context),
+    height: screenHeight(context) * 0.06,
+    color: Colors.blue.shade100,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        boldText('Receipt', color: Colors.black),
+        SizedBox(width: screenWidth(context) * 0.20),
+        InkWell(
+          child: CircleAvatar(
+            backgroundColor: Colors.indigo.shade900,
+            radius: 15,
+            child: CircleAvatar(
+              radius: 14,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.share_rounded,
+                  size: 20, color: Colors.indigo.shade900),
+            ),
+          ),
+          onTap: () {
+            sharePng(context, key);
+          },
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * .04,
+        ),
+        InkWell(
+          child: CircleAvatar(
+            backgroundColor: Colors.indigo.shade900,
+            radius: 15,
+            child: CircleAvatar(
+              radius: 14,
+              backgroundColor: Colors.white,
+              child: Icon(Icons.download_rounded,
+                  size: 20, color: Colors.indigo.shade900),
+            ),
+          ),
+          onTap: () {
+            captureAndSharePng(context, key, pop: false);
+          },
+        ),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * .06,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget receiptDetail(
+  BuildContext context,
+  List<ReceiptDetail> receptDetail1,
+) {
+  return CustomList(
+      list: receptDetail1,
+      itemSpace: 7,
+      child: (ReceiptDetail data, index) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            boldText(
+              data.title!,
+              fontSize: 16.0,
+            ),
+            boldText(data.value!, fontSize: 16.0, color: Colors.blueGrey),
+          ],
+        );
+      });
+}
+
+Widget boldText(String text,
+    {Color color = Colors.white,
+    TextAlign textAlign = TextAlign.start,
+    double fontSize = 18.0,
+    String fontFamily = FontFamilyHelper.sourceSansBold}) {
+  return Text(text,
+      textAlign: textAlign,
+      style:
+          TextStyle(color: color, fontSize: fontSize, fontFamily: fontFamily));
+}
+
+Widget semiBoldText(String text,
+    {Color color = Colors.white,
+    TextAlign textAlign = TextAlign.start,
+    double fontSize = 16.0,
+    String fontFamily = FontFamilyHelper.sourceSansSemiBold}) {
+  return Text(text,
+      textAlign: textAlign,
+      style:
+          TextStyle(color: color, fontSize: fontSize, fontFamily: fontFamily));
+}
+
+Widget normalText(String text,
+    {Color color = Colors.white,
+    TextAlign textAlign = TextAlign.start,
+    double fontSize = 14.0,
+    String fontFamily = FontFamilyHelper.sourceSansRegular}) {
+  return Text(text,
+      textAlign: textAlign,
+      style: TextStyle(color: color, fontSize: 14, fontFamily: fontFamily));
 }

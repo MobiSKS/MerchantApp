@@ -11,10 +11,10 @@ import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:timer_count_down/timer_controller.dart';
 import '../../base/base_view.dart';
-import '../../const/image_resources.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 import '../../util/uiutil.dart';
+import '../../util/utils.dart';
 import 'fastag_receipt.dart';
 
 class TypeOfSale extends StatefulWidget {
@@ -72,18 +72,17 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                 autovalidateMode: AutovalidateMode.always,
                 child: Column(
                   children: [
-                    _header(context),
+                    header(context),
                     SizedBox(height: screenHeight(context) * 0.02),
-                    _title(context),
+                    title(context, AppStrings.typeOfSale),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(height: screenHeight(context) * 0.05),
-                            headerText(AppStrings.selectPaymentType,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
+                            boldText(AppStrings.selectPaymentType,
+                                color: Colors.grey.shade600),
                             _selectPaymentType(context),
                             _payType == '505'
                                 ? _selectBank(context)
@@ -92,9 +91,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                                 ? _enterVehicleNo(context)
                                 : Container(),
                             SizedBox(height: screenHeight(context) * 0.05),
-                            headerText(AppStrings.mobileNum,
-                                color: Colors.grey.shade600,
-                                fontWeight: FontWeight.w500),
+                            boldText(
+                              AppStrings.mobileNum,
+                              color: Colors.grey.shade600,
+                            ),
                             _enterMobileNo(context),
                             _otpSent ? enterOTP(context) : Container(),
                             SizedBox(height: screenHeight(context) * 0.10),
@@ -125,11 +125,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                     : alertPopUp(context, 'Please enter otp');
           },
           style: buttonStyle,
-          child: const Text(
-            AppStrings.submit,
-            style: TextStyle(
-                fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
-          ),
+          child: boldText(AppStrings.submit, fontSize: 20, color: Colors.white),
         ),
       ),
     );
@@ -140,8 +136,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
-        headerText(AppStrings.enterOTP,
-            color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+        boldText(AppStrings.enterOTP,
+            color: Colors.grey.shade600, ),
         _otpTextField(context, paymentOtpController,
             color: Colors.grey.shade600),
         const SizedBox(height: 10),
@@ -151,7 +147,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
             underlinedText(AppStrings.resendOTP, color: Colors.grey.shade500),
             Row(
               children: [
-                smallText(AppStrings.resendOTPIn, color: Colors.grey.shade500),
+                normalText(AppStrings.resendOTPIn, color: Colors.grey.shade500),
                 const SizedBox(width: 10),
                 countDownTimer(context, 30, _timerController, color: Colors.red)
               ],
@@ -200,8 +196,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.04),
-        headerText(AppStrings.selectBank,
-            color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+        boldText(AppStrings.selectBank,
+            color: Colors.grey.shade600, ),
         _selectBankList(context),
       ],
     );
@@ -237,8 +233,8 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.05),
-        headerText('Vehicle Number',
-            color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+        boldText('Vehicle Number',
+            color: Colors.grey.shade600, ),
         SizedBox(
           width: screenWidth(context),
           child: TextFormField(
@@ -345,47 +341,6 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     );
   }
 
-  Widget _title(context) {
-    return Container(
-      width: screenWidth(context),
-      height: screenHeight(context) * 0.06,
-      color: Colors.indigo.shade300,
-      child: Center(
-          child: headerText(AppStrings.typeOfSale,
-              fontWeight: FontWeight.w500, color: Colors.black)),
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(Icons.arrow_back_ios_new,
-                      color: Colors.black, size: 24)),
-              SizedBox(width: screenWidth(context) * 0.06),
-              Image.asset(ImageResources.driveTruckPlusImage,
-                  height: screenHeight(context) * 0.032),
-            ],
-          ),
-          Row(
-            children: [
-              Image.asset(ImageResources.hpLogo,
-                  height: screenHeight(context) * 0.05),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
   Future<void> _submitPayment(TransactionsProvider transProvider) async {
     _payType == "505"
         ? await submitOTPFastTag(transProvider)
@@ -468,7 +423,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       amount: double.parse(widget.amount!),
       bankId: bankId,
       mobile: _mobileController.text,
-      invoiceDate: '2022-09-22T14:29:35.436Z',
+      invoiceDate: Utils.isoDateTimeFormat(),
       oTp: otp,
       tagId: fastTagdata!.tagId,
       txnID: fastTagdata.txnId,

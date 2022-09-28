@@ -37,8 +37,8 @@ class _ERPDetailState extends State<ERPDetail> {
             },
             child: const Icon(Icons.arrow_back_ios_new,
                 color: Colors.black, size: 24)),
-        title: headerText(AppStrings.erpDetail,
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+        title: boldText(AppStrings.erpDetail,
+            color: Colors.black,  fontSize: 20),
         actions: [
           IconButton(
               onPressed: () {},
@@ -61,8 +61,8 @@ class _ERPDetailState extends State<ERPDetail> {
             color: Colors.indigo.shade200,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: headerText(AppStrings.searchResult,
-                  color: Colors.black, fontWeight: FontWeight.w500),
+              child: boldText(AppStrings.searchResult,
+                  color: Colors.black,),
             ),
           ),
         ),
@@ -89,8 +89,8 @@ class _ERPDetailState extends State<ERPDetail> {
             Utils.selectDatePopup(context, selectedDate, _fromDateController);
           }),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _toDateController, AppStrings.toDate, showIcon: true,
-              onTap: () {
+          simpleTextField(context, _toDateController, AppStrings.toDate,
+              showIcon: true, onTap: () {
             Utils.selectDatePopup(context, selectedDate, _toDateController);
           }),
           SizedBox(height: screenHeight(context) * 0.01),
@@ -128,13 +128,14 @@ class _ERPDetailState extends State<ERPDetail> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  headerText(AppStrings.erpSummary,
+                  boldText(AppStrings.erpSummary,
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                  ),
                   Row(
                     children: [
-                      smallText(AppStrings.viewDetail, fontWeight: FontWeight.normal),
+                      normalText(AppStrings.viewDetail,
+                      ),
                       const SizedBox(
                         width: 5,
                       ),
@@ -155,13 +156,12 @@ class _ERPDetailState extends State<ERPDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText(AppStrings.settlementDate,
+                          normalText(AppStrings.settlementDate,
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('25-06-2021',
+                              textAlign: TextAlign.start,
+                      ),
+                          boldText('25-06-2021',
                               color: Colors.black,
-                              fontWeight: FontWeight.bold,
                               fontSize: 16),
                         ],
                       ),
@@ -169,14 +169,14 @@ class _ERPDetailState extends State<ERPDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText(AppStrings.sale,
+                          normalText(AppStrings.sale,
                               color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('XYZ',
+                              textAlign: TextAlign.start,
+                            ),
+                          boldText('XYZ',
                               color: Colors.black,
                               fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                             ),
                         ],
                       ),
                     ],
@@ -187,28 +187,32 @@ class _ERPDetailState extends State<ERPDetail> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText('Receivable Amount',
-                              color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('₹3000',
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                          normalText(
+                            'Receivable Amount',
+                            color: Colors.black,
+                            textAlign: TextAlign.start,
+                          ),
+                          boldText(
+                            '₹3000',
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
                         ],
                       ),
                       const SizedBox(width: 25),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          smallText('JDE Status',
-                              color: Colors.black,
-                              align: TextAlign.start,
-                              fontWeight: FontWeight.normal),
-                          headerText('ABC',
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
+                          normalText(
+                            'JDE Status',
+                            color: Colors.black,
+                            textAlign: TextAlign.start,
+                          ),
+                          boldText(
+                            'ABC',
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
                         ],
                       ),
                     ],
@@ -235,8 +239,10 @@ class _ERPDetailState extends State<ERPDetail> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          smallText('Terminal ID: TRMID123456',
-              color: Colors.black, fontWeight: FontWeight.normal),
+          normalText(
+            'Terminal ID: TRMID123456',
+            color: Colors.black,
+          ),
         ],
       ),
     );

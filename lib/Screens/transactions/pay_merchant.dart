@@ -55,9 +55,9 @@ class _PayMerchantState extends State<PayMerchant> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
-                        headerText(AppStrings.enterPayCode,
+                        boldText(AppStrings.enterPayCode,
                             color: Colors.grey.shade600,
-                            fontWeight: FontWeight.w500),
+                            ),
                         _enterpayCode(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.submit, onTap: () {

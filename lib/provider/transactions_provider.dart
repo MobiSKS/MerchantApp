@@ -70,7 +70,7 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Success']) {
         _otpResponseSale = OtpResponseSale.fromJson(response);
       } else {
-        alertPopUp(context, response['Data']['message'],
+        alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
@@ -87,7 +87,6 @@ class TransactionsProvider extends ChangeNotifier {
       String cardNum = '',
       int formFactor = 3,
       int productId = 0}) async {
-    _dio.options.headers['Authorization'] = Utils.userToken;
     showLoader(context);
     var ip = await Utils.getIp();
     Map param = {
@@ -100,7 +99,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Transtype": transType,
       "Invoiceid": "",
       "Invoicedate": Utils.isoDateTimeFormat(),
-      "Mobileno": "9582922934",
+      "Mobileno": mobileNo,
       "Productid": productId,
       "Odometerreading": "",
       "OTP": otp,
@@ -120,21 +119,21 @@ class TransactionsProvider extends ChangeNotifier {
     param.addAll(commonReqBody);
 
     try {
-      Response response =
-          await _dio.post(UrlConstant.saleByTerminal, data: param);
+      var response = await apiServices.post(UrlConstant.saleByTerminal,
+          body: param, requestHeader: commonHeader);
       dismissLoader(context);
-      if (response.statusCode == 200) {
-        _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response.data);
+      if (response['Success']) {
+        _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
         if (_saleByTeminalResponse!.internelStatusCode != 1000) {
           alertPopUp(context, _saleByTeminalResponse!.data![0].reason!);
         }
       } else {
-        alertPopUp(context, response.data['Message'],
-            doLogout: response.data['Status_Code'] == 401 ? true : false);
+        alertPopUp(context, response['Message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
-    } on DioError catch (e) {
-      return alertPopUp(context, e.response!.data!);
+    } catch (e) {
+      return alertPopUp(context, e.toString());
     }
   }
 
@@ -248,7 +247,6 @@ class TransactionsProvider extends ChangeNotifier {
       String? oTp,
       String? invoiceDate}) async {
     showLoader(context);
-
     var ip = await Utils.getIp();
     Map param = {
       "BankID": bankId,
@@ -280,7 +278,7 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Internel_Status_Code'] == 1000) {
         _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
       } else {
-        alertPopUp(context, response['Message'],
+        alertPopUp(context, response["Data"]["ResMsg"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

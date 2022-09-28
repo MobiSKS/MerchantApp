@@ -45,7 +45,7 @@ class AuthViewModel extends ChangeNotifier {
         await _sharedPref.saveBool(SharedPref.isLogin, true);
         await _sharedPref.save(SharedPref.userDetails, response.data);
       } else {
-        alertPopUp(context, 'Invalid username or Password');
+        alertPopUp(context, response.data["Message"]);
       }
     } on DioError catch (e) {
       return alertPopUp(context, e.response!.statusMessage!);

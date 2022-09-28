@@ -3,11 +3,12 @@ import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/dashboard.dart';
 import 'package:dtplusmerchant/Screens/erp_detail.dart';
 import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
-import 'package:dtplusmerchant/Screens/profile/edit_profile.dart';
+import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/Screens/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
+import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -56,6 +57,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => TransactionsProvider()),
+        ChangeNotifierProvider(create: (context) => FinancialsProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -75,9 +77,9 @@ class _MyAppState extends State<MyApp> {
           "/dashboard": (context) => const Dashboard(),
           "/typeofSale": (context) => const TypeOfSale(),
           "/editProfile": (context) => const EditProfile(),
-          "/forgotPassword": (context) => ForgotPassword(),
+          "/forgotPassword": (context) =>const ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
-          "/scanQRcode": (context) =>  const ScanQRCode(),
+          "/scanQRcode": (context) => const ScanQRCode(),
           "/transactionDetails": (context) => const TransactionDetails(),
           "/receivablePayable": (context) => const ReceivablePayable(),
           "/erpDetail": (context) => const ERPDetail(),

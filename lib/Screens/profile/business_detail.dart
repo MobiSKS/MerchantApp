@@ -15,8 +15,8 @@ class BusinessDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        headerText(AppStrings.businessDetail,
-            fontWeight: FontWeight.bold, color: Colors.black),
+        boldText(AppStrings.businessDetail,
+           color: Colors.black),
         const SizedBox(height: 20),
         _listView(context),
       ],
@@ -47,12 +47,11 @@ class BusinessDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  smallText(_detail[index].question!,
-                      fontWeight: FontWeight.bold, size: 16.0),
-                  smallText(_detail[index].ans!, fontWeight: FontWeight.normal,size:16.0)
+                  boldText(_detail[index].question!, fontSize: 16.0),
+                  boldText(_detail[index].ans!, fontSize: 16.0)
                 ],
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               const Divider(color: Colors.grey),
             ],
           );

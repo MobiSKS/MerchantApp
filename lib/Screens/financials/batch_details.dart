@@ -35,8 +35,8 @@ class _BatchDetailsState extends State<BatchDetails> {
             },
             child: const Icon(Icons.arrow_back_ios_new,
                 color: Colors.black, size: 24)),
-        title: headerText(AppStrings.batchDetails,
-            color: Colors.black, fontWeight: FontWeight.w500, fontSize: 20),
+        title: boldText(AppStrings.batchDetails,
+            color: Colors.black,  fontSize: 20),
         actions: [
           IconButton(
               onPressed: () {},
@@ -59,8 +59,8 @@ class _BatchDetailsState extends State<BatchDetails> {
             color: Colors.indigo.shade200,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: headerText(AppStrings.searchResult,
-                  color: Colors.black, fontWeight: FontWeight.w500),
+              child: boldText(AppStrings.searchResult,
+                  color: Colors.black, ),
             ),
           ),
         ),
@@ -128,14 +128,14 @@ class _BatchDetailsState extends State<BatchDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  headerText(AppStrings.batchSummary,
+                  boldText(AppStrings.batchSummary,
                       color: Colors.black,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold),
+                   ),
                   Row(
                     children: [
-                      smallText(AppStrings.viewDetail,
-                          fontWeight: FontWeight.normal),
+                      normalText(AppStrings.viewDetail,
+                         ),
                       const SizedBox(
                         width: 5,
                       ),
@@ -154,13 +154,12 @@ class _BatchDetailsState extends State<BatchDetails> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      smallText(AppStrings.batchStatus,
+                      normalText(AppStrings.batchStatus,
                           color: Colors.black,
-                          align: TextAlign.start,
-                          fontWeight: FontWeight.normal),
-                      headerText(AppStrings.status,
+                          textAlign: TextAlign.start,
+                          ),
+                      boldText(AppStrings.status,
                           color: Colors.black,
-                          fontWeight: FontWeight.bold,
                           fontSize: 16),
                     ],
                   ),
@@ -168,14 +167,14 @@ class _BatchDetailsState extends State<BatchDetails> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      smallText(AppStrings.numberOfTransaction,
+                      normalText(AppStrings.numberOfTransaction,
                           color: Colors.black,
-                          align: TextAlign.start,
-                          fontWeight: FontWeight.normal),
-                      headerText('30',
+                          textAlign: TextAlign.start,
+                          ),
+                      boldText('30',
                           color: Colors.black,
                           fontSize: 16,
-                          fontWeight: FontWeight.bold),
+                          ),
                     ],
                   ),
                   SizedBox(height: screenHeight(context) * 0.01),
@@ -200,10 +199,10 @@ class _BatchDetailsState extends State<BatchDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          smallText('${AppStrings.batchID}: BIDI123456',
-              color: Colors.black, fontWeight: FontWeight.normal),
-          smallText('${AppStrings.terminalID}: TRMID123456',
-              color: Colors.black, fontWeight: FontWeight.normal),
+          normalText('${AppStrings.batchID}: BIDI123456',
+              color: Colors.black,),
+          normalText('${AppStrings.terminalID}: TRMID123456',
+              color: Colors.black, ),
         ],
       ),
     );

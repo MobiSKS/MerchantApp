@@ -19,7 +19,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
   double columnPadding = 20;
   late int diffPayment;
   String? _selectedValuePayment;
-  String? _selectedValueSettlement;
   final List<Payment> transactions = [
     Payment(
         name: 'Ram Kumar',
@@ -182,28 +181,28 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     },
                   ),
                   const Spacer(),
-                  headerText("Payment Trends",
-                      color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+                  boldText("Payment Trends",
+                      color: Colors.grey.shade500, ),
                 ],
               ),
               const SizedBox(height: 20),
               Row(
                 children: [
-                  headerText("No of Transactions",
-                      color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+                  boldText("No of Transactions",
+                      color: Colors.grey.shade500, ),
                   const Spacer(),
-                  headerText("Total",
-                      color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+                  boldText("Total",
+                      color: Colors.grey.shade500, ),
                 ],
               ),
               const SizedBox(height: 10),
               Row(
                 children: [
-                  headerText('50',
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                  boldText('50',
+                      color: Colors.black, ),
                   const Spacer(),
-                  headerText("₹ 20,979",
-                      color: Colors.black, fontWeight: FontWeight.bold),
+                  boldText("₹ 20,979",
+                      color: Colors.black, ),
                 ],
               ),
               SizedBox(height: screenHeight(context) * 0.03),
@@ -251,23 +250,21 @@ class _SettlementScreenState extends State<SettlementScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            headerText(data.name!,
+            boldText(data.name!,
                 color: Colors.grey.shade500,
-                fontWeight: FontWeight.bold,
                 fontSize: 20.0),
             const SizedBox(height: 5),
             Row(
               children: [
                 Row(
                   children: [
-                    headerText(data.date!,
+                    boldText(data.date!,
                         color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold,
                         fontSize: 16.0),
                     const SizedBox(width: 5),
-                    headerText(data.time!,
+                    boldText(data.time!,
                         color: Colors.grey.shade500,
-                        fontWeight: FontWeight.bold),
+                       ),
                   ],
                 ),
               ],
@@ -275,11 +272,11 @@ class _SettlementScreenState extends State<SettlementScreen> {
           ]),
           Row(
             children: [
-              headerText('₹ ${data.amount!}',
-                  color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+              boldText('₹ ${data.amount!}',
+                  color: Colors.grey.shade500, ),
               const SizedBox(width: 20),
-              headerText(data.payMode!,
-                  color: Colors.grey.shade500, fontWeight: FontWeight.bold),
+              boldText(data.payMode!,
+                  color: Colors.grey.shade500, ),
             ],
           )
         ],
@@ -294,8 +291,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
       color: Colors.indigo.shade200,
       child: Padding(
         padding: const EdgeInsets.only(left: 30, top: 15),
-        child: headerText('Complete Details',
-            color: Colors.black, fontWeight: FontWeight.w500),
+        child: semiBoldText('Complete Details',
+            color: Colors.black, ),
       ),
     );
   }
