@@ -25,7 +25,7 @@ class BusinessDetail extends StatelessWidget {
 
   Widget _listView(BuildContext context) {
     var data = _sharedPref.user!.data;
-    final List<MerchantDetail> _detail = [
+    final List<MerchantDetail> detail = [
       MerchantDetail(
           question: 'Zonal Office',
           ans: data!.objOutletDetails![0].zonalOfficeName),
@@ -40,15 +40,15 @@ class BusinessDetail extends StatelessWidget {
     return SizedBox(
       height: screenHeight(context) * 0.50,
       child: ListView.builder(
-        itemCount: _detail.length,
+        itemCount: detail.length,
         itemBuilder: (context, index) {
           return Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(_detail[index].question!, fontSize: 16.0),
-                  boldText(_detail[index].ans!, fontSize: 16.0)
+                  boldText(detail[index].question!, fontSize: 16.0),
+                  boldText(detail[index].ans!, fontSize: 16.0)
                 ],
               ),
               const SizedBox(height: 10),

@@ -373,7 +373,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
 
   Future<void> sendOTPforFastTag(TransactionsProvider saleReloadViewM) async {
     if (validateMobile() && _payType.isNotEmpty) {
-      var resp = await saleReloadViewM.generateOtpFastTAG(context,
+       await saleReloadViewM.generateOtpFastTAG(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           bankId: bankId,

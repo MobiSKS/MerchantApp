@@ -5,8 +5,6 @@ import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 
-import 'const/injection.dart';
-import 'preferences/shared_preference.dart';
 import 'util/utils.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -17,7 +15,6 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
 
   String? name;
   String? id;

@@ -22,7 +22,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
   final _countDownController = CountdownController();
-  bool _otpSent = false;
+ final  bool _otpSent = false;
   final _monbileController = TextEditingController();
 
   @override

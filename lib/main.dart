@@ -17,7 +17,6 @@ import 'Screens/auth/login_page.dart';
 import 'const/injection.dart';
 import 'preferences/shared_preference.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import 'provider/transactions_provider.dart';
 
 Future<void> main() async {

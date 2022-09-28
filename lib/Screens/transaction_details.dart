@@ -3,7 +3,6 @@ import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 import '../util/utils.dart';
 

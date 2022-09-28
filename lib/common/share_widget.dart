@@ -22,6 +22,6 @@ Future<void> sharePng(BuildContext context, GlobalKey key,
   log("local file full path $fullPath");
   File file = File(fullPath);
   await file.writeAsBytes(pngBytes);
-  final result = await ImageGallerySaver.saveImage(pngBytes);
+   await ImageGallerySaver.saveImage(pngBytes);
   await Share.shareFiles([fullPath], text: "");
 }

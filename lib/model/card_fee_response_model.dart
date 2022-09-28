@@ -5,7 +5,6 @@ class CardFeeResponseModel {
   String? message;
   String? methodName;
   List<Data>? data;
-  Null? modelState;
 
   CardFeeResponseModel(
       {this.success,
@@ -14,7 +13,7 @@ class CardFeeResponseModel {
       this.message,
       this.methodName,
       this.data,
-      this.modelState});
+      });
 
   CardFeeResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
@@ -28,20 +27,18 @@ class CardFeeResponseModel {
         data!.add( Data.fromJson(v));
       });
     }
-    modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
     return data;
   }
 }
@@ -60,10 +57,10 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
-    data['RefNo'] = this.refNo;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['RefNo'] = refNo;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

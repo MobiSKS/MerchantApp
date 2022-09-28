@@ -5,7 +5,6 @@ class OtpResponseSale {
   String? message;
   String? methodName;
   List<Data>? data;
-  Null? modelState;
 
   OtpResponseSale(
       {this.success,
@@ -14,7 +13,7 @@ class OtpResponseSale {
       this.message,
       this.methodName,
       this.data,
-      this.modelState});
+      });
 
   OtpResponseSale.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
@@ -25,23 +24,21 @@ class OtpResponseSale {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
-    modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
     return data;
   }
 }
@@ -75,14 +72,14 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['OTP'] = this.oTP;
-    data['RetailOutletName'] = this.retailOutletName;
-    data['VechileNo'] = this.vechileNo;
-    data['Address'] = this.address;
-    data['MobileNo'] = this.mobileNo;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['OTP'] = oTP;
+    data['RetailOutletName'] = retailOutletName;
+    data['VechileNo'] = vechileNo;
+    data['Address'] = address;
+    data['MobileNo'] = mobileNo;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

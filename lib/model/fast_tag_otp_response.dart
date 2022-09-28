@@ -21,16 +21,16 @@ class FastTagOTPResponse {
     internelStatusCode = json['Internel_Status_Code'];
     message = json['Message'];
     methodName = json['Method_Name'];
-    data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
+    data = json['Data'] != null ? Data.fromJson(json['Data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.toJson();
     }
@@ -79,18 +79,18 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ResCode'] = this.resCode;
-    data['ResCd'] = this.resCd;
-    data['ResMsg'] = this.resMsg;
-    data['TxnId'] = this.txnId;
-    data['txnTime'] = this.txnTime;
-    data['TagId'] = this.tagId;
-    data['MobileNo'] = this.mobileNo;
-    data['VRN'] = this.vRN;
-    data['TxnNo'] = this.txnNo;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ResCode'] = resCode;
+    data['ResCd'] = resCd;
+    data['ResMsg'] = resMsg;
+    data['TxnId'] = txnId;
+    data['txnTime'] = txnTime;
+    data['TagId'] = tagId;
+    data['MobileNo'] = mobileNo;
+    data['VRN'] = vRN;
+    data['TxnNo'] = txnNo;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

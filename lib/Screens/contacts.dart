@@ -1,5 +1,6 @@
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
+// ignore: library_prefixes
 import 'package:url_launcher/url_launcher.dart' as urlLauncher;
 import '../const/app_strings.dart';
 import '../const/image_resources.dart';

@@ -3,8 +3,6 @@ import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-
 import '../../base/base_view.dart';
 import '../../const/app_strings.dart';
 

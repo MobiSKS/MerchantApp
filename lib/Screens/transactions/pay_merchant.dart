@@ -4,8 +4,6 @@ import 'package:dtplusmerchant/Screens/transactions/paycode_receipt.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
-import '../../const/injection.dart';
-import '../../preferences/shared_preference.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
 
@@ -17,7 +15,6 @@ class PayMerchant extends StatefulWidget {
 }
 
 class _PayMerchantState extends State<PayMerchant> {
-  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final _payCodeController = TextEditingController();

@@ -8,7 +8,7 @@ class BaseView<T extends ChangeNotifier> extends StatefulWidget {
   final Widget Function(BuildContext context, T value, Widget? child) builder;
   final Function(T)? onModelReady;
 
-  const BaseView({required this.builder, this.onModelReady});
+  const BaseView({super.key, required this.builder, this.onModelReady});
 
   @override
   _BaseViewState<T> createState() => _BaseViewState<T>();

@@ -1,11 +1,8 @@
-import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
 import 'package:flutter/material.dart';
-import '../../const/injection.dart';
 import '../const/common_param.dart';
 import '../const/url_constant.dart';
-import '../preferences/shared_preference.dart';
 import '../util/uiutil.dart';
 import '../util/utils.dart';
 

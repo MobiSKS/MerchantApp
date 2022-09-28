@@ -120,5 +120,6 @@ class AppStrings {
   static const String numberOfCards = "Number of Cards";
   static const String enterPayCode ="Enter Pay Code";
   static const String merchantCopy= "MERCHANT COPY";
+  static const String merchantId ="Merchant Id";
   
 }

@@ -9,8 +9,6 @@ import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
-import '../../const/injection.dart';
-import '../../preferences/shared_preference.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
 
@@ -22,7 +20,6 @@ class CreditSaleComplete extends StatefulWidget {
 }
 
 class _CreditSaleComplete extends State<CreditSaleComplete> {
-  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool otpReceived = false;
   final _cardNumberController = TextEditingController();

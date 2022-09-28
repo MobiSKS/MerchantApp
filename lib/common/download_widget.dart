@@ -38,6 +38,7 @@ Future<void> downloadScreenshot(GlobalKey<State<StatefulWidget>> key) async {
   await file.writeAsBytes(pngBytes);
 
   final result = await ImageGallerySaver.saveImage(pngBytes);
+  log(result);
  
 
   log("File Saved to Gallery");

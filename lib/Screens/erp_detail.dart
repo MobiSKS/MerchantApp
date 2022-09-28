@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-
 import '../common/custom_list.dart';
 import '../const/app_strings.dart';
 import '../const/image_resources.dart';
@@ -15,7 +13,6 @@ class ERPDetail extends StatefulWidget {
 }
 
 class _ERPDetailState extends State<ERPDetail> {
-  @override
   List<String> transactionList = ['1', '2', '3', '4'];
   DateTime selectedDate = DateTime.now();
   final TextEditingController _terminalController = TextEditingController();

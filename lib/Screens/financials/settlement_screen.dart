@@ -218,12 +218,10 @@ class _SettlementScreenState extends State<SettlementScreen> {
         ),
         SizedBox(height: screenHeight(context) * 0.03),
         transactions.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.all(38.0),
-                child: Container(
-                  child: const Center(
-                    child: Text("No Transactions Found"),
-                  ),
+            ?const Padding(
+                padding:  EdgeInsets.all(38.0),
+                child:  Center(
+                  child: Text("No Transactions Found"),
                 ),
               )
             : Expanded(

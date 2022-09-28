@@ -1,20 +1,16 @@
-import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/model/paycode_response_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
-import '../../common/separator.dart';
-import '../../common/share_widget.dart';
 import '../../const/injection.dart';
 import '../../model/receipt_detal.dart';
 import '../../preferences/shared_preference.dart';
 
 class PayCodeReceipt extends StatefulWidget {
   final PaycodeResponseModel payCodeResp;
-  PayCodeReceipt({super.key, required this.payCodeResp});
+  const PayCodeReceipt({super.key, required this.payCodeResp});
 
   @override
   State<PayCodeReceipt> createState() => _PayCodeReceiptState();

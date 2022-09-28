@@ -5,7 +5,6 @@ class CreditOutstandingModel {
   String? message;
   String? methodName;
   Data? data;
-  Null? modelState;
 
   CreditOutstandingModel(
       {this.success,
@@ -14,7 +13,7 @@ class CreditOutstandingModel {
       this.message,
       this.methodName,
       this.data,
-      this.modelState});
+   });
 
   CreditOutstandingModel.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
@@ -22,21 +21,19 @@ class CreditOutstandingModel {
     internelStatusCode = json['Internel_Status_Code'];
     message = json['Message'];
     methodName = json['Method_Name'];
-    data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
-    modelState = json['Model_State'];
+    data = json['Data'] != null ?  Data.fromJson(json['Data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.toJson();
     }
-    data['Model_State'] = this.modelState;
     return data;
   }
 }
@@ -51,27 +48,27 @@ class Data {
     if (json['MerchantDetails'] != null) {
       merchantDetails = <MerchantDetails>[];
       json['MerchantDetails'].forEach((v) {
-        merchantDetails!.add(new MerchantDetails.fromJson(v));
+        merchantDetails!.add(MerchantDetails.fromJson(v));
       });
     }
     if (json['MerchantCustomerMappedDetails'] != null) {
       merchantCustomerMappedDetails = <MerchantCustomerMappedDetails>[];
       json['MerchantCustomerMappedDetails'].forEach((v) {
         merchantCustomerMappedDetails!
-            .add(new MerchantCustomerMappedDetails.fromJson(v));
+            .add( MerchantCustomerMappedDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.merchantDetails != null) {
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    if (merchantDetails != null) {
       data['MerchantDetails'] =
-          this.merchantDetails!.map((v) => v.toJson()).toList();
+          merchantDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.merchantCustomerMappedDetails != null) {
+    if (merchantCustomerMappedDetails != null) {
       data['MerchantCustomerMappedDetails'] =
-          this.merchantCustomerMappedDetails!.map((v) => v.toJson()).toList();
+          merchantCustomerMappedDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -103,13 +100,13 @@ class MerchantDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MerchantId'] = this.merchantId;
-    data['RetailOutletName'] = this.retailOutletName;
-    data['RegionalOfficeName'] = this.regionalOfficeName;
-    data['ZonalOfficeName'] = this.zonalOfficeName;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MerchantId'] = merchantId;
+    data['RetailOutletName'] = retailOutletName;
+    data['RegionalOfficeName'] = regionalOfficeName;
+    data['ZonalOfficeName'] = zonalOfficeName;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }
@@ -140,13 +137,13 @@ class MerchantCustomerMappedDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['CustomerId'] = this.customerId;
-    data['IndividualOrgName'] = this.individualOrgName;
-    data['Outstanding'] = this.outstanding;
-    data['CreditCloseLimit'] = this.creditCloseLimit;
-    data['LimitBalance'] = this.limitBalance;
-    data['CCMSBalanceStatus'] = this.cCMSBalanceStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['CustomerId'] = customerId;
+    data['IndividualOrgName'] = individualOrgName;
+    data['Outstanding'] = outstanding;
+    data['CreditCloseLimit'] = creditCloseLimit;
+    data['LimitBalance'] = limitBalance;
+    data['CCMSBalanceStatus'] = cCMSBalanceStatus;
     return data;
   }
 }

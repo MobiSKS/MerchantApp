@@ -5,7 +5,6 @@ class UserModel {
   String? message;
   String? methodName;
   Data? data;
-  Null? modelState;
 
   UserModel(
       {this.success,
@@ -14,7 +13,7 @@ class UserModel {
       this.message,
       this.methodName,
       this.data,
-      this.modelState});
+      });
 
   UserModel.fromJson(Map<dynamic, dynamic> json) {
     success = json['Success'];
@@ -23,20 +22,18 @@ class UserModel {
     message = json['Message'];
     methodName = json['Method_Name'];
     data = json['Data'] != null ? Data.fromJson(json['Data']) : null;
-    modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.toJson();
     }
-    data['Model_State'] = this.modelState;
     return data;
   }
 }
@@ -76,7 +73,7 @@ class Data {
       objGetParentTransTypeDetail = <ObjGetParentTransTypeDetail>[];
       json['ObjGetParentTransTypeDetail'].forEach((v) {
         objGetParentTransTypeDetail!
-            .add(new ObjGetParentTransTypeDetail.fromJson(v));
+            .add(ObjGetParentTransTypeDetail.fromJson(v));
       });
     }
     if (json['ObjBanks'] != null) {
@@ -88,47 +85,47 @@ class Data {
     if (json['ObjFormFactors'] != null) {
       objFormFactors = <ObjFormFactors>[];
       json['ObjFormFactors'].forEach((v) {
-        objFormFactors!.add(new ObjFormFactors.fromJson(v));
+        objFormFactors!.add(ObjFormFactors.fromJson(v));
       });
     }
     if (json['ObjProduct'] != null) {
       objProduct = <ObjProduct>[];
       json['ObjProduct'].forEach((v) {
-        objProduct!.add(new ObjProduct.fromJson(v));
+        objProduct!.add(ObjProduct.fromJson(v));
       });
     }
     if (json['ObjOutletDetails'] != null) {
       objOutletDetails = <ObjOutletDetails>[];
       json['ObjOutletDetails'].forEach((v) {
-        objOutletDetails!.add(new ObjOutletDetails.fromJson(v));
+        objOutletDetails!.add(ObjOutletDetails.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.objGetMerchantDetail != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (objGetMerchantDetail != null) {
       data['ObjGetMerchantDetail'] =
-          this.objGetMerchantDetail!.map((v) => v.toJson()).toList();
+          objGetMerchantDetail!.map((v) => v.toJson()).toList();
     }
-    if (this.objGetTransTypeDetail != null) {
+    if (objGetTransTypeDetail != null) {
       data['ObjGetTransTypeDetail'] =
-          this.objGetTransTypeDetail!.map((v) => v.toJson()).toList();
+          objGetTransTypeDetail!.map((v) => v.toJson()).toList();
     }
 
-    if (this.objBanks != null) {
-      data['ObjBanks'] = this.objBanks!.map((v) => v.toJson()).toList();
+    if (objBanks != null) {
+      data['ObjBanks'] = objBanks!.map((v) => v.toJson()).toList();
     }
-    if (this.objFormFactors != null) {
+    if (objFormFactors != null) {
       data['ObjFormFactors'] =
-          this.objFormFactors!.map((v) => v.toJson()).toList();
+          objFormFactors!.map((v) => v.toJson()).toList();
     }
-    if (this.objProduct != null) {
-      data['ObjProduct'] = this.objProduct!.map((v) => v.toJson()).toList();
+    if (objProduct != null) {
+      data['ObjProduct'] = objProduct!.map((v) => v.toJson()).toList();
     }
-    if (this.objOutletDetails != null) {
+    if (objOutletDetails != null) {
       data['ObjOutletDetails'] =
-          this.objOutletDetails!.map((v) => v.toJson()).toList();
+          objOutletDetails!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -211,30 +208,30 @@ class ObjGetMerchantDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Token'] = this.token;
-    data['MerchantId'] = this.merchantId;
-    data['TerminalId'] = this.terminalId;
-    data['MerchantName'] = this.merchantName;
-    data['MerchantLocation'] = this.merchantLocation;
-    data['Header1'] = this.header1;
-    data['Header2'] = this.header2;
-    data['Footer1'] = this.footer1;
-    data['Footer2'] = this.footer2;
-    data['BatchSaleLimit'] = this.batchSaleLimit;
-    data['BatchReloadLimit'] = this.batchReloadLimit;
-    data['BatchSize'] = this.batchSize;
-    data['SettlementTime'] = this.settlementTime;
-    data['RemoteDownload'] = this.remoteDownload;
-    data['URL'] = this.uRL;
-    data['BatchNo'] = this.batchNo;
-    data['CardFeeAmount'] = this.cardFeeAmount;
-    data['StatusId'] = this.statusId;
-    data['StatusName'] = this.statusName;
-    data['EmailId'] = this.emailId;
-    data['MobileNo'] = this.mobileNo;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Token'] = token;
+    data['MerchantId'] = merchantId;
+    data['TerminalId'] = terminalId;
+    data['MerchantName'] = merchantName;
+    data['MerchantLocation'] = merchantLocation;
+    data['Header1'] = header1;
+    data['Header2'] = header2;
+    data['Footer1'] = footer1;
+    data['Footer2'] = footer2;
+    data['BatchSaleLimit'] = batchSaleLimit;
+    data['BatchReloadLimit'] = batchReloadLimit;
+    data['BatchSize'] = batchSize;
+    data['SettlementTime'] = settlementTime;
+    data['RemoteDownload'] = remoteDownload;
+    data['URL'] = uRL;
+    data['BatchNo'] = batchNo;
+    data['CardFeeAmount'] = cardFeeAmount;
+    data['StatusId'] = statusId;
+    data['StatusName'] = statusName;
+    data['EmailId'] = emailId;
+    data['MobileNo'] = mobileNo;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }
@@ -280,18 +277,18 @@ class ObjGetTransTypeDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['SerialNo'] = this.serialNo;
-    data['Type'] = this.type;
-    data['TransType'] = this.transType;
-    data['TransName'] = this.transName;
-    data['MaxVal'] = this.maxVal;
-    data['MinVal'] = this.minVal;
-    data['ServiceStatus'] = this.serviceStatus;
-    data['Carded'] = this.carded;
-    data['Cardless'] = this.cardless;
-    data['NonCarded'] = this.nonCarded;
-    data['ParentId'] = this.parentId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['SerialNo'] = serialNo;
+    data['Type'] = type;
+    data['TransType'] = transType;
+    data['TransName'] = transName;
+    data['MaxVal'] = maxVal;
+    data['MinVal'] = minVal;
+    data['ServiceStatus'] = serviceStatus;
+    data['Carded'] = carded;
+    data['Cardless'] = cardless;
+    data['NonCarded'] = nonCarded;
+    data['ParentId'] = parentId;
     return data;
   }
 }
@@ -337,18 +334,18 @@ class ObjGetParentTransTypeDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['SerialNo'] = this.serialNo;
-    data['Type'] = this.type;
-    data['TransType'] = this.transType;
-    data['TransName'] = this.transName;
-    data['MaxVal'] = this.maxVal;
-    data['MinVal'] = this.minVal;
-    data['ServiceStatus'] = this.serviceStatus;
-    data['Carded'] = this.carded;
-    data['Cardless'] = this.cardless;
-    data['NonCarded'] = this.nonCarded;
-    data['ParentId'] = this.parentId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['SerialNo'] = serialNo;
+    data['Type'] = type;
+    data['TransType'] = transType;
+    data['TransName'] = transName;
+    data['MaxVal'] = maxVal;
+    data['MinVal'] = minVal;
+    data['ServiceStatus'] = serviceStatus;
+    data['Carded'] = carded;
+    data['Cardless'] = cardless;
+    data['NonCarded'] = nonCarded;
+    data['ParentId'] = parentId;
     return data;
   }
 }
@@ -365,9 +362,9 @@ class ObjBanks {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['FastagId'] = this.fastagId;
-    data['FastagName'] = this.fastagName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['FastagId'] = fastagId;
+    data['FastagName'] = fastagName;
     return data;
   }
 }
@@ -384,9 +381,9 @@ class ObjFormFactors {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['FormFactorId'] = this.formFactorId;
-    data['FormFactorName'] = this.formFactorName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['FormFactorId'] = formFactorId;
+    data['FormFactorName'] = formFactorName;
     return data;
   }
 }
@@ -405,10 +402,10 @@ class ObjProduct {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['ProductId'] = this.productId;
-    data['ProductName'] = this.productName;
-    data['ProductStatus'] = this.productStatus;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['ProductId'] = productId;
+    data['ProductName'] = productName;
+    data['ProductStatus'] = productStatus;
     return data;
   }
 }
@@ -422,7 +419,7 @@ class ObjOutletDetails {
   String? retailOutletAddress2;
   String? retailOutletAddress3;
   String? retailOutletPhoneNumber;
-  Null? gSTNumber;
+  String? gSTNumber;
   String? retailOutletCity;
   String? retailOutletDistrictId;
   String? retailOutletPinNumber;
@@ -472,24 +469,24 @@ class ObjOutletDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['OutletCategoryName'] = this.outletCategoryName;
-    data['MerchantTypeName'] = this.merchantTypeName;
-    data['EmailId'] = this.emailId;
-    data['MobileNo'] = this.mobileNo;
-    data['RetailOutletAddress1'] = this.retailOutletAddress1;
-    data['RetailOutletAddress2'] = this.retailOutletAddress2;
-    data['RetailOutletAddress3'] = this.retailOutletAddress3;
-    data['RetailOutletPhoneNumber'] = this.retailOutletPhoneNumber;
-    data['GSTNumber'] = this.gSTNumber;
-    data['RetailOutletCity'] = this.retailOutletCity;
-    data['RetailOutletDistrictId'] = this.retailOutletDistrictId;
-    data['RetailOutletPinNumber'] = this.retailOutletPinNumber;
-    data['RetailOutletName'] = this.retailOutletName;
-    data['ZonalOfficeName'] = this.zonalOfficeName;
-    data['RegionalOfficeName'] = this.regionalOfficeName;
-    data['ErpCode'] = this.erpCode;
-    data['SalesArea'] = this.salesArea;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['OutletCategoryName'] = outletCategoryName;
+    data['MerchantTypeName'] = merchantTypeName;
+    data['EmailId'] = emailId;
+    data['MobileNo'] = mobileNo;
+    data['RetailOutletAddress1'] = retailOutletAddress1;
+    data['RetailOutletAddress2'] = retailOutletAddress2;
+    data['RetailOutletAddress3'] = retailOutletAddress3;
+    data['RetailOutletPhoneNumber'] = retailOutletPhoneNumber;
+    data['GSTNumber'] = gSTNumber;
+    data['RetailOutletCity'] = retailOutletCity;
+    data['RetailOutletDistrictId'] = retailOutletDistrictId;
+    data['RetailOutletPinNumber'] = retailOutletPinNumber;
+    data['RetailOutletName'] = retailOutletName;
+    data['ZonalOfficeName'] = zonalOfficeName;
+    data['RegionalOfficeName'] = regionalOfficeName;
+    data['ErpCode'] = erpCode;
+    data['SalesArea'] = salesArea;
     return data;
   }
 }

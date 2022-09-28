@@ -16,7 +16,7 @@ class CardBalanceScreen extends StatefulWidget {
 }
 
 class _CardBalanceScreenState extends State<CardBalanceScreen> {
-  bool _otpReceived = false;
+ final  bool _otpReceived = false;
   final _mobileController = TextEditingController();
   final otpController = OtpFieldController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -153,7 +153,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   }
 
   Widget _cardBalancedetail(BuildContext context) {
-    List<CommonList> _cardBalanceEntity = [
+    List<CommonList> cardBalanceEntity = [
       CommonList(key: 'Date', value: '22/09/2022'),
       CommonList(key: 'Time', value: '2:10 PM'),
       CommonList(key: 'Monthly Limit', value: 'Rs 10000'),
@@ -166,7 +166,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: CustomList(
-            list: _cardBalanceEntity,
+            list: cardBalanceEntity,
           //  itemSpace: 15,
             child: (CommonList data, index) {
               return Column(
@@ -186,7 +186,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
                     ),
                   ),
                  // const SizedBox(height: 15),
-               index != _cardBalanceEntity.length-1?   const Divider(color: Colors.blueGrey):Container()
+               index != cardBalanceEntity.length-1?   const Divider(color: Colors.blueGrey):Container()
                 ],
               );
             }));

@@ -110,7 +110,7 @@ class _HomeState extends State<Home> {
         children: [
           boldText(Utils.outletName, fontSize: 20, color: Colors.black),
           const SizedBox(height: 5),
-          semiBoldText('Merchant Id  ${Utils.merchantId}',
+          semiBoldText('${AppStrings.merchantId}  ${Utils.merchantId}',
               fontSize: 18,
               color: Colors.black,
               fontFamily: FontFamilyHelper.sourceSansRegular),
