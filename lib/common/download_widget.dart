@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-
+                  
 Future<void> captureAndSharePng(BuildContext context, GlobalKey key,
     {bool pop = true,
     String message = "Receipt Downloaded Successfully"}) async {
@@ -38,7 +38,7 @@ Future<void> downloadScreenshot(GlobalKey<State<StatefulWidget>> key) async {
   await file.writeAsBytes(pngBytes);
 
   final result = await ImageGallerySaver.saveImage(pngBytes);
-  log(result);
+  log(result.toString());
  
 
   log("File Saved to Gallery");

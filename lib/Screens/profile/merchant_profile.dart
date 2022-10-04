@@ -15,12 +15,14 @@ class Merchantprofile extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         boldText(AppStrings.merchantprofile,
-       color: Colors.black),
+       color: Colors.black, fontSize: 22.0,),
         const SizedBox(height: 30),
         _listView(context),
       ],
     );
   }
+
+  
 
   Widget _listView(BuildContext context) {
     var data = _sharedPref.user!.data!;
@@ -55,8 +57,8 @@ class Merchantprofile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   boldText(detail[index].question!,
-                      fontSize: 16.0),
-                  normalText(detail[index].ans!, fontSize:16.0)
+                      fontSize: 20.0,),
+                  semiBoldText(detail[index].ans!, fontSize:18.0)
                 ],
               ),
               const SizedBox(height: 10),

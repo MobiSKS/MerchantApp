@@ -5,8 +5,9 @@
         android:label="dtplusmerchant"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:installLocation="internalOnly" 
         android:allowBackup="false"
-        android:fullBackupContent="false">
+        android:fullBackupOnly="false">
        
         <activity
             android:name=".MainActivity"

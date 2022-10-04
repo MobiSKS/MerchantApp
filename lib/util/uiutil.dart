@@ -14,10 +14,6 @@ import '../const/image_resources.dart';
 import '../model/receipt_detal.dart';
 import 'utils.dart';
 
-
-
-
-
 Widget underlinedText(String text,
     {Color color = Colors.black, double fontSize = 14.0}) {
   return Text(text,
@@ -25,7 +21,7 @@ Widget underlinedText(String text,
           decoration: TextDecoration.underline,
           color: color,
           fontSize: fontSize,
-          fontFamily: FontFamilyHelper.sourceSansRegular));
+          fontFamily: FontFamilyHelper.sourceSansSemiBold));
 }
 
 double screenWidth(BuildContext context) {
@@ -123,7 +119,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
           onTap!();
         },
         style: buttonStyle,
-        child: boldText(text!, fontSize: 20),
+        child: boldText(text!, fontSize: 22, color: Colors.white),
       ),
     ),
   );
@@ -393,7 +389,7 @@ Widget receiptTitle(context, GlobalKey key) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        boldText('Receipt', color: Colors.black),
+        boldText('Receipt', color: Colors.black, fontSize: 22),
         SizedBox(width: screenWidth(context) * 0.20),
         InkWell(
           child: CircleAvatar(
@@ -447,20 +443,17 @@ Widget receiptDetail(
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            boldText(
-              data.title!,
-              fontSize: 16.0,
-            ),
-            boldText(data.value!, fontSize: 16.0, color: Colors.blueGrey),
+            boldText(data.title!, fontSize: 18.0),
+            boldText(data.value!, fontSize: 18.0, color: Colors.blueGrey),
           ],
         );
       });
 }
 
 Widget boldText(String text,
-    {Color color = Colors.white,
+    {Color color = Colors.black,
     TextAlign textAlign = TextAlign.start,
-    double fontSize = 18.0,
+    double fontSize = 20.0,
     String fontFamily = FontFamilyHelper.sourceSansBold}) {
   return Text(text,
       textAlign: textAlign,
@@ -469,9 +462,9 @@ Widget boldText(String text,
 }
 
 Widget semiBoldText(String text,
-    {Color color = Colors.white,
+    {Color color = Colors.black,
     TextAlign textAlign = TextAlign.start,
-    double fontSize = 16.0,
+    double fontSize = 18.0,
     String fontFamily = FontFamilyHelper.sourceSansSemiBold}) {
   return Text(text,
       textAlign: textAlign,
@@ -480,11 +473,48 @@ Widget semiBoldText(String text,
 }
 
 Widget normalText(String text,
-    {Color color = Colors.white,
+    {Color color = Colors.black,
     TextAlign textAlign = TextAlign.start,
-    double fontSize = 14.0,
+    double fontSize = 18.0,
     String fontFamily = FontFamilyHelper.sourceSansRegular}) {
   return Text(text,
       textAlign: textAlign,
-      style: TextStyle(color: color, fontSize: 14, fontFamily: fontFamily));
+      style:
+          TextStyle(color: color, fontSize: fontSize, fontFamily: fontFamily));
+}
+
+Widget shareButton() {
+  return InkWell(
+    child: CircleAvatar(
+      backgroundColor: Colors.indigo.shade900,
+      radius: 15,
+      child: CircleAvatar(
+        radius: 14,
+        backgroundColor: Colors.white,
+        child:
+            Icon(Icons.share_rounded, size: 20, color: Colors.indigo.shade900),
+      ),
+    ),
+    onTap: () {
+      //  sharePng(context, key);
+    },
+  );
+}
+
+Widget downloadButton() {
+  return InkWell(
+    child: CircleAvatar(
+      backgroundColor: Colors.indigo.shade900,
+      radius: 15,
+      child: CircleAvatar(
+        radius: 14,
+        backgroundColor: Colors.white,
+        child: Icon(Icons.download_rounded,
+            size: 20, color: Colors.indigo.shade900),
+      ),
+    ),
+    onTap: () {
+      // captureAndSharePng(context, key, pop: false);
+    },
+  );
 }

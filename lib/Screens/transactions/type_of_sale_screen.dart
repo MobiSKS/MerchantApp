@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
 import 'package:dtplusmerchant/Screens/transactions/sale_receipt.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
@@ -35,6 +34,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   late String _selectedbank;
   late bool _otpSent;
   String otp = "";
+  late int _otplength;
   int bankId = 0;
   final _mobileController = TextEditingController();
   final _vehicleNoController = TextEditingController();
@@ -136,8 +136,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
-        boldText(AppStrings.enterOTP,
-            color: Colors.grey.shade600, ),
+        boldText(AppStrings.enterOTP, color: Colors.grey.shade600),
         _otpTextField(context, paymentOtpController,
             color: Colors.grey.shade600),
         const SizedBox(height: 10),
@@ -165,7 +164,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }) {
     return OTPTextField(
       controller: controller,
-      length: 6,
+      length: _otplength,
       width: screenWidth(context),
       fieldWidth: 50,
       style: TextStyle(fontSize: 18, color: color),
@@ -182,7 +181,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         });
       },
       onChanged: (pin) {
-        if (pin.length != 6) {
+        if (pin.length != _otplength) {
           setState(() {
             enabledButton = false;
           });
@@ -196,8 +195,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.04),
-        boldText(AppStrings.selectBank,
-            color: Colors.grey.shade600, ),
+        boldText(
+          AppStrings.selectBank,
+          color: Colors.grey.shade600,
+        ),
         _selectBankList(context),
       ],
     );
@@ -233,8 +234,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.05),
-        boldText('Vehicle Number',
-            color: Colors.grey.shade600, ),
+        boldText(
+          'Vehicle Number',
+          color: Colors.grey.shade600,
+        ),
         SizedBox(
           width: screenWidth(context),
           child: TextFormField(
@@ -364,6 +367,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
         setState(() {
           _otpSent = true;
+          _otplength = transProvider.otpResponseSale!.data![0].oTP!.length;
         });
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
@@ -373,7 +377,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
 
   Future<void> sendOTPforFastTag(TransactionsProvider saleReloadViewM) async {
     if (validateMobile() && _payType.isNotEmpty) {
-       await saleReloadViewM.generateOtpFastTAG(context,
+      await saleReloadViewM.generateOtpFastTAG(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           bankId: bankId,
@@ -382,6 +386,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         showToast('OTP sent successfully', false);
         setState(() {
           _otpSent = true;
+          _otplength = 4;
         });
       } else {
         alertPopUp(context, saleReloadViewM.fastTagOTPResponse!.message!);

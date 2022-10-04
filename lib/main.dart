@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _checkLogin() async {
-    bool isLoggedin = await sharedPref.readBool(SharedPref.isLogin);
+    bool isLoggedin = await sharedPref.readBool(SharedPref.isLogin);       
     setState(() {
       isLogin = isLoggedin;
     });

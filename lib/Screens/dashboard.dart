@@ -16,7 +16,6 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
-
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
     Container(),
@@ -29,11 +28,11 @@ class _DashboardState extends State<Dashboard> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor: Colors.indigo.shade50,
+        backgroundColor:_selectedIndex==2?Colors.white: Colors.indigo.shade50,
         key: _scaffoldKey,
         drawer: const NavDrawer(),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, // T
+          type: BottomNavigationBarType.fixed, 
           backgroundColor: Colors.indigo.shade900,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,
@@ -42,11 +41,13 @@ class _DashboardState extends State<Dashboard> {
           showUnselectedLabels: true,
           unselectedLabelStyle: const TextStyle(
               fontSize: 12.0,
-            fontFamily: FontFamilyHelper.sourceSansRegular,
+              fontFamily: FontFamilyHelper.sourceSansRegular,
               color: Colors.white),
           selectedLabelStyle: const TextStyle(
-             fontFamily: FontFamilyHelper.sourceSansRegular,
-              fontSize: 12.0, fontWeight: FontWeight.bold, color: Colors.white),
+              fontFamily: FontFamilyHelper.sourceSansRegular,
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.white),
           items: [
             BottomNavigationBarItem(
               icon: Padding(

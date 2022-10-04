@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_typing_uninitialized_variables
 
 import 'dart:convert';
 import 'dart:developer';
@@ -28,7 +27,7 @@ class ApiServices {
     try {
       final response = await http.post(Uri.parse(_baseUrl + url),
           headers: requestHeader, body: json.encode(body));
-      responseJson = _returnResponse(response);
+      responseJson = json.decode(response.body.toString());
     } catch (e) {
       return BadRequestException();
     }
@@ -75,20 +74,21 @@ class ApiServices {
   }
 
   dynamic _returnResponse(http.Response response) {
-    switch (response.statusCode) {
-      case 200:
+     switch (response.statusCode) {
+       case 200:
         var responseJson = json.decode(response.body.toString());
-        log(responseJson);
+       log(responseJson);
         return responseJson;
-      case 400:
-        throw BadRequestException(response.body.toString());
-      case 401:
-      case 403:
-        throw UnauthorisedException(response.body.toString());
-      case 500:
-      default:
-        throw FetchDataException(
-            'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
-    }
+       case 400:
+         throw BadRequestException(response.body.toString());
+       case 401:
+    
+       case 403:
+         throw UnauthorisedException(response.body.toString());
+       case 500:
+     default:
+         throw FetchDataException(
+             'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+     }
   }
 }

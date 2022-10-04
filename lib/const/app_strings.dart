@@ -5,7 +5,6 @@ class AppStrings {
   static const String rememberMe = "Remember me";
   static const String forgotPassword = "Forgot Password";
   static const String submit = "SUBMIT";
-  static const String trackApplicationForm = "Track Application Form";
   static const String retailOutletOnMap = "Retail Outlets on map";
   static const String locateDTplusOutlet = "Locate DTplus Outlet";
   static const String home = "Home";
@@ -14,8 +13,6 @@ class AppStrings {
   static const String profile = "Profile";
   static const String transactionDetails = "Transaction Details";
   static const String receivablePayableDetail = "Receivable & Payable";
-  static const String hpRefuelCardPaymentConfirmation =
-      "HP Re-Fuel Card Payment Confirmation";
   static const String userNameEmptyMsg = "UserName can't be empty";
   static const String passwordEmptyMsg = "Password Can't be empty";
   static const String notification = "Notification";
@@ -84,7 +81,6 @@ class AppStrings {
   static const String forPetrolDieselCS = "1800-1039-811";
   static const String forHPgasORLPGQCS = "1800-2333-555";
   static const String website = "Website";
-  static const String hpPayLink = "https://www.hppay.in";
   static const String selectPAYType = "'Select Payment Type";
   static const String batchNum = "BATCH NO.";
   static const String rocNum = "ROC NO.";
@@ -118,8 +114,7 @@ class AppStrings {
   static const String cardFeeTransaction = "Card Fee Transaction";
   static const String results = "Results";
   static const String numberOfCards = "Number of Cards";
-  static const String enterPayCode ="Enter Pay Code";
-  static const String merchantCopy= "MERCHANT COPY";
-  static const String merchantId ="Merchant Id";
-  
+  static const String enterPayCode = "Enter Pay Code";
+  static const String merchantCopy = "MERCHANT COPY";
+  static const String merchantId = "Merchant Id";
 }

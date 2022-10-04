@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../model/user_model.dart';
 
 class SharedPref {

@@ -34,7 +34,7 @@ class FinancialsProvider extends ChangeNotifier {
       if (response['Success']) {
         _creditOutstandingModel = CreditOutstandingModel.fromJson(response);
       } else {
-        alertPopUp(context, response['Data']['message'],
+        alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

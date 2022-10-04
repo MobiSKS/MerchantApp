@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -5,7 +6,6 @@ enum ViewState { IDLE, BUSY }
 
 class BaseViewModel extends ChangeNotifier {
   ViewState _viewState = ViewState.BUSY;
-
   ViewState get viewState => _viewState;
 
   ViewState _overlayLoadingState = ViewState.IDLE;

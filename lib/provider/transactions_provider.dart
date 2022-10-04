@@ -138,7 +138,6 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> generateQR(context, {double? amount, String? productId}) async {
-    _dio.options.headers['Authorization'] = Utils.userToken;
     showLoader(context);
     var ip = await Utils.getIp();
     Map param = {
@@ -150,17 +149,17 @@ class TransactionsProvider extends ChangeNotifier {
     };
     param.addAll(commonReqBody);
     try {
-      Response response = await _dio.post(UrlConstant.generateQR, data: param);
+      var response = await apiServices.post(UrlConstant.generateQR, body: param,requestHeader: commonHeader);
       dismissLoader(context);
-      if (response.data['Success']) {
-        _generateQrResponse = GenerateQrResponse.fromJson(response.data);
+      if (response['Success']) {
+        _generateQrResponse = GenerateQrResponse.fromJson(response);
       } else {
-        alertPopUp(context, response.data['Data']['message'],
-            doLogout: response.data['Status_Code'] == 401 ? true : false);
+        alertPopUp(context, response['Data']['message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
-    } on DioError catch (e) {
-      return alertPopUp(context, e.response!.statusMessage!);
+    }  catch (e) {
+      return alertPopUp(context, e.toString());
     }
   }
 

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
@@ -16,8 +15,8 @@ class OtherDetail extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         boldText(AppStrings.contactPersonDetail,
-            color: Colors.black),
-        const SizedBox(height: 20),
+            color: Colors.black,fontSize: 22.0),
+        const SizedBox(height: 30),
         _listView(context),
       ],
     );
@@ -43,8 +42,8 @@ class OtherDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(detail[index].question!, fontSize: 16.0),
-                  normalText(detail[index].ans!, fontSize: 16.0)
+                  boldText(detail[index].question!, fontSize: 20.0),
+                  semiBoldText(detail[index].ans!, fontSize: 18.0)
                 ],
               ),
               const SizedBox(height: 10),

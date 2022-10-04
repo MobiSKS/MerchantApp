@@ -109,7 +109,7 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.basicInfoBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.merchantprofile, )
+          normalText(AppStrings.merchantprofile,   textAlign: TextAlign.center,fontSize:16 )
         ],
       ),
     );
@@ -133,7 +133,7 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.addressBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.retailOutletAddress,
+          normalText(AppStrings.retailOutletAddress,   textAlign: TextAlign.center,fontSize:16
             )
         ],
       ),
@@ -158,7 +158,7 @@ class _EditProfileState extends State<EditProfile> {
                       : ImageResources.officialDetailsBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.keyOfficialDetail,)
+          normalText(AppStrings.keyOfficialDetail,   textAlign: TextAlign.center,fontSize: 16.0)
         ],
       ),
     );
@@ -180,13 +180,15 @@ class _EditProfileState extends State<EditProfile> {
                   index == 3
                       ? ImageResources.otherDetailsWhite
                       : ImageResources.otherDetailsBlue,
+                      
                   height: 21)),
           const SizedBox(height: 10),
           normalText(
               index == 3
                   ? AppStrings.contactPersonDetail
                   : AppStrings.otherDetails,
-              fontSize: 12.0)
+                  textAlign: TextAlign.center,
+              fontSize: 16.0)
         ],
       ),
     );

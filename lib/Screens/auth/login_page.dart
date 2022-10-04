@@ -89,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: () {
                           Navigator.pushNamed(context, "/forgotPassword");
                         },
-                        child: underlinedText(AppStrings.forgotPassword))
+                        child: underlinedText(AppStrings.forgotPassword,fontSize: 16))
                   ],
                 ),
               ),
@@ -116,7 +116,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          semiBoldText(AppStrings.welcomeBack),
+          semiBoldText(AppStrings.welcomeBack,fontSize: 22.0,color:Colors.white),
           SizedBox(height: screenHeight(context) * 0.030),
           _userNameField(),
           SizedBox(height: screenHeight(context) * 0.030),
@@ -142,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             filled: true,
         
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 14,fontFamily: FontFamilyHelper.sourceSansRegular),
+            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 18,fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.userName,
             fillColor: Colors.white),
       ),
@@ -173,7 +173,7 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             filled: true,
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13,fontFamily: FontFamilyHelper.sourceSansRegular),
+            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 18,fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.password,
             fillColor: Colors.white),
       ),
@@ -253,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
         child: const Text(
           AppStrings.submit,
           style: TextStyle(
-              fontSize: 16, fontFamily: FontFamilyHelper.sourceSansBold, color: Colors.white),
+              fontSize: 22, fontFamily: FontFamilyHelper.sourceSansBold, color: Colors.white),
         ),
       ),
     );

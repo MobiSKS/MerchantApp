@@ -7,13 +7,16 @@ class GenerateQrResponse {
   List<Data>? data;
 
   GenerateQrResponse(
+
       {this.success,
       this.statusCode,
       this.internelStatusCode,
       this.message,
       this.methodName,
       this.data,
-      });
+      }
+
+      );
 
   GenerateQrResponse.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
@@ -26,8 +29,8 @@ class GenerateQrResponse {
       json['Data'].forEach((v) {
         data!.add(Data.fromJson(v));
       });
+     }
     }
-  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};

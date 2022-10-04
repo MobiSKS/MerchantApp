@@ -19,7 +19,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _selectedProduct = "";
-  String ?_productName;
+  String? _productName;
   final _amountController = TextEditingController();
   List<String> payMode = [AppStrings.generateQR, AppStrings.sale];
   late String selectedMode;
@@ -58,13 +58,11 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
                         boldText(AppStrings.selectProduct,
-                            color: Colors.grey.shade600,
-                           ),
+                            color: Colors.grey.shade600),
                         _selectProduct(context),
                         SizedBox(height: screenHeight(context) * 0.05),
                         boldText(AppStrings.enterAmount,
-                            color: Colors.grey.shade600,
-                        ),
+                            color: Colors.grey.shade600),
                         _enterAmount(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.next, onTap: () {
@@ -83,8 +81,8 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
         ? showModalBottomSheet<void>(
             context: context,
             builder: (BuildContext context) {
-              return StatefulBuilder(builder: ((BuildContext context,
-                  StateSetter setState /*You can rename this!*/) {
+              return StatefulBuilder(
+                  builder: ((BuildContext context, StateSetter setState) {
                 return SizedBox(
                   height: screenHeight(context) * 0.35,
                   child: Column(
@@ -94,8 +92,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                       Padding(
                         padding: const EdgeInsets.only(left: 40, bottom: 20),
                         child: boldText(AppStrings.selectType,
-                            color: Colors.black,
-                            fontSize: 20),
+                            color: Colors.black, fontSize: 20),
                       ),
                       Divider(
                         color: Colors.grey.shade900,
@@ -128,7 +125,8 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                                   const SizedBox(
                                     width: 10,
                                   ),
-                                boldText(payThrough, fontSize: 20.0,color: Colors.black)
+                                  boldText(payThrough,
+                                      fontSize: 20.0, color: Colors.black)
                                 ],
                               ),
                             );
@@ -222,7 +220,10 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           onChanged: (value) {
             setState(() {
               _selectedProduct = value!.toString();
-              _productName = productList.where((e) => e.productId==int.parse(_selectedProduct)).toList()[0].productName;
+              _productName = productList
+                  .where((e) => e.productId == int.parse(_selectedProduct))
+                  .toList()[0]
+                  .productName;
             });
           },
         ),
