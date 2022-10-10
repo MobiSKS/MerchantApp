@@ -20,9 +20,16 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
   final _sharedPref = Injection.injector.get<SharedPref>();
 
   final ScreenshotController screenshotController = ScreenshotController();
-
+  final _copyType = ValueNotifier<String>("CUSTOMER COPY");
   final GlobalKey _key = GlobalKey();
-  String _copyType = "CUSTOMER COPY";
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _copyType.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -81,7 +88,7 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   receiptHeader(context,
-                      copyType: _copyType,
+                      copyType: _copyType.value,
                       custDetail: custDetail,
                       outletName:
                           widget.creditCompResp.data![0].retailOutletName),
@@ -99,9 +106,7 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
   }
 
   void _downLoadMerchantCopy() {
-    setState(() {
-      _copyType = 'MERCHANT COPY';
-    });
+    _copyType.value = 'MERCHANT COPY';
     showLoader(context);
     Future.delayed(const Duration(milliseconds: 500), () {
       captureAndSharePng(context, _key, pop: false);

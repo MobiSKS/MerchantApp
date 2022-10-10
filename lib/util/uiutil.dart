@@ -113,7 +113,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
     padding: const EdgeInsets.symmetric(horizontal: 40),
     child: SizedBox(
       width: screenWidth(context),
-      height: screenHeight(context) * 0.05,
+     // height: screenHeight(context) * 0.05,
       child: TextButton(
         onPressed: () {
           onTap!();

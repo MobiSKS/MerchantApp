@@ -74,7 +74,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget _headerIcons() {
     return SizedBox(
-      height: screenHeight(context) * 0.12,
+      height: screenHeight(context) * 0.15,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

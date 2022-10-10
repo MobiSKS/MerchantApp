@@ -84,7 +84,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
               return StatefulBuilder(
                   builder: ((BuildContext context, StateSetter setState) {
                 return SizedBox(
-                  height: screenHeight(context) * 0.35,
+                  height: screenHeight(context) * 0.39,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

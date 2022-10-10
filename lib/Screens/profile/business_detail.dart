@@ -38,7 +38,7 @@ class BusinessDetail extends StatelessWidget {
           question: 'Sales Area', ans: data.objOutletDetails![0].salesArea),
     ];
     return SizedBox(
-      height: screenHeight(context) * 0.50,
+      height: screenHeight(context) * 0.45,
       child: ListView.builder(
         itemCount: detail.length,
         itemBuilder: (context, index) {

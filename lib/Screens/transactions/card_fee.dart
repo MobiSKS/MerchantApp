@@ -42,8 +42,10 @@ class _CardFeeState extends State<CardFee> {
             color: Colors.blue.shade100,
             child: Padding(
               padding: const EdgeInsets.only(left: 30, top: 15),
-              child: boldText(AppStrings.results,
-                  color: Colors.black, ),
+              child: boldText(
+                AppStrings.results,
+                color: Colors.black,
+              ),
             ),
           ),
         ),
@@ -97,8 +99,7 @@ class _CardFeeState extends State<CardFee> {
                   amount: _totalAmount(),
                   formNum: _formNoController.text,
                   cardNumber: _cardnumberController.text,
-                  txnId:   cardFeeProvider.cardFeeResponseModel!.data![0].refNo,
-
+                  txnId: cardFeeProvider.cardFeeResponseModel!.data![0].refNo,
                 )),
       );
     }
@@ -120,10 +121,11 @@ class _CardFeeState extends State<CardFee> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(AppStrings.cardFeeTransaction,
-                      color: Colors.black,
-                      fontSize: 16,
-                      ),
+                  boldText(
+                    AppStrings.cardFeeTransaction,
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                 ],
               ),
               Divider(color: Colors.indigo.shade400),
@@ -140,11 +142,9 @@ class _CardFeeState extends State<CardFee> {
                           boldText(AppStrings.formNo,
                               color: Colors.black,
                               textAlign: TextAlign.start,
-                              fontFamily: FontFamilyHelper.sourceSansRegular
-                              ),
+                              fontFamily: FontFamilyHelper.sourceSansRegular),
                           boldText(_formNoController.text,
-                              color: Colors.black,
-                              fontSize: 16),
+                              color: Colors.black, fontSize: 16),
                         ],
                       ),
                       SizedBox(width: screenWidth(context) * 0.10),
@@ -152,13 +152,9 @@ class _CardFeeState extends State<CardFee> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           normalText(AppStrings.numberOfCards,
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                              ),
+                              color: Colors.black, textAlign: TextAlign.start),
                           boldText(_cardnumberController.text,
-                              color: Colors.black,
-                              fontSize: 16,
-                              ),
+                              color: Colors.black, fontSize: 16),
                         ],
                       ),
                     ],
@@ -170,13 +166,12 @@ class _CardFeeState extends State<CardFee> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           semiBoldText('Total Amount',
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                              ),
-                          boldText('₹${_totalAmount().toString()}',
-                              color: Colors.black,
-                              fontSize: 16,
-                              ),
+                              color: Colors.black, textAlign: TextAlign.start),
+                          boldText(
+                            '₹${_totalAmount().toString()}',
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
                         ],
                       ),
                       const SizedBox(width: 25),

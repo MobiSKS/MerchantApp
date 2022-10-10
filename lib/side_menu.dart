@@ -76,7 +76,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   ),
                   CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: screenWidth(context) * 0.109)
+                      radius: screenWidth(context) * 0.10)
                 ],
               ),
             ),

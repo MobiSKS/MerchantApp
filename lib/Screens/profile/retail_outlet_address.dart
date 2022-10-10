@@ -45,7 +45,7 @@ class RetailOutletAddress extends StatelessWidget {
           ans: data.objOutletDetails![0].retailOutletPhoneNumber),
     ];
     return SizedBox(
-      height: screenHeight(context) * 0.50,
+      height: screenHeight(context) * 0.45,
       child: ListView.builder(
         itemCount: detail.length,
         itemBuilder: (context, index) {

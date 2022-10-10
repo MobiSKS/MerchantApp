@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
-
-class SharedPref {
+ 
+class SharedPref{
   static String userDetails = "userstore";
   static String fastTagDetail = "fastTagDetail";
   late SharedPreferences _prefs;
@@ -21,6 +21,8 @@ class SharedPref {
       _user = UserModel.fromJson(user);
     }
   }
+
+ 
 
   storeFastTagData() async {
     _prefs = await SharedPreferences.getInstance();

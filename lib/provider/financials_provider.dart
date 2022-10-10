@@ -3,6 +3,7 @@ import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
 import 'package:flutter/material.dart';
 import '../const/common_param.dart';
 import '../const/url_constant.dart';
+import '../model/transaction_summary_model.dart';
 import '../util/uiutil.dart';
 import '../util/utils.dart';
 
@@ -14,6 +15,10 @@ class FinancialsProvider extends ChangeNotifier {
 
   CreditOutstandingModel? _creditOutstandingModel;
   CreditOutstandingModel? get creditOutstandingModel => _creditOutstandingModel;
+
+  TransactionSummaryModel? _transactionSummaryModel;
+  TransactionSummaryModel? get transactionSummaryModel =>
+      _transactionSummaryModel;
 
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
     showLoader(context);

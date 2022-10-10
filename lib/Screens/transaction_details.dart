@@ -97,7 +97,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           simpleTextField(
               context, _statusController, "Card no./Mobile No./Vehicle No."),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _statusController, "Status"),
+          simpleTextField(context, _statusController, "Customer ID"),
           SizedBox(height: screenHeight(context) * 0.04),
           customButton(context, AppStrings.search, onTap: () {})
         ],

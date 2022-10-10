@@ -32,7 +32,6 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   late String _payType;
   late String transType;
   late String _selectedbank;
-  late bool _otpSent;
   String otp = "";
   late int _otplength;
   int bankId = 0;
@@ -41,12 +40,12 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   final paymentOtpController = OtpFieldController();
   final _timerController = CountdownController();
   bool enabledButton = false;
+  final ValueNotifier<bool> _otpSent = ValueNotifier<bool>(false);
   @override
   void initState() {
     super.initState();
     _payType = "";
     _selectedbank = "";
-    _otpSent = false;
   }
 
   bool validateMobile() {
@@ -56,6 +55,12 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     } else {
       return false;
     }
+  }
+
+  @override
+  void dispose() {
+    _otpSent.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,30 +82,33 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                     title(context, AppStrings.typeOfSale),
                     Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(height: screenHeight(context) * 0.05),
-                            boldText(AppStrings.selectPaymentType,
-                                color: Colors.grey.shade600),
-                            _selectPaymentType(context),
-                            _payType == '505'
-                                ? _selectBank(context)
-                                : Container(),
-                            _payType == '505'
-                                ? _enterVehicleNo(context)
-                                : Container(),
-                            SizedBox(height: screenHeight(context) * 0.05),
-                            boldText(
-                              AppStrings.mobileNum,
-                              color: Colors.grey.shade600,
-                            ),
-                            _enterMobileNo(context),
-                            _otpSent ? enterOTP(context) : Container(),
-                            SizedBox(height: screenHeight(context) * 0.10),
-                            submitButton(context, saleReloadViewM)
-                          ],
-                        ))
+                        child: 
+                          
+                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: screenHeight(context) * 0.05),
+                              boldText(AppStrings.selectPaymentType,
+                                  color: Colors.grey.shade600),
+                              _selectPaymentType(context),
+                              _payType == '505'
+                                  ? _selectBank(context)
+                                  : Container(),
+                              _payType == '505'
+                                  ? _enterVehicleNo(context)
+                                  : Container(),
+                              SizedBox(height: screenHeight(context) * 0.05),
+                              boldText(
+                                AppStrings.mobileNum,
+                                color: Colors.grey.shade600,
+                              ),
+                              _enterMobileNo(context),
+                              _otpSent.value ? enterOTP(context) : Container(),
+                              SizedBox(height: screenHeight(context) * 0.10),
+                              submitButton(context, saleReloadViewM)
+                            ],
+                          ),
+                        )
                   ],
                 ),
               ),
@@ -118,7 +126,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         height: screenHeight(context) * 0.05,
         child: TextButton(
           onPressed: () {
-            !_otpSent
+            !_otpSent.value
                 ? sendOTP(saleReloadViewM)
                 : enabledButton
                     ? _submitPayment(saleReloadViewM)
@@ -288,12 +296,12 @@ class _TypeOfSaleState extends State<TypeOfSale> {
             setState(() {
               _payType = value!;
               _mobileController.clear();
-              _otpSent = false;
               transType = paymentTypeList
                   .where((e) => e.transType == int.parse(_payType))
                   .toList()[0]
                   .transName!;
             });
+            _otpSent.value = false;
           },
         ),
       ),
@@ -336,7 +344,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                   .fastagId!;
               log('==========>$bankId');
               _mobileController.clear();
-              _otpSent = false;
+              _otpSent.value = false;
             });
           },
         ),
@@ -366,9 +374,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         log('===========> OTP ${transProvider.otpResponseSale!.data![0].oTP!}');
         showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
         setState(() {
-          _otpSent = true;
           _otplength = transProvider.otpResponseSale!.data![0].oTP!.length;
         });
+        _otpSent.value = true;
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
       }
@@ -384,8 +392,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           vehicleNo: _vehicleNoController.text);
       if (saleReloadViewM.fastTagOTPResponse!.internelStatusCode == 1000) {
         showToast('OTP sent successfully', false);
+        _otpSent.value = true;
+
         setState(() {
-          _otpSent = true;
           _otplength = 4;
         });
       } else {
@@ -401,8 +410,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         otp: otp,
         transType: int.parse(_payType),
         productId: widget.productId!);
+    _otpSent.value = false;
     if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
       showToast('Payment Successfull', false);
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -414,9 +425,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                 )),
       );
     } else {
-      setState(() {
-        _otpSent = false;
-      });
+      _otpSent.value = false;
     }
   }
 
@@ -450,9 +459,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                 )),
       );
     } else {
-      setState(() {
-        _otpSent = false;
-      });
+     _otpSent.value= false;
     }
   }
 }

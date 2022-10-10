@@ -1,6 +1,7 @@
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/financials/card_balance_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/credit_sale_outstanding.dart';
+import 'package:dtplusmerchant/Screens/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
@@ -54,7 +55,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: _body(context),
+      child: SingleChildScrollView(child: _body(context)),
     );
   }
 
@@ -84,7 +85,7 @@ class _HomeState extends State<Home> {
                       fontSize: 23,
                       color: Colors.black),
                 ),
-                SizedBox(height: screenHeight(context) * 0.02),
+                SizedBox(height: screenHeight(context) * 0.01),
                 _transactiongridView(context)
               ],
             ),
@@ -101,7 +102,7 @@ class _HomeState extends State<Home> {
   Widget _merchantId(context) {
     return Container(
       width: screenWidth(context) * 0.90,
-      height: screenHeight(context) * 0.07,
+      height: screenHeight(context) * 0.09,
       decoration: BoxDecoration(
           color: Colors.blue.shade200,
           borderRadius: const BorderRadius.all(Radius.circular(12))),
@@ -152,14 +153,14 @@ class _HomeState extends State<Home> {
       },
       child: Container(
         height: screenHeight(context) * 0.12,
-        width: screenWidth(context) * 0.15,
+        width: screenWidth(context) * 0.17,
         decoration: BoxDecoration(
           color: const Color(0xffFFFFFF),
           borderRadius: const BorderRadius.all(Radius.circular(8)),
           border: Border.all(color: Colors.blueGrey.shade100),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: const EdgeInsets.only(left: 10, right: 10,),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -170,7 +171,7 @@ class _HomeState extends State<Home> {
               semiBoldText(_financialOptions[index].optionName!,
                   color: Colors.black,
                   fontFamily: FontFamilyHelper.sourceSansBold,
-                  fontSize: 15.0,
+                  fontSize:_financialOptions[index].optionName ==AppStrings.settlements ||_financialOptions[index].optionName ==AppStrings.creditSaleOuts?13.5: 15.0,
                   textAlign: TextAlign.center)
             ],
           ),
@@ -221,7 +222,7 @@ class _HomeState extends State<Home> {
       },
       child: Container(
         height: screenHeight(context) * 0.12,
-        width: screenWidth(context) * 0.15,
+      width: screenWidth(context) * 0.15,
         decoration: BoxDecoration(
           color: const Color(0xffFFFFFF),
           borderRadius: const BorderRadius.all(
@@ -272,6 +273,12 @@ class _HomeState extends State<Home> {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const CreditSaleOutStanding()),
+      );
+    } else if (_financialOptions[index].optionName! ==
+        AppStrings.summary) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const TransactionDetails()),
       );
     }
   }

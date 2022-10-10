@@ -48,6 +48,7 @@ class AuthViewModel extends ChangeNotifier {
         alertPopUp(context, response.data["Message"]);
       }
     } on DioError catch (e) {
+      dismissLoader(context);
       return alertPopUp(context, e.response!.statusMessage!);
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
@@ -149,7 +151,8 @@ class TransactionsProvider extends ChangeNotifier {
     };
     param.addAll(commonReqBody);
     try {
-      var response = await apiServices.post(UrlConstant.generateQR, body: param,requestHeader: commonHeader);
+      var response = await apiServices.post(UrlConstant.generateQR,
+          body: param, requestHeader: commonHeader);
       dismissLoader(context);
       if (response['Success']) {
         _generateQrResponse = GenerateQrResponse.fromJson(response);
@@ -158,7 +161,7 @@ class TransactionsProvider extends ChangeNotifier {
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
-    }  catch (e) {
+    } catch (e) {
       return alertPopUp(context, e.toString());
     }
   }

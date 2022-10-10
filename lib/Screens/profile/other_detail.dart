@@ -33,7 +33,7 @@ class OtherDetail extends StatelessWidget {
           question: 'Email Id', ans: data.objGetMerchantDetail![0].emailId),
     ];
     return SizedBox(
-      height: screenHeight(context) * 0.50,
+      height: screenHeight(context) * 0.45,
       child: ListView.builder(
         itemCount: detail.length,
         itemBuilder: (context, index) {

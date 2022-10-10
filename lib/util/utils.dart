@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:dart_ipify/dart_ipify.dart';
@@ -21,11 +23,11 @@ class Utils {
   static const int otpTypeForSale = 1;
   static const int otpTypeForCreditSaleComplete = 9;
 
-  
-  static void logout(BuildContext context) {
-    showLoader(context);
-    _sharedPref.preferenceClear();
-    dismissLoader(context);
+  static Future<void> logout(BuildContext context) async {
+   
+    await _sharedPref.remove(SharedPref.userDetails);
+    await _sharedPref.preferenceClear();
+   // dismissLoader(context);
     Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
   }
 //=======date format ===== exp: 2022-09-16================
@@ -83,7 +85,6 @@ class Utils {
     }
     return os;
   }
-
 
 //=======Date Format exp:  yyyy-MM-dd'T'HH:mm:ss.SSSZ========
   static String isoDateTimeFormat() {

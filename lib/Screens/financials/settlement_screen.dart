@@ -387,57 +387,60 @@ class _SettlementScreenState extends State<SettlementScreen> {
           MaterialPageRoute(builder: (context) => const SettlementDetail()),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 30),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              semiBoldText('Batch Id: 4600074',
-                  color: Colors.grey.shade500, fontSize: 18.0),
-              const SizedBox(height: 5),
-              Text.rich(
-                TextSpan(
-                  children: [
-                    TextSpan(
-                        text: 'JDE Status: ',
+      child: SizedBox(
+        width: screenWidth(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                semiBoldText('Batch Id: 4600074',
+                    color: Colors.grey.shade500, fontSize: 18.0),
+                const SizedBox(height: 5),
+                Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                          text: 'JDE Status: ',
+                          style: TextStyle(
+                              color: Colors.grey.shade500,
+                              fontSize: 18,
+                              fontFamily: FontFamilyHelper.sourceSansSemiBold)),
+                      const TextSpan(
+                        text: 'Success',
                         style: TextStyle(
-                            color: Colors.grey.shade500,
+                            color: Colors.green,
                             fontSize: 18,
-                            fontFamily: FontFamilyHelper.sourceSansSemiBold)),
-                    const TextSpan(
-                      text: 'Success',
-                      style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 18,
-                          fontFamily: FontFamilyHelper.sourceSansSemiBold),
+                            fontFamily: FontFamilyHelper.sourceSansSemiBold),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        semiBoldText(data.date!,
+                            color: Colors.grey.shade500, fontSize: 18.0),
+                        const SizedBox(width: 5),
+                        semiBoldText(data.time!,
+                            color: Colors.grey.shade500, fontSize: 18.0),
+                      ],
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 5),
+              ]),
               Row(
                 children: [
-                  Row(
-                    children: [
-                      semiBoldText(data.date!,
-                          color: Colors.grey.shade500, fontSize: 18.0),
-                      const SizedBox(width: 5),
-                      semiBoldText(data.time!,
-                          color: Colors.grey.shade500, fontSize: 18.0),
-                    ],
-                  ),
+                  semiBoldText('₹ ${data.amount!}',
+                      color: Colors.grey.shade500, fontSize: 18.0),
                 ],
-              ),
-            ]),
-            Row(
-              children: [
-                semiBoldText('₹ ${data.amount!}',
-                    color: Colors.grey.shade500, fontSize: 18.0),
-              ],
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
