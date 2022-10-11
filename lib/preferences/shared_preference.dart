@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../model/user_model.dart';
- 
-class SharedPref{
+import '../util/uiutil.dart';
+
+class SharedPref {
   static String userDetails = "userstore";
   static String fastTagDetail = "fastTagDetail";
   late SharedPreferences _prefs;
@@ -19,10 +20,10 @@ class SharedPref{
     final user = await read(userDetails);
     if (user != null && user is Map) {
       _user = UserModel.fromJson(user);
+    } else {
+      _user = null;
     }
   }
-
- 
 
   storeFastTagData() async {
     _prefs = await SharedPreferences.getInstance();
@@ -72,6 +73,44 @@ class SharedPref{
 
   preferenceClear() async {
     await _prefs.clear();
+  }
+
+  Future<dynamic> getPrefrenceData({dynamic defaultValue, String ?key}) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+
+      if (defaultValue is bool) {
+        return prefs.getBool(key!);
+      } else if (defaultValue is String) {
+        return prefs.getString(key!);
+      } else if (defaultValue is int) {
+        return prefs.getInt(key!);
+      } else {
+        return _getPrefModel(key!);
+      }
+    } catch (error) {
+      showToast(error.toString(), true);
+    }
+  }
+
+  Future<T?> _getPrefModel<T>(String prefKey) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var u = prefs.getString(
+      prefKey,
+    );
+
+    if (u != null) {
+      return fromJson<T>(prefKey, await json.decode(u));
+    }
+    return null;
+  }
+
+  fromJson<T>(String object, dynamic json) {
+    if (object == SharedPref.userDetails) {
+      return UserModel.fromJson(json) as T;
+    } else {
+      throw Exception("Unknown class");
+    }
   }
 
   UserModel? get user => _user;

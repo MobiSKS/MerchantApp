@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
@@ -35,15 +37,14 @@ class AuthViewModel extends ChangeNotifier {
       "HWSerialNo": "1490147844",
       "Password": password
     };
-    log('======>IPV4 $ip');
     try {
       Response response = await _dio.post(UrlConstant.loginApi, data: param);
       dismissLoader(context);
       if (response.data['Success']) {
         _userModel = UserModel.fromJson(response.data);
-        log('==>token ${_userModel!.data!.objGetMerchantDetail![0].token!}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
         await _sharedPref.save(SharedPref.userDetails, response.data);
+        notifyListeners();
       } else {
         alertPopUp(context, response.data["Message"]);
       }
@@ -51,5 +52,11 @@ class AuthViewModel extends ChangeNotifier {
       dismissLoader(context);
       return alertPopUp(context, e.response!.statusMessage!);
     }
+  }
+
+   Future<void> logout(BuildContext context) async {
+    await _sharedPref.preferenceClear();
+     notifyListeners();
+    Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
   }
 }

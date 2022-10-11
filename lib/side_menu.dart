@@ -1,3 +1,4 @@
+import 'package:dtplusmerchant/Screens/auth/auth_view_model.dart';
 import 'package:dtplusmerchant/Screens/auth/forgot_password_screen.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
@@ -5,7 +6,9 @@ import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/preferences/shared_preference.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'const/injection.dart';
+import 'model/user_model.dart';
 import 'util/utils.dart';
 
 class NavDrawer extends StatefulWidget {
@@ -25,10 +28,11 @@ class _NavDrawerState extends State<NavDrawer> {
     getNameId();
   }
 
-  getNameId() {
-    String firstName = _sharedPref.user!.data!.objGetMerchantDetail![0].merchantName!;
+  getNameId() async{
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails) as UserModel;
+    String firstName = user.data!.objGetMerchantDetail![0].merchantName!;
     String lastName = "";
-    String userId = Utils.merchantId;
+    String userId = user.data!.objGetMerchantDetail![0].merchantId!;
     setState(() {
       name = "$firstName $lastName";
       id = userId;
@@ -57,14 +61,14 @@ class _NavDrawerState extends State<NavDrawer> {
                       boldText(AppStrings.welcome, fontSize: 20,color:Colors.white),
                       SizedBox(height: screenHeight(context) * 0.01),
                       boldText(
-                        name!,
+                        name ?? "",
                         fontSize: 24,
                         color:Colors.white
                       ),
                       SizedBox(height: screenHeight(context) * 0.01),
                       Row(
                         children: [
-                          boldText('Id : $id', fontSize: 20,color:Colors.white),
+                          boldText('Id : ${id ??'' }', fontSize: 20,color:Colors.white),
                           const SizedBox(width: 20),
                           GestureDetector(
                               onTap: () {},
@@ -122,7 +126,10 @@ class _NavDrawerState extends State<NavDrawer> {
           ListTile(
             leading: Image.asset(ImageResources.logoutIcon, height: 20),
             title: semiBoldText(AppStrings.logout, color: Colors.black,fontSize: 18.0),
-            onTap: () => {Utils.logout(context)},
+            onTap: ()async {
+              var authPro =Provider.of<AuthViewModel>(context,listen:false);
+              await authPro.logout(context);
+            },
           ),
         ],
       ),

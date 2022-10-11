@@ -13,6 +13,7 @@ import '../const/url_constant.dart';
 import '../model/card_fee_response_model.dart';
 import '../model/fastag_otp_cofirm_model.dart';
 import '../model/sale_by_terminal_response.dart';
+import '../model/user_model.dart';
 import '../preferences/shared_preference.dart';
 import '../util/uiutil.dart';
 import '../util/utils.dart';
@@ -53,6 +54,14 @@ class TransactionsProvider extends ChangeNotifier {
       int otpType = 1}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+
+ Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     Map param = {
       "CCN": ccn,
       "CreatedBy": "5063857578",
@@ -67,7 +76,7 @@ class TransactionsProvider extends ChangeNotifier {
 
     try {
       var response = await apiServices.post(UrlConstant.generateOtpForSale,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Success']) {
         _otpResponseSale = OtpResponseSale.fromJson(response);
@@ -91,6 +100,14 @@ class TransactionsProvider extends ChangeNotifier {
       int productId = 0}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+
+ Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     Map param = {
       "Userip": ip,
       "Latitude": "1133.2323.23",
@@ -122,7 +139,7 @@ class TransactionsProvider extends ChangeNotifier {
 
     try {
       var response = await apiServices.post(UrlConstant.saleByTerminal,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Success']) {
         _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
@@ -140,6 +157,8 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> generateQR(context, {double? amount, String? productId}) async {
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
     showLoader(context);
     var ip = await Utils.getIp();
     Map param = {
@@ -150,9 +169,14 @@ class TransactionsProvider extends ChangeNotifier {
       "Userip": ip,
     };
     param.addAll(commonReqBody);
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+
     try {
       var response = await apiServices.post(UrlConstant.generateQR,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Success']) {
         _generateQrResponse = GenerateQrResponse.fromJson(response);
@@ -173,6 +197,12 @@ class TransactionsProvider extends ChangeNotifier {
       String? vehicleNo}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     Map<dynamic, dynamic> param = {
       "BankID": bankId,
       "Mobileno": mobileNo,
@@ -181,10 +211,10 @@ class TransactionsProvider extends ChangeNotifier {
       "Userip": ip,
     };
     param.addAll(commonReqBody);
-
+   
     try {
       var response = await apiServices.post(UrlConstant.otpForFastTag,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Internel_Status_Code'] == 1000) {
         _fastTagOTPResponse = FastTagOTPResponse.fromJson(response);
@@ -250,6 +280,14 @@ class TransactionsProvider extends ChangeNotifier {
       String? invoiceDate}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+
+ Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     Map param = {
       "BankID": bankId,
       "TxnRefId": txnID,
@@ -275,7 +313,7 @@ class TransactionsProvider extends ChangeNotifier {
     param.addAll(commonReqBody);
     try {
       var response = await apiServices.post(UrlConstant.confirmFastTagOtp,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Internel_Status_Code'] == 1000) {
         _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
@@ -295,6 +333,14 @@ class TransactionsProvider extends ChangeNotifier {
   }) async {
     showLoader(context);
     var ip = await Utils.getIp();
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+
+ Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     Map param = {
       "Bankname": "",
       "Gatewayname": "",
@@ -327,7 +373,7 @@ class TransactionsProvider extends ChangeNotifier {
 
     try {
       var response = await apiServices.post(UrlConstant.saleByTerminal,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Internel_Status_Code'] == 1000) {
         _paycodeResponseModel = PaycodeResponseModel.fromJson(response);

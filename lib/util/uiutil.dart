@@ -227,7 +227,7 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     customButton(context, 'OK', onTap: () {
-                      doLogout ? Utils.logout(context) : Navigator.pop(context);
+                      doLogout ? (){} : Navigator.pop(context);
                     })
                   ],
                 )),

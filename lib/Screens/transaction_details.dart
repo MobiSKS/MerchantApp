@@ -1,9 +1,12 @@
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
+import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 
+import '../base/base_view.dart';
+import '../provider/financials_provider.dart';
 import '../util/utils.dart';
 
 class TransactionDetails extends StatefulWidget {
@@ -14,9 +17,10 @@ class TransactionDetails extends StatefulWidget {
 }
 
 class _TransactionDetailsState extends State<TransactionDetails> {
-  List<String> transactionList = ['1', '2', '3', '4'];
   DateTime selectedDate = DateTime.now();
-  final TextEditingController _statusController = TextEditingController();
+  bool _dataReceived = false;
+  String _selectedType = "";
+  final TextEditingController _terminalIdController = TextEditingController();
   final TextEditingController _fromDateController = TextEditingController();
   final TextEditingController _toDateController = TextEditingController();
 
@@ -25,6 +29,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: true,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         shadowColor: Colors.grey,
@@ -48,37 +53,48 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Widget _body(BuildContext context) {
-    return Column(
-      children: [
-        _searchFilter(),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-            width: screenWidth(context),
-            height: screenHeight(context) * 0.06,
-            color: Colors.indigo.shade200,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 15),
-              child: boldText(
-                'Search Results',
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: screenHeight(context) * 0.03,
-        ),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: _searchResults(),
-        )),
-      ],
-    );
+    return BaseView<FinancialsProvider>(onModelReady: (model) async {
+      await model.getTransactionType(context);
+    }, builder: (context, financialPro, child) {
+      return financialPro.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                _searchFilter(financialPro),
+                _dataReceived
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Container(
+                          width: screenWidth(context),
+                          height: screenHeight(context) * 0.06,
+                          color: Colors.indigo.shade200,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 30, top: 15),
+                            child: boldText(
+                              'Search Results',
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      )
+                    : Container(),
+                SizedBox(
+                  height: screenHeight(context) * 0.03,
+                ),
+                _dataReceived
+                    ? Expanded(
+                        child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        child:
+                            _searchResults(financialPro.transactionDetailModel),
+                      ))
+                    : Container()
+              ],
+            );
+    });
   }
 
-  Widget _searchFilter() {
+  Widget _searchFilter(FinancialsProvider financialPro) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
@@ -95,27 +111,79 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           }),
           SizedBox(height: screenHeight(context) * 0.01),
           simpleTextField(
-              context, _statusController, "Card no./Mobile No./Vehicle No."),
+              context, _terminalIdController, "Terminal Id (Optional) "),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _statusController, "Customer ID"),
+          _selectProduct(context, financialPro),
           SizedBox(height: screenHeight(context) * 0.04),
-          customButton(context, AppStrings.search, onTap: () {})
+          customButton(context, AppStrings.search, onTap: () {
+            getTransactionDetail(financialPro);
+          })
         ],
       ),
     );
   }
 
-  Widget _searchResults() {
+  Future<void> getTransactionDetail(FinancialsProvider financialPro) async {
+    await financialPro.getTransactionDetail(context,
+        fromDate: _fromDateController.text,
+        toDate: _toDateController.text,
+        terminalId: _terminalIdController.text,
+        transType: _selectedType);
+
+    if (financialPro.transactionDetailModel!.internelStatusCode == 1000) {
+      setState(() {
+        _dataReceived = true;
+      });
+    }
+  }
+
+  Widget _selectProduct(BuildContext context, FinancialsProvider financialPro) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(bottom: BorderSide(color: Colors.grey.shade400))),
+      height: 45,
+      child: Center(
+        child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+              enabledBorder: InputBorder.none, enabled: false),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
+          icon: const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.keyboard_arrow_down),
+          ),
+          hint: semiBoldText('Select Transaction Type'),
+          value: _selectedType.isEmpty ? null : _selectedType,
+          items: financialPro.transactionType!.data!.map((value) {
+            return DropdownMenuItem(
+              value: value.transactionID.toString(),
+              child: Text(value.transactionType!),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _selectedType = value!;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _searchResults(TransactionDetailModel? transactionDetailModel) {
     return CustomList(
-      list: transactionList,
+      list: transactionDetailModel!.data!,
       itemSpace: 20,
-      child: (String data, index) {
-        return _transactionCard();
+      child: (Data data, index) {
+        return _transactionCard(data);
       },
     );
   }
 
-  Widget _transactionCard() {
+  Widget _transactionCard(Data data) {
     return Column(
       children: [
         Container(
@@ -151,38 +219,63 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 
+                    children: [
+                      Column(
+                           crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          normalText(
+                            'Name',
+                            color: Colors.black,
+                          ),
+                          boldText(
+                            data.nameOnCard!,
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          normalText(
+                            'Amount',
+                            color: Colors.black,
+                          ),
+                          boldText(
+                            '₹${data.amount!}',
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(height: screenHeight(context) * 0.01),
                   normalText(
-                    'Customer Mobile no./Vehicle No./',
+                    'Mobile no./Card Number',
                     color: Colors.black,
                     textAlign: TextAlign.start,
                   ),
-                  boldText('9998088987', color: Colors.black, fontSize: 16),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  normalText(
-                    'Amount',
-                    color: Colors.black,
-                  ),
-                  boldText(
-                    '₹3000',
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
+                  boldText('${data.mobileNo!}/${data.cardNo}',
+                      color: Colors.black, fontSize: 16),
                   SizedBox(height: screenHeight(context) * 0.01),
                 ],
               ),
             ],
           ),
         ),
-        _transactionID()
+        _transactionID(data)
       ],
     );
   }
 
-  Widget _transactionID() {
+  Widget _transactionID(Data data) {
     return Container(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
       decoration: BoxDecoration(
-          color: Colors.indigo.shade300,
+          color: Colors.indigo.shade200,
           borderRadius: const BorderRadius.only(
               bottomRight: Radius.circular(20),
               bottomLeft: Radius.circular(20))),
@@ -190,11 +283,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           normalText(
-            '25-06-2022',
+            data.transactionDate!,
             color: Colors.black,
           ),
           normalText(
-            'Terminal ID: TRMID123456',
+            'Terminal ID: ${data.terminalId}',
             color: Colors.black,
           ),
         ],

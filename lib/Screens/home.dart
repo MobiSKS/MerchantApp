@@ -9,8 +9,9 @@ import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import '../const/image_resources.dart';
+import '../const/injection.dart';
+import '../preferences/shared_preference.dart';
 import '../util/uiutil.dart';
-import '../util/utils.dart';
 import 'financials/settlement_screen.dart';
 
 class Home extends StatefulWidget {
@@ -21,6 +22,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final List<GridOption> _financialOptions = [
     GridOption(
         optionName: AppStrings.summary, optionIcon: ImageResources.summaryIcon),
@@ -52,6 +54,7 @@ class _HomeState extends State<Home> {
     GridOption(
         optionName: AppStrings.cardFee, optionIcon: ImageResources.cardFee),
   ];
+  
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -109,9 +112,9 @@ class _HomeState extends State<Home> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          boldText(Utils.outletName, fontSize: 20, color: Colors.black),
+          boldText(_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!, fontSize: 20, color: Colors.black),
           const SizedBox(height: 5),
-          semiBoldText('${AppStrings.merchantId}  ${Utils.merchantId}',
+          semiBoldText('${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
               fontSize: 18,
               color: Colors.black,
               fontFamily: FontFamilyHelper.sourceSansRegular),

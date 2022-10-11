@@ -3,7 +3,6 @@
 import 'dart:io';
 
 import 'package:dart_ipify/dart_ipify.dart';
-import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../const/injection.dart';
@@ -23,13 +22,7 @@ class Utils {
   static const int otpTypeForSale = 1;
   static const int otpTypeForCreditSaleComplete = 9;
 
-  static Future<void> logout(BuildContext context) async {
-   
-    await _sharedPref.remove(SharedPref.userDetails);
-    await _sharedPref.preferenceClear();
-   // dismissLoader(context);
-    Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
-  }
+  
 //=======date format ===== exp: 2022-09-16================
 
   static String convertDateFormatInYYMMDD(DateTime date) {
@@ -50,7 +43,7 @@ class Utils {
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
       initialDate: initialDate,
-      firstDate: DateTime.now(),
+      firstDate: DateTime(2022),
       lastDate: DateTime(2101),
       builder: (BuildContext context, Widget? child) {
         return Theme(
