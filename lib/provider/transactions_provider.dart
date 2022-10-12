@@ -10,6 +10,7 @@ import 'package:dtplusmerchant/model/paycode_response_model.dart';
 import 'package:flutter/material.dart';
 import '../../const/injection.dart';
 import '../const/url_constant.dart';
+import '../model/card_enquiry_model.dart';
 import '../model/card_fee_response_model.dart';
 import '../model/fastag_otp_cofirm_model.dart';
 import '../model/sale_by_terminal_response.dart';
@@ -45,6 +46,9 @@ class TransactionsProvider extends ChangeNotifier {
 
   PaycodeResponseModel? _paycodeResponseModel;
   PaycodeResponseModel? get paycodeResponseModel => _paycodeResponseModel;
+
+  CardEnquiryModel? _cardEnquiryResponseModel;
+  CardEnquiryModel? get cardEnquiryResponseModel => _cardEnquiryResponseModel;
 
   Future<void> generateOTPSale(context,
       {String mobileNo = '',
@@ -379,6 +383,47 @@ class TransactionsProvider extends ChangeNotifier {
         _paycodeResponseModel = PaycodeResponseModel.fromJson(response);
         if (_paycodeResponseModel!.internelStatusCode != 1000) {
           alertPopUp(context, _paycodeResponseModel!.data![0].reason!);
+        }
+      } else {
+        alertPopUp(context, response['Message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+   Future<void> cardEnquiryDetails(
+    context, {
+    String? mobileNo,
+    String? OTP,
+  }) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    Map param = {
+      "Userip": ip,
+      "Latitude": "1133.2323.23",
+      "Longitude": "11.2.12.2",
+      "Cardno": "",
+      "Useragent": Utils.checkOs(),
+      "Mobileno": mobileNo,
+      "OTP": OTP.toString(),
+      "Pin": "",
+      "Sourceid": "8",
+      "CreatedBy": "5063857578",
+      "Formfactor": "3",
+    };
+    param.addAll(commonReqBody);
+    debugPrint("payload for card enquiry ===> $param");
+    try {
+      var response = await apiServices.post(UrlConstant.cardbalance,
+          body: param, requestHeader: commonHeader);
+      dismissLoader(context);
+      if (response['Success']) {
+        _cardEnquiryResponseModel = CardEnquiryModel.fromJson(response);
+        if (_cardEnquiryResponseModel!.internelStatusCode != 1000) {
+          alertPopUp(context, _cardEnquiryResponseModel!.data![0].reason!);
         }
       } else {
         alertPopUp(context, response['Message'],

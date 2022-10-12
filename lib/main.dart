@@ -6,7 +6,7 @@ import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/Screens/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
-import 'package:dtplusmerchant/Screens/transaction_details.dart';
+import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';

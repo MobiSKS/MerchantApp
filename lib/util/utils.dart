@@ -21,6 +21,7 @@ class Utils {
 
   static const int otpTypeForSale = 1;
   static const int otpTypeForCreditSaleComplete = 9;
+   static const int otpTypeForCardBalanceEnquiry = 7;
 
   
 //=======date format ===== exp: 2022-09-16================

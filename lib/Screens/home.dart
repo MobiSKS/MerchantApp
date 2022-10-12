@@ -1,7 +1,7 @@
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/financials/card_balance_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/credit_sale_outstanding.dart';
-import 'package:dtplusmerchant/Screens/transaction_details.dart';
+import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
@@ -25,7 +25,7 @@ class _HomeState extends State<Home> {
    final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final List<GridOption> _financialOptions = [
     GridOption(
-        optionName: AppStrings.summary, optionIcon: ImageResources.summaryIcon),
+        optionName: AppStrings.transactionDetails, optionIcon: ImageResources.summaryIcon),
     GridOption(
         optionName: AppStrings.settlements,
         optionIcon: ImageResources.settlementIcon),
@@ -278,7 +278,7 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(builder: (context) => const CreditSaleOutStanding()),
       );
     } else if (_financialOptions[index].optionName! ==
-        AppStrings.summary) {
+        AppStrings.transactionDetails) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const TransactionDetails()),

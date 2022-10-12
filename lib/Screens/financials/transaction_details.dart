@@ -5,9 +5,9 @@ import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 
-import '../base/base_view.dart';
-import '../provider/financials_provider.dart';
-import '../util/utils.dart';
+import '../../base/base_view.dart';
+import '../../provider/financials_provider.dart';
+import '../../util/utils.dart';
 
 class TransactionDetails extends StatefulWidget {
   const TransactionDetails({super.key});
@@ -155,7 +155,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             padding: EdgeInsets.only(right: 8.0),
             child: Icon(Icons.keyboard_arrow_down),
           ),
-          hint: semiBoldText('Select Transaction Type'),
+          hint: boldText('Select Transaction Type',color: Colors.grey.shade700,fontSize: 17),
           value: _selectedType.isEmpty ? null : _selectedType,
           items: financialPro.transactionType!.data!.map((value) {
             return DropdownMenuItem(

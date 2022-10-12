@@ -1,10 +1,16 @@
+import 'dart:developer';
+
 import 'package:dtplusmerchant/common/custom_list.dart';
+import 'package:dtplusmerchant/model/card_enquiry_model.dart';
+import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:provider/provider.dart';
 
 import '../../const/app_strings.dart';
 
@@ -16,7 +22,7 @@ class CardBalanceScreen extends StatefulWidget {
 }
 
 class _CardBalanceScreenState extends State<CardBalanceScreen> {
-  final bool _otpReceived = false;
+  bool _otpReceived = false;
   final _mobileController = TextEditingController();
   final otpController = OtpFieldController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -42,6 +48,8 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   }
 
   Widget _body(BuildContext context) {
+    var transactionPro =
+        Provider.of<TransactionsProvider>(context, listen: false);
     return Form(
       key: _formKey,
       autovalidateMode: AutovalidateMode.always,
@@ -77,7 +85,11 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             ),
           ),
           SizedBox(height: screenHeight(context) * 0.02),
-          _cardBalancedetail(context),
+          transactionPro.cardEnquiryResponseModel != null
+              ? _cardBalanceDetail(context,transactionPro.cardEnquiryResponseModel!.data![0])
+              : const Center(
+                  child: Text("No Balance Record Found"),
+                ),
         ],
       ),
     );
@@ -105,7 +117,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   }) {
     return OTPTextField(
       controller: controller,
-      length: 6,
+      length: 4,
       width: screenWidth(context),
       fieldWidth: 50,
       style: TextStyle(fontSize: 18, color: color),
@@ -145,6 +157,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             return null;
           }
         },
+        // onFieldSubmitted: submit(),
         keyboardType: TextInputType.number,
         decoration: const InputDecoration(
           hintText: 'Enter mobile Number',
@@ -153,16 +166,16 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     );
   }
 
-  Widget _cardBalancedetail(BuildContext context) {
+  Widget _cardBalanceDetail(BuildContext context, Data data,) {
     List<CommonList> cardBalanceEntity = [
       CommonList(key: 'Date', value: '22/09/2022'),
       CommonList(key: 'Time', value: '2:10 PM'),
-      CommonList(key: 'Monthly Limit', value: 'Rs 10000'),
-      CommonList(key: 'Monthly Spent', value: 'Rs 567'),
-      CommonList(key: 'Monthly Limit Balance', value: 'Rs 80000'),
-      CommonList(key: 'Daily Limit', value: 'Rs 667'),
-      CommonList(key: 'Daily Spent', value: 'Rs 3000'),
-      CommonList(key: 'Daily Limit Balance', value: 'Rs 500'),
+      CommonList(key: 'Monthly Limit', value: 'Rs ${data.monthlyLimit}'),
+      CommonList(key: 'Monthly Spent', value: 'Rs ${data.monthlySpent}'),
+      CommonList(key: 'Monthly Limit Balance', value: 'Rs ${data.monthlyLimitBal}'),
+      CommonList(key: 'Daily Limit', value: 'Rs ${data.dailyLimit}'),
+      CommonList(key: 'Daily Spent', value: 'Rs ${data.dailySpent}'),
+      CommonList(key: 'Daily Limit Balance', value: 'Rs ${data.dailyLimitBal}'),
     ];
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -192,7 +205,42 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             }));
   }
 
-  Future<void> submit() async {}
+  Future<void> submit() async {
+    var transactionPro =
+        Provider.of<TransactionsProvider>(context, listen: false);
+
+    if (!_otpReceived) {
+      await transactionPro.generateOTPSale(
+        context,
+        mobileNo: _mobileController.text,
+        otpType: Utils.otpTypeForCardBalanceEnquiry,
+      );
+
+      if (transactionPro.otpResponseSale!.internelStatusCode == 1000) {
+        log('===>otp ${transactionPro.otpResponseSale!.data![0].oTP!}');
+        showToast(transactionPro.otpResponseSale!.data![0].oTP!, false);
+        setState(() {
+          _otpReceived = true;
+        });
+      }
+    } else {
+      await transactionPro.cardEnquiryDetails(context,
+          mobileNo: _mobileController.text, OTP: otp);
+      if (transactionPro.cardEnquiryResponseModel!.internelStatusCode == 1000) {
+        debugPrint('===>otp ${transactionPro.cardEnquiryResponseModel!.data}');
+        showToast(transactionPro.cardEnquiryResponseModel!.message!, false);
+        setState(() {
+          _otpReceived = false;
+          _mobileController.text = "";
+        });
+      }else{
+        setState(() {
+          _otpReceived = false;
+          _mobileController.text = "";
+        });
+      }
+    }
+  }
 }
 
 class CommonList {
