@@ -62,7 +62,7 @@ class Data {
   String? currency;
   double? amount;
   String? serviceCharge;
-  Null? driveStars;
+  String? driveStars;
   String? voidedByRoc;
   String? voidedRoc;
   String? fSMName;

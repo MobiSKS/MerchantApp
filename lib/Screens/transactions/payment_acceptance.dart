@@ -184,8 +184,10 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
             context,
             MaterialPageRoute(
                 builder: (context) => ScanQRCode(
-                      qrString: saleViewM.generateQrResponse!.data![0].qRString,
-                    )));
+                    qrString: saleViewM.generateQrResponse!.data![0].qRString,
+                    amount: saleViewM.generateQrResponse!.data![0].amount,
+                    outletName:
+                        saleViewM.generateQrResponse!.data![0].outletName)));
       }
     }
   }

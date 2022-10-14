@@ -12,7 +12,6 @@ import '../common/separator.dart';
 import '../common/share_widget.dart';
 import '../const/image_resources.dart';
 import '../model/receipt_detal.dart';
-import 'utils.dart';
 
 Widget underlinedText(String text,
     {Color color = Colors.black, double fontSize = 14.0}) {
@@ -93,7 +92,7 @@ Widget customTextField(
             borderRadius: BorderRadius.circular(16.0),
           ),
           filled: true,
-          hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13),
+          hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13,fontFamily: FontFamilyHelper.sourceSansSemiBold),
           hintText: hintText,
           fillColor: Colors.white),
     ),
@@ -113,7 +112,6 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
     padding: const EdgeInsets.symmetric(horizontal: 40),
     child: SizedBox(
       width: screenWidth(context),
-     // height: screenHeight(context) * 0.05,
       child: TextButton(
         onPressed: () {
           onTap!();
@@ -319,26 +317,44 @@ showLoader(context) {
           ));
 }
 
-AppBar normalAppBar(BuildContext context, {required String title}) {
-  return AppBar(
-    backgroundColor: Colors.white,
-    leading: GestureDetector(
-        onTap: () {
-          Navigator.pop(context);
-        },
-        child: const Icon(Icons.arrow_back_ios_new,
-            color: Colors.black, size: 24)),
-    title: boldText(
-      title,
-      color: Colors.black,
-      fontSize: 24,
+ normalAppBar(BuildContext context, {required String title}) {
+  return PreferredSize(
+      preferredSize: const Size.fromHeight(70.0),
+    child: AppBar(
+      backgroundColor: Colors.white,
+      leading: Column(
+        children: [
+        const  SizedBox(height: 7,),
+          IconButton(
+               onPressed: (){
+                Navigator.pop(context);
+               },
+              icon: const Icon(Icons.arrow_back_ios_new,
+                  color: Colors.black, size: 27,)),
+        ],
+      ),
+      title: Column(
+        children: [
+               const  SizedBox(height: 7,),
+          boldText(
+            title,
+            color: Colors.black,
+            fontSize: 24,
+          ),
+        ],
+      ),
+      centerTitle: true,
+      actions: [
+        Column(
+          children: [
+             const  SizedBox(height: 7,),
+            IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.notifications, color: Colors.grey, size: 26)),
+          ],
+        )
+      ],
     ),
-    centerTitle: true,
-    actions: [
-      IconButton(
-          onPressed: () {},
-          icon: const Icon(Icons.notifications, color: Colors.grey, size: 26))
-    ],
   );
 }
 
@@ -435,16 +451,17 @@ Widget receiptTitle(context, GlobalKey key) {
 Widget receiptDetail(
   BuildContext context,
   List<ReceiptDetail> receptDetail1,
+  {double itemSapce=7.0}
 ) {
   return CustomList(
       list: receptDetail1,
-      itemSpace: 7,
+      itemSpace: itemSapce,
       child: (ReceiptDetail data, index) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            boldText(data.title!, fontSize: 18.0),
-            boldText(data.value!, fontSize: 18.0, color: Colors.blueGrey),
+            semiBoldText(data.title!, fontSize: 18.0),
+            semiBoldText(data.value!, fontSize: 18.0, color: Colors.blueGrey),
           ],
         );
       });

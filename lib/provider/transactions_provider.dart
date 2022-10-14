@@ -177,7 +177,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
-
+  log('===>token ${user.data!.objGetMerchantDetail![0].token}');
     try {
       var response = await apiServices.post(UrlConstant.generateQR,
           body: param, requestHeader: header);

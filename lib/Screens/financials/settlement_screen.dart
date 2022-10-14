@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
@@ -78,7 +80,9 @@ class _SettlementScreenState extends State<SettlementScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context, title: AppStrings.paymentNsettlement),
+        appBar: PreferredSize(
+            preferredSize: Size.fromHeight(70.0),
+          child: normalAppBar(context, title: AppStrings.paymentNsettlement)),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             physics:
@@ -98,7 +102,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
             pageIndex: pageIndex,
             labelFirst: AppStrings.payments,
             labelSecond: AppStrings.settlements),
-        SizedBox(height: screenHeight(context) * 0.03),
+        SizedBox(height: screenHeight(context) * 0.02),
         _pageViewWidget(context),
       ],
     );
@@ -125,92 +129,89 @@ class _SettlementScreenState extends State<SettlementScreen> {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  DropdownButton(
-                    focusColor: Colors.indigo.shade50,
-                    isExpanded: false,
-                    alignment: Alignment.centerLeft,
-                    underline: Container(
-                      color: Colors.transparent,
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 35,
-                    ),
-                    hint: Text(
-                      _selectedValuePayment ?? "Today",
-                      style: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    items: dropdownValues.map((String item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (String? newVal) async {
-                      switch (newVal) {
-                        case "Today":
-                          diffPayment = 0;
-                          break;
-                        case "Yesterday":
-                          diffPayment = 1;
-                          break;
-                        case "Last 7 Days":
-                          diffPayment = 7;
-                          break;
-                        default:
-                          _selectedValuePayment = "Today";
-                          break;
-                      }
+          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+           
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    DropdownButton(
+                      focusColor: Colors.indigo.shade50,
+                      isExpanded: false,
+                      alignment: Alignment.centerLeft,
+                      underline: Container(
+                        color: Colors.transparent,
+                      ),
+                      icon: const Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 35,
+                      ),
+                      hint: semiBoldText(_selectedValuePayment ?? "Today",
+                          color: Colors.grey.shade700, fontSize: 22),
+                      items: dropdownValues.map((String item) {
+                        return DropdownMenuItem(
+                          value: item,
+                          child: Text(item),
+                        );
+                      }).toList(),
+                      onChanged: (String? newVal) async {
+                        switch (newVal) {
+                          case "Today":
+                            diffPayment = 0;
+                            break;
+                          case "Yesterday":
+                            diffPayment = 1;
+                            break;
+                          case "Last 7 Days":
+                            diffPayment = 7;
+                            break;
+                          default:
+                            _selectedValuePayment = "Today";
+                            break;
+                        }
 
-                      setState(() {
-                        _selectedValuePayment = newVal;
-                      });
-                    },
-                  ),
-                  const Spacer(),
-                  boldText(
-                    "Payment Trends",
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Row(
-                children: [
-                  boldText(
-                    "No of Transactions",
-                    color: Colors.grey.shade500,
-                  ),
-                  const Spacer(),
-                  boldText(
-                    "Total",
-                    color: Colors.grey.shade500,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  boldText(
-                    '50',
-                    color: Colors.black,
-                  ),
-                  const Spacer(),
-                  boldText(
-                    "₹ 20,979",
-                    color: Colors.black,
-                  ),
-                ],
-              ),
-              SizedBox(height: screenHeight(context) * 0.03),
-            ],
+                        setState(() {
+                          _selectedValuePayment = newVal;
+                        });
+                      },
+                    ),
+                    const Spacer(),
+                    semiBoldText("Payment Trends",
+                        color: Colors.grey.shade700, fontSize: 22),
+                  ],
+                ),
+                const SizedBox(height: 15),
+                Divider(indent: 0,endIndent: 0,color:Colors.grey.shade600),
+                                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    semiBoldText("No of Transactions",
+                        color: Colors.grey.shade700, fontSize: 22),
+                    const Spacer(),
+                    semiBoldText("Total",
+                        color: Colors.grey.shade700, fontSize:22),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    boldText(
+                      '50',
+                      color: Colors.black,
+                    ),
+                    const Spacer(),
+                    boldText(
+                      "₹ 20,979",
+                      color: Colors.black,
+                    ),
+                  ],
+                ),
+                SizedBox(height: screenHeight(context) * 0.03),
+              ],
+            ),
           ),
         ),
         Column(
@@ -232,9 +233,19 @@ class _SettlementScreenState extends State<SettlementScreen> {
                 child: SingleChildScrollView(
                     child: CustomList(
                         list: transactions,
-                        itemSpace: 20,
+                        itemSpace: 5,
                         child: (Payment data, index) {
-                          return _listItem(context, data);
+                          return Column(
+                            children: [
+                              _listItem(context, data),
+                              const SizedBox(height: 10),
+                              Divider(
+                                color: Colors.grey.shade700,
+                                endIndent: 20,
+                                indent: 20,
+                              )
+                            ],
+                          );
                         })),
               ),
       ],
@@ -331,9 +342,19 @@ class _SettlementScreenState extends State<SettlementScreen> {
                 child: SingleChildScrollView(
                     child: CustomList(
                         list: transactions,
-                        itemSpace: 20,
+                        itemSpace: 10,
                         child: (Payment data, index) {
-                          return _settlementList(context, data);
+                          return Column(
+                            children: [
+                              _settlementList(context, data),
+                              const SizedBox(height: 10),
+                              Divider(
+                                color: Colors.grey.shade700,
+                                endIndent: 20,
+                                indent: 20,
+                              )
+                            ],
+                          );
                         })),
               ),
       ],
@@ -341,36 +362,61 @@ class _SettlementScreenState extends State<SettlementScreen> {
   }
 
   Widget _listItem(BuildContext context, Payment data) {
+    var initials;
+    var string = data.name!.split(" ");
+    if (string.length > 1) {
+      initials = string[0][0] + string[1][0];
+    } else {
+      initials = string[0][0];
+    }
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            boldText(data.name!, color: Colors.grey.shade500, fontSize: 20.0),
-            const SizedBox(height: 5),
-            Row(
-              children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor:
+                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                child: Center(
+                    child: semiBoldText(initials,
+                        color: Colors.white, fontSize: 20)),
+              ),
+              SizedBox(width: screenWidth(context) * 0.03),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                semiBoldText(data.name!,
+                    color: Colors.grey.shade800, fontSize: 20.0),
+                const SizedBox(height: 5),
                 Row(
                   children: [
-                    boldText(data.date!,
-                        color: Colors.grey.shade500, fontSize: 16.0),
-                    const SizedBox(width: 5),
-                    boldText(
-                      data.time!,
-                      color: Colors.grey.shade500,
+                    Row(
+                      children: [
+                        semiBoldText(
+                          data.date!,
+                          color: Colors.grey.shade500,
+                        ),
+                        const SizedBox(width: 5),
+                        semiBoldText(
+                          data.time!,
+                          color: Colors.grey.shade500,
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
-          ]),
+              ]),
+            ],
+          ),
           Row(
             children: [
               boldText(
                 '₹ ${data.amount!}',
-                color: Colors.grey.shade500,
+                color: Colors.grey.shade800,
               ),
             ],
           )
@@ -397,7 +443,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 semiBoldText('Batch Id: 4600074',
-                    color: Colors.grey.shade500, fontSize: 18.0),
+                    color: Colors.grey.shade700, fontSize: 18.0),
                 const SizedBox(height: 5),
                 Text.rich(
                   TextSpan(
@@ -405,7 +451,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                       TextSpan(
                           text: 'JDE Status: ',
                           style: TextStyle(
-                              color: Colors.grey.shade500,
+                              color: Colors.grey.shade700,
                               fontSize: 18,
                               fontFamily: FontFamilyHelper.sourceSansSemiBold)),
                       const TextSpan(
@@ -424,10 +470,10 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     Row(
                       children: [
                         semiBoldText(data.date!,
-                            color: Colors.grey.shade500, fontSize: 18.0),
+                            color: Colors.grey.shade700, fontSize: 18.0),
                         const SizedBox(width: 5),
                         semiBoldText(data.time!,
-                            color: Colors.grey.shade500, fontSize: 18.0),
+                            color: Colors.grey.shade700, fontSize: 18.0),
                       ],
                     ),
                   ],
@@ -436,7 +482,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
               Row(
                 children: [
                   semiBoldText('₹ ${data.amount!}',
-                      color: Colors.grey.shade500, fontSize: 18.0),
+                      color: Colors.grey.shade700, fontSize: 18.0),
                 ],
               )
             ],

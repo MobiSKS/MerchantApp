@@ -1,21 +1,25 @@
 import 'package:flutter/material.dart';
 import '../../const/app_strings.dart';
+import '../../const/image_resources.dart';
 import '../../util/uiutil.dart';
 
 class ScanQRCode extends StatelessWidget {
   final String? qrString;
-  const ScanQRCode({super.key, this.qrString});
-
+  final String? outletName;
+  final String? amount;
+  const ScanQRCode({super.key, this.qrString, this.amount, this.outletName});
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
           appBar: normalAppBar(context, title: AppStrings.qrPayment),
-          backgroundColor: Colors.indigo.shade50,
+          backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: screenHeight(context) * 0.15),
+              SizedBox(height: screenHeight(context) * 0.07),
+              Image.asset(ImageResources.hpLogoReceipt, height: 100),
+              SizedBox(height: screenHeight(context) * 0.015),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -43,7 +47,11 @@ class ScanQRCode extends StatelessWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+                 SizedBox(height: screenHeight(context) * 0.04),
+                 boldText('Amount:  ₹ $amount',fontSize: 24),
+                  SizedBox(height: screenHeight(context) * 0.01),
+                 boldText(outletName!,fontSize: 24),
             ],
           )),
     );

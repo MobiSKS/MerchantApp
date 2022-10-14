@@ -6,9 +6,11 @@ import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../const/injection.dart';
+import '../model/user_model.dart';
 import '../preferences/shared_preference.dart';
 
 class Utils {
+ 
   static final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   static String merchantId =
       _sharedPref.user!.data!.objGetMerchantDetail![0].merchantId!;

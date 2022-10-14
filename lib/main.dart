@@ -75,7 +75,7 @@ class _MyAppState extends State<MyApp> {
           "/login": (context) => const LoginPage(),
           "/dashboard": (context) => const Dashboard(),
           "/typeofSale": (context) => const TypeOfSale(),
-          "/editProfile": (context) => const EditProfile(),
+          "/editProfile": (context) => const Profile(),
           "/forgotPassword": (context) =>const ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
           "/scanQRcode": (context) => const ScanQRCode(),

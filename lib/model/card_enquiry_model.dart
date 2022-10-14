@@ -39,7 +39,7 @@ class CardEnquiryModel {
     data['Status_Code'] = this.statusCode;
     data['Internel_Status_Code'] = this.internelStatusCode;
     data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    data['Method_Name'] = this.methodName; 
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }

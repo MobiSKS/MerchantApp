@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:flutter/material.dart';
 import '../../util/uiutil.dart';
@@ -105,9 +107,19 @@ class _SettlementDetailState extends State<SettlementDetail> {
                 child: SingleChildScrollView(
                     child: CustomList(
                         list: transactions,
-                        itemSpace: 20,
+                        itemSpace: 5,
                         child: (Payment data, index) {
-                          return _listItem(context, data);
+                          return Column(
+                            children: [
+                              _listItem(context, data),
+                              const SizedBox(height: 10),
+                              Divider(
+                                color: Colors.grey.shade700,
+                                endIndent: 20,
+                                indent: 20,
+                              )
+                            ],
+                          );
                         })),
               ),
       ],
@@ -121,30 +133,42 @@ class _SettlementDetailState extends State<SettlementDetail> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            semiBoldText(data.name!,
-                color: Colors.grey.shade500, fontSize: 18.0),
-            const SizedBox(height: 5),
-            Row(
-              children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor:
+                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                child: Center(
+                    child: semiBoldText(data.name![0],
+                        color: Colors.white, fontSize: 22)),
+              ),
+              SizedBox(width: screenWidth(context) * 0.03),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                semiBoldText(data.name!,
+                    color: Colors.grey.shade700, fontSize: 22.0),
+                const SizedBox(height: 5),
                 Row(
                   children: [
-                    semiBoldText(data.date!,
-                        color: Colors.grey.shade500, fontSize: 18.0),
-                    const SizedBox(width: 5),
-                    semiBoldText(data.time!,
-                        color: Colors.grey.shade500, fontSize: 18.0),
+                    Row(
+                      children: [
+                        semiBoldText(data.date!,
+                            color: Colors.grey.shade700, fontSize: 18.0),
+                        const SizedBox(width: 5),
+                        semiBoldText(data.time!,
+                            color: Colors.grey.shade700, fontSize: 18.0),
+                      ],
+                    ),
                   ],
                 ),
-              ],
-            ),
-          ]),
+              ]),
+            ],
+          ),
           Row(
             children: [
-              boldText(
-                '₹ ${data.amount!}',
-                color: Colors.grey.shade500,
-              ),
+              semiBoldText('₹ ${data.amount!}',
+                  color: Colors.grey.shade700, fontSize: 22),
             ],
           )
         ],

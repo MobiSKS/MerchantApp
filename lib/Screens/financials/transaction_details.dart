@@ -1,10 +1,11 @@
+import 'package:dtplusmerchant/Screens/financials/summary_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../provider/financials_provider.dart';
 import '../../util/utils.dart';
@@ -30,24 +31,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         child: Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.grey,
-        centerTitle: true,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.black, size: 24)),
-        title: boldText(AppStrings.transactionDetails,
-            color: Colors.black, fontSize: 20),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Image.asset(ImageResources.notificationIcon))
-        ],
-      ),
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70.0),
+          child: Center(child: normalAppBar(context, title: AppStrings.transactionDetails))),
       body: _body(context),
     ));
   }
@@ -113,7 +99,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           simpleTextField(
               context, _terminalIdController, "Terminal Id (Optional) "),
           SizedBox(height: screenHeight(context) * 0.01),
-          _selectProduct(context, financialPro),
+          _selectTransactionType(context, financialPro),
           SizedBox(height: screenHeight(context) * 0.04),
           customButton(context, AppStrings.search, onTap: () {
             getTransactionDetail(financialPro);
@@ -124,20 +110,32 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Future<void> getTransactionDetail(FinancialsProvider financialPro) async {
-    await financialPro.getTransactionDetail(context,
-        fromDate: _fromDateController.text,
-        toDate: _toDateController.text,
-        terminalId: _terminalIdController.text,
-        transType: _selectedType);
+    var prov = Provider.of<FinancialsProvider>(context, listen: false);
+    if ((_fromDateController.text.isNotEmpty &&
+            _toDateController.text.isNotEmpty) &&
+        _selectedType.isNotEmpty) {
+      await prov.getTransactionDetail(context,
+          fromDate: _fromDateController.text,
+          toDate: _toDateController.text,
+          terminalId: _terminalIdController.text,
+          transType: _selectedType);
 
-    if (financialPro.transactionDetailModel!.internelStatusCode == 1000) {
-      setState(() {
-        _dataReceived = true;
-      });
+      if (prov.transactionDetailModel!.internelStatusCode == 1000) {
+        setState(() {
+          _dataReceived = true;
+        });
+      } else {
+        setState(() {
+          _dataReceived = false;
+        });
+      }
+    } else {
+      alertPopUp(context, 'Please fill all required details');
     }
   }
 
-  Widget _selectProduct(BuildContext context, FinancialsProvider financialPro) {
+  Widget _selectTransactionType(
+      BuildContext context, FinancialsProvider financialPro) {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -155,7 +153,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             padding: EdgeInsets.only(right: 8.0),
             child: Icon(Icons.keyboard_arrow_down),
           ),
-          hint: boldText('Select Transaction Type',color: Colors.grey.shade700,fontSize: 17),
+          hint: boldText('Select Transaction Type',
+              color: Colors.grey.shade700, fontSize: 17),
           value: _selectedType.isEmpty ? null : _selectedType,
           items: financialPro.transactionType!.data!.map((value) {
             return DropdownMenuItem(
@@ -184,90 +183,98 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Widget _transactionCard(Data data) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-          width: screenWidth(context),
-          decoration: BoxDecoration(
-              color: Colors.blueGrey.shade100,
-              borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20), topLeft: Radius.circular(20))),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  boldText('Transaction Summary',
-                      color: Colors.black, fontSize: 16),
-                  Row(
-                    children: [
-                      normalText('View Detail'),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      const Icon(Icons.arrow_forward_ios,
-                          size: 15, color: Colors.black)
-                    ],
-                  )
-                ],
-              ),
-              Divider(color: Colors.indigo.shade400),
-              const SizedBox(height: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                 
-                    children: [
-                      Column(
-                           crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          normalText(
-                            'Name',
-                            color: Colors.black,
-                          ),
-                          boldText(
-                            data.nameOnCard!,
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          normalText(
-                            'Amount',
-                            color: Colors.black,
-                          ),
-                          boldText(
-                            '₹${data.amount!}',
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                  normalText(
-                    'Mobile no./Card Number',
-                    color: Colors.black,
-                    textAlign: TextAlign.start,
-                  ),
-                  boldText('${data.mobileNo!}/${data.cardNo}',
-                      color: Colors.black, fontSize: 16),
-                  SizedBox(height: screenHeight(context) * 0.01),
-                ],
-              ),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TransactionSummarydetail(data: data)));
+      },
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
+            width: screenWidth(context),
+            decoration: BoxDecoration(
+                color: Colors.blueGrey.shade100,
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20))),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    boldText('Transaction Summary',
+                        color: Colors.black, fontSize: 16),
+                    Row(
+                      children: [
+                        normalText('View Detail'),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        const Icon(Icons.arrow_forward_ios,
+                            size: 15, color: Colors.black)
+                      ],
+                    )
+                  ],
+                ),
+                Divider(color: Colors.indigo.shade400),
+                const SizedBox(height: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            normalText(
+                              'Name',
+                              color: Colors.black,
+                            ),
+                            boldText(
+                              data.nameOnCard!,
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            normalText(
+                              'Amount',
+                              color: Colors.black,
+                            ),
+                            boldText(
+                              '₹${data.amount!}',
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    SizedBox(height: screenHeight(context) * 0.01),
+                    normalText(
+                      'Mobile no./Card Number',
+                      color: Colors.black,
+                      textAlign: TextAlign.start,
+                    ),
+                    boldText('${data.mobileNo!}/${data.cardNo}',
+                        color: Colors.black, fontSize: 16),
+                    SizedBox(height: screenHeight(context) * 0.01),
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
-        _transactionID(data)
-      ],
+          _transactionID(data)
+        ],
+      ),
     );
   }
 

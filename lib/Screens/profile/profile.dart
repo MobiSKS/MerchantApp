@@ -7,14 +7,13 @@ import 'merchant_profile.dart';
 import 'other_detail.dart';
 import 'retail_outlet_address.dart';
 
-class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
-
+class Profile extends StatefulWidget {
+  const Profile({super.key});
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  State<Profile> createState() => _ProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _ProfileState extends State<Profile> {
   int index = 0;
   @override
   Widget build(BuildContext context) {

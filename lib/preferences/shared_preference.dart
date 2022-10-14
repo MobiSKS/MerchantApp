@@ -42,7 +42,7 @@ class SharedPref {
   save(String key, value) async {
     await _prefs.setString(key, json.encode(value));
     if (key == userDetails) {
-      await init();
+    await init();
     }
   }
 
@@ -72,6 +72,7 @@ class SharedPref {
   }
 
   preferenceClear() async {
+    
     await _prefs.clear();
   }
 

@@ -25,24 +25,7 @@ class _BatchDetailsState extends State<BatchDetails> {
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        shadowColor: Colors.grey,
-        centerTitle: true,
-        leading: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(Icons.arrow_back_ios_new,
-                color: Colors.black, size: 24)),
-        title: boldText(AppStrings.batchDetails,
-            color: Colors.black,  fontSize: 20),
-        actions: [
-          IconButton(
-              onPressed: () {},
-              icon: Image.asset(ImageResources.notificationIcon))
-        ],
-      ),
+      appBar:normalAppBar(context, title: AppStrings.batchDetails),
       body: _body(context),
     ));
   }

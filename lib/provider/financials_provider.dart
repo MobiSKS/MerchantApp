@@ -139,14 +139,14 @@ class FinancialsProvider extends ChangeNotifier {
         _transactionDetailModel = TransactionDetailModel.fromJson(response);
       } else {
         _isLoading = false;
-            dismissLoader(context);
+        dismissLoader(context);
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
     } catch (e) {
       _isLoading = false;
-          dismissLoader(context);
+      dismissLoader(context);
       return alertPopUp(context, e.toString());
     }
   }

@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:flutter/material.dart';
@@ -42,8 +43,9 @@ class AuthViewModel extends ChangeNotifier {
       dismissLoader(context);
       if (response.data['Success']) {
         _userModel = UserModel.fromJson(response.data);
+        log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
-        await _sharedPref.save(SharedPref.userDetails, response.data);
+       await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {
         alertPopUp(context, response.data["Message"]);

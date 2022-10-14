@@ -91,7 +91,7 @@ class _NavDrawerState extends State<NavDrawer> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const EditProfile()),
+                MaterialPageRoute(builder: (context) => const Profile()),
               );
             },
           ),
