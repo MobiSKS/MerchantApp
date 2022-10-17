@@ -1,8 +1,9 @@
 import 'package:dtplusmerchant/Screens/financials/summary_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/const/image_resources.dart';
-import 'package:dtplusmerchant/model/transaction_detail_model.dart';
+import 'package:dtplusmerchant/model/transaction_detail_model.dart'
+    as transDetail;
+import 'package:dtplusmerchant/model/transaction_type.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,7 +12,8 @@ import '../../provider/financials_provider.dart';
 import '../../util/utils.dart';
 
 class TransactionDetails extends StatefulWidget {
-  const TransactionDetails({super.key});
+  final TransactionType transType;
+  const TransactionDetails(this.transType, {super.key});
 
   @override
   State<TransactionDetails> createState() => _TransactionDetailsState();
@@ -33,50 +35,53 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70.0),
-          child: Center(child: normalAppBar(context, title: AppStrings.transactionDetails))),
-      body: _body(context),
+          child: Center(
+              child:
+                  normalAppBar(context, title: AppStrings.transactionDetails))),
+      body: Column(
+        children: [
+          title(context, AppStrings.transactionDetails),
+          SingleChildScrollView(child: _body(context)),
+        ],
+      ),
     ));
   }
 
   Widget _body(BuildContext context) {
-    return BaseView<FinancialsProvider>(onModelReady: (model) async {
-      await model.getTransactionType(context);
-    }, builder: (context, financialPro, child) {
-      return financialPro.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                _searchFilter(financialPro),
-                _dataReceived
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Container(
-                          width: screenWidth(context),
-                          height: screenHeight(context) * 0.06,
-                          color: Colors.indigo.shade200,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 15),
-                            child: boldText(
-                              'Search Results',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  height: screenHeight(context) * 0.03,
-                ),
-                _dataReceived
-                    ? Expanded(
-                        child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child:
-                            _searchResults(financialPro.transactionDetailModel),
-                      ))
-                    : Container()
-              ],
-            );
+    return BaseView<FinancialsProvider>(
+        builder: (context, financialPro, child) {
+      return Column(
+        children: [
+          _searchFilter(financialPro),
+          _dataReceived
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Container(
+                    width: screenWidth(context),
+                    height: screenHeight(context) * 0.06,
+                    color: Colors.indigo.shade200,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 30, top: 15),
+                      child: boldText(
+                        'Search Results',
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                )
+              : Container(),
+          SizedBox(
+            height: screenHeight(context) * 0.03,
+          ),
+          _dataReceived
+              ? Expanded(
+                  child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: _searchResults(financialPro.transactionDetailModel),
+                ))
+              : Container()
+        ],
+      );
     });
   }
 
@@ -156,7 +161,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           hint: boldText('Select Transaction Type',
               color: Colors.grey.shade700, fontSize: 17),
           value: _selectedType.isEmpty ? null : _selectedType,
-          items: financialPro.transactionType!.data!.map((value) {
+          items: widget.transType.data!.map((value) {
             return DropdownMenuItem(
               value: value.transactionID.toString(),
               child: Text(value.transactionType!),
@@ -172,17 +177,18 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     );
   }
 
-  Widget _searchResults(TransactionDetailModel? transactionDetailModel) {
+  Widget _searchResults(
+      transDetail.TransactionDetailModel? transactionDetailModel) {
     return CustomList(
       list: transactionDetailModel!.data!,
       itemSpace: 20,
-      child: (Data data, index) {
+      child: (transDetail.Data data, index) {
         return _transactionCard(data);
       },
     );
   }
 
-  Widget _transactionCard(Data data) {
+  Widget _transactionCard(transDetail.Data data) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -278,7 +284,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     );
   }
 
-  Widget _transactionID(Data data) {
+  Widget _transactionID(transDetail.Data data) {
     return Container(
       padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
       decoration: BoxDecoration(

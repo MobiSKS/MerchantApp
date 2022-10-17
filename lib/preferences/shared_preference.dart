@@ -10,7 +10,6 @@ class SharedPref {
   late SharedPreferences _prefs;
   UserModel? _user;
   FastTagOTPResponse? _fastTagData;
-
   static String isLogin = "isLogin";
   static String invoiceId = "invoiceID";
   SharedPreferences get prefs => _prefs;

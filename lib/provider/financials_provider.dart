@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../const/common_param.dart';
 import '../const/injection.dart';
 import '../const/url_constant.dart';
+import '../model/receivable_payable_model.dart';
 import '../model/transaction_detail_model.dart';
 import '../model/transaction_summary_model.dart';
 import '../model/transaction_type.dart';
@@ -31,6 +32,10 @@ class FinancialsProvider extends ChangeNotifier {
   TransactionType? _transactionType;
   TransactionType? get transactionType => _transactionType;
 
+
+  ReceivablePayableModel? _receivablePayableResponseModel;
+  ReceivablePayableModel? get receivablePayableResponseModel => _receivablePayableResponseModel;
+
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
     showLoader(context);
     var ip = await Utils.getIp();
@@ -43,9 +48,9 @@ class FinancialsProvider extends ChangeNotifier {
     header.addAll(commonHeader);
 
     Map param = {
-      "MerchantId": Utils.merchantId,
+      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
       "Useragent": Utils.checkOs(),
-      "UserId": userId,
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Userip": ip,
     };
 
@@ -150,4 +155,41 @@ class FinancialsProvider extends ChangeNotifier {
       return alertPopUp(context, e.toString());
     }
   }
+    Future<void> receivablePayableDetails(
+      context, {
+        String? terminalId,
+        String? fromDate,
+        String? toDate
+      }) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    Map param = {
+      "Userip": ip,
+      "Useragent": Utils.checkOs(),
+      "ToDate": toDate.toString(),
+      "FromDate": fromDate.toString(),
+    };
+    param.addAll(commonReqBody);
+    debugPrint("payload for receivable & payable details ===> $param");
+    try {
+      var response = await apiServices.post(UrlConstant.receivablePayable,
+          body: param, requestHeader: commonHeader);
+      dismissLoader(context);
+      if (response['Success']) {
+        _receivablePayableResponseModel = ReceivablePayableModel.fromJson(response);
+        debugPrint("response of receivable and payable ====>> $_receivablePayableResponseModel");
+        if (_receivablePayableResponseModel!.internelStatusCode != 1000) {
+          alertPopUp(context, 'Error Occured');
+        }
+      } else {
+        alertPopUp(context, response['Message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+
 }

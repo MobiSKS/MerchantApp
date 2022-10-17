@@ -1,16 +1,22 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/financials/card_balance_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/credit_sale_outstanding.dart';
+import 'package:dtplusmerchant/Screens/financials/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../const/image_resources.dart';
 import '../const/injection.dart';
 import '../preferences/shared_preference.dart';
+import '../provider/transactions_provider.dart';
 import '../util/uiutil.dart';
 import 'financials/settlement_screen.dart';
 
@@ -22,10 +28,11 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
+  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final List<GridOption> _financialOptions = [
     GridOption(
-        optionName: AppStrings.transactionDetails, optionIcon: ImageResources.summaryIcon),
+        optionName: AppStrings.transactionDetails,
+        optionIcon: ImageResources.summaryIcon),
     GridOption(
         optionName: AppStrings.settlements,
         optionIcon: ImageResources.settlementIcon),
@@ -54,7 +61,7 @@ class _HomeState extends State<Home> {
     GridOption(
         optionName: AppStrings.cardFee, optionIcon: ImageResources.cardFee),
   ];
-  
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -85,8 +92,7 @@ class _HomeState extends State<Home> {
                 Padding(
                   padding: const EdgeInsets.only(left: 10),
                   child: boldText(AppStrings.transactions,
-                      fontSize: 23,
-                      color: Colors.black),
+                      fontSize: 23, color: Colors.black),
                 ),
                 SizedBox(height: screenHeight(context) * 0.01),
                 _transactiongridView(context)
@@ -112,9 +118,13 @@ class _HomeState extends State<Home> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          boldText(_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!, fontSize: 20, color: Colors.black),
+          boldText(
+              _sharedPref.user!.data!.objOutletDetails![0].retailOutletName!,
+              fontSize: 20,
+              color: Colors.black),
           const SizedBox(height: 5),
-          semiBoldText('${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
+          semiBoldText(
+              '${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
               fontSize: 18,
               color: Colors.black,
               fontFamily: FontFamilyHelper.sourceSansRegular),
@@ -163,7 +173,10 @@ class _HomeState extends State<Home> {
           border: Border.all(color: Colors.blueGrey.shade100),
         ),
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10,),
+          padding: const EdgeInsets.only(
+            left: 10,
+            right: 10,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -174,7 +187,12 @@ class _HomeState extends State<Home> {
               semiBoldText(_financialOptions[index].optionName!,
                   color: Colors.black,
                   fontFamily: FontFamilyHelper.sourceSansBold,
-                  fontSize:_financialOptions[index].optionName ==AppStrings.settlements ||_financialOptions[index].optionName ==AppStrings.creditSaleOuts?13.5: 15.0,
+                  fontSize: _financialOptions[index].optionName ==
+                              AppStrings.settlements ||
+                          _financialOptions[index].optionName ==
+                              AppStrings.creditSaleOuts
+                      ? 13.5
+                      : 15.0,
                   textAlign: TextAlign.center)
             ],
           ),
@@ -225,7 +243,7 @@ class _HomeState extends State<Home> {
       },
       child: Container(
         height: screenHeight(context) * 0.12,
-      width: screenWidth(context) * 0.15,
+        width: screenWidth(context) * 0.15,
         decoration: BoxDecoration(
           color: const Color(0xffFFFFFF),
           borderRadius: const BorderRadius.all(
@@ -242,7 +260,7 @@ class _HomeState extends State<Home> {
               Image.asset(_transactionsOptions[index].optionIcon!,
                   height: screenHeight(context) * 0.038),
               const SizedBox(height: 10),
-                semiBoldText(_transactionsOptions[index].optionName!,
+              semiBoldText(_transactionsOptions[index].optionName!,
                   color: Colors.black,
                   fontFamily: FontFamilyHelper.sourceSansBold,
                   fontSize: 15.0,
@@ -279,9 +297,28 @@ class _HomeState extends State<Home> {
       );
     } else if (_financialOptions[index].optionName! ==
         AppStrings.transactionDetails) {
+      getTransactionType();
+    } else if (_financialOptions[index].optionName! ==
+        AppStrings.receivablePayableDetail) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const TransactionDetails()),
+        MaterialPageRoute(builder: (context) => const ReceivablePayable()),
+      );
+    }
+  }
+
+  Future<void> getTransactionType() async {
+    showLoader(context);
+    var financialPro = Provider.of<FinancialsProvider>(context, listen: false);
+    await financialPro.getTransactionType(context);
+    if (financialPro.transactionType != null &&
+        financialPro.transactionType!.internelStatusCode == 1000) {
+      dismissLoader(context);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                TransactionDetails(financialPro.transactionType!)),
       );
     }
   }

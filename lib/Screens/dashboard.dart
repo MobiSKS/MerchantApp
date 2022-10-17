@@ -28,7 +28,7 @@ class _DashboardState extends State<Dashboard> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor:_selectedIndex==2?Colors.white: Colors.indigo.shade50,
+        backgroundColor:_selectedIndex==2?Colors.white: Colors.white,
         key: _scaffoldKey,
         drawer: const NavDrawer(),
         bottomNavigationBar: BottomNavigationBar(
@@ -130,7 +130,7 @@ class _DashboardState extends State<Dashboard> {
       color: Colors.indigo.shade900,
       child: Padding(
         padding:
-            const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+            const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

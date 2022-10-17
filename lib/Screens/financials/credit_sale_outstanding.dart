@@ -32,8 +32,13 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context, title: AppStrings.creditSaleOuts),
-        body: SingleChildScrollView(child: _body(context)),
+        appBar: normalAppBar(context,),
+        body: SingleChildScrollView(child: Column(
+          children: [
+            title(context,AppStrings.creditSaleOuts),
+            _body(context),
+          ],
+        )),
       ),
     );
   }
@@ -52,7 +57,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
                   children: [
                     SizedBox(height: screenHeight(context) * 0.05),
                     semiBoldText('Customer ID',
-                        color: Colors.grey.shade600,
+                        color: Colors.grey.shade900,
                         ),
                     _enterCustomerId(context),
                     SizedBox(height: screenHeight(context) * 0.05),

@@ -4,6 +4,7 @@ import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import '../../const/app_strings.dart';
 import '../../util/uiutil.dart';
@@ -80,9 +81,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: PreferredSize(
-            preferredSize: Size.fromHeight(70.0),
-          child: normalAppBar(context, title: AppStrings.paymentNsettlement)),
+        appBar: normalAppBar(context, title: AppStrings.paymentNsettlement),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(
             physics:
@@ -132,7 +131,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
           padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 30),
-           
             child: Column(
               children: [
                 const SizedBox(height: 10),
@@ -184,15 +182,15 @@ class _SettlementScreenState extends State<SettlementScreen> {
                   ],
                 ),
                 const SizedBox(height: 15),
-                Divider(indent: 0,endIndent: 0,color:Colors.grey.shade600),
-                                const SizedBox(height: 5),
+                Divider(indent: 0, endIndent: 0, color: Colors.grey.shade600),
+                const SizedBox(height: 5),
                 Row(
                   children: [
                     semiBoldText("No of Transactions",
                         color: Colors.grey.shade700, fontSize: 22),
                     const Spacer(),
                     semiBoldText("Total",
-                        color: Colors.grey.shade700, fontSize:22),
+                        color: Colors.grey.shade700, fontSize: 22),
                   ],
                 ),
                 const SizedBox(height: 10),
@@ -362,14 +360,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
   }
 
   Widget _listItem(BuildContext context, Payment data) {
-    var initials;
-    var string = data.name!.split(" ");
-    if (string.length > 1) {
-      initials = string[0][0] + string[1][0];
-    } else {
-      initials = string[0][0];
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Row(
@@ -381,10 +371,9 @@ class _SettlementScreenState extends State<SettlementScreen> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               CircleAvatar(
-                backgroundColor:
-                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                backgroundColor: Utils.getRamdomColor(),
                 child: Center(
-                    child: semiBoldText(initials,
+                    child: semiBoldText(Utils.getNameInitials(data.name),
                         color: Colors.white, fontSize: 20)),
               ),
               SizedBox(width: screenWidth(context) * 0.03),
@@ -443,7 +432,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 semiBoldText('Batch Id: 4600074',
-                    color: Colors.grey.shade700, fontSize: 18.0),
+                    color: Colors.grey.shade900, fontSize: 18.0),
                 const SizedBox(height: 5),
                 Text.rich(
                   TextSpan(
@@ -451,7 +440,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                       TextSpan(
                           text: 'JDE Status: ',
                           style: TextStyle(
-                              color: Colors.grey.shade700,
+                              color: Colors.grey.shade600,
                               fontSize: 18,
                               fontFamily: FontFamilyHelper.sourceSansSemiBold)),
                       const TextSpan(
@@ -470,7 +459,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     Row(
                       children: [
                         semiBoldText(data.date!,
-                            color: Colors.grey.shade700, fontSize: 18.0),
+                            color: Colors.grey.shade600, fontSize: 18.0),
                         const SizedBox(width: 5),
                         semiBoldText(data.time!,
                             color: Colors.grey.shade700, fontSize: 18.0),
@@ -482,7 +471,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
               Row(
                 children: [
                   semiBoldText('₹ ${data.amount!}',
-                      color: Colors.grey.shade700, fontSize: 18.0),
+                      color: Colors.grey.shade900, fontSize: 18.0),
                 ],
               )
             ],

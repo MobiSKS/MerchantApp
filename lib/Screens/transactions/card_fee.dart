@@ -26,7 +26,12 @@ class _CardFeeState extends State<CardFee> {
         child: Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: normalAppBar(context, title: AppStrings.cardFee),
-      body: _body(context),
+      body: Column(
+        children: [
+          title(context, AppStrings.cardFee),
+          _body(context),
+        ],
+      ),
     ));
   }
 

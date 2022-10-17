@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:dtplusmerchant/common/custom_list.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import '../../const/app_strings.dart';
 import '../../util/uiutil.dart';
 
 class SettlementDetail extends StatefulWidget {
@@ -40,7 +42,7 @@ class _SettlementDetailState extends State<SettlementDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context, title: 'Settlement Detail'),
+        appBar: normalAppBar(context),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(child: _body(context)),
       ),
@@ -51,7 +53,8 @@ class _SettlementDetailState extends State<SettlementDetail> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: screenHeight(context) * 0.03),
+        // SizedBox(height: screenHeight(context) * 0.03),
+        title(context,'Settlement Details'),
         _settlementWidget(context),
       ],
     );
@@ -139,9 +142,9 @@ class _SettlementDetailState extends State<SettlementDetail> {
             children: [
               CircleAvatar(
                 backgroundColor:
-                    Colors.primaries[Random().nextInt(Colors.primaries.length)],
+                  Utils.getRamdomColor(),
                 child: Center(
-                    child: semiBoldText(data.name![0],
+                    child: semiBoldText(Utils.getNameInitials(data.name),
                         color: Colors.white, fontSize: 22)),
               ),
               SizedBox(width: screenWidth(context) * 0.03),

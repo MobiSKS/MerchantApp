@@ -4,7 +4,7 @@ import 'package:dtplusmerchant/Screens/dashboard.dart';
 import 'package:dtplusmerchant/Screens/erp_detail.dart';
 import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
-import 'package:dtplusmerchant/Screens/receivable_payable.dart';
+import 'package:dtplusmerchant/Screens/financials/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
@@ -79,7 +79,6 @@ class _MyAppState extends State<MyApp> {
           "/forgotPassword": (context) =>const ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
           "/scanQRcode": (context) => const ScanQRCode(),
-          "/transactionDetails": (context) => const TransactionDetails(),
           "/receivablePayable": (context) => const ReceivablePayable(),
           "/erpDetail": (context) => const ERPDetail(),
           "/batchDetails": (context) => const BatchDetails(),

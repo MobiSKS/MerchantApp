@@ -16,6 +16,8 @@ class UrlConstant {
   static const String transactionType ="settings/get_transaction_type";
   static const String transactionDetail = "merchant/merchant_transaction_detail";
   static const String cardbalance = "transaction/balance_enquiry";
+  static const String receivablePayable = "merchant/merchant_receivable_payable_detail";
+
 //==============================api_key && secret_key=================================
 
   static const String apiKey = "3C25F265-F86D-419D-9A04-EA74A503C197";

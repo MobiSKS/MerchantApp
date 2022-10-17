@@ -1,9 +1,11 @@
+import 'package:dtplusmerchant/Screens/auth/auth_view_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:timer_count_down/timer_count_down.dart';
 import '../common/custom_list.dart';
@@ -92,7 +94,10 @@ Widget customTextField(
             borderRadius: BorderRadius.circular(16.0),
           ),
           filled: true,
-          hintStyle: TextStyle(color: Colors.grey[800], fontSize: 13,fontFamily: FontFamilyHelper.sourceSansSemiBold),
+          hintStyle: TextStyle(
+              color: Colors.grey[800],
+              fontSize: 13,
+              fontFamily: FontFamilyHelper.sourceSansSemiBold),
           hintText: hintText,
           fillColor: Colors.white),
     ),
@@ -109,7 +114,7 @@ var buttonStyle = ButtonStyle(
 
 Widget customButton(BuildContext context, String? text, {Function? onTap}) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 40),
+    padding: const EdgeInsets.symmetric(horizontal: 00),
     child: SizedBox(
       width: screenWidth(context),
       child: TextButton(
@@ -150,7 +155,7 @@ Widget generateQRImage(BuildContext context,
 Widget title(context, String text) {
   return Container(
     width: screenWidth(context),
-    height: screenHeight(context) * 0.06,
+    height: screenHeight(context) * 0.08,
     color: Colors.blue.shade100,
     child: Center(child: boldText(text, color: Colors.black, fontSize: 22)),
   );
@@ -158,18 +163,19 @@ Widget title(context, String text) {
 
 Widget header(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+    padding: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Row(
           children: [
-            GestureDetector(
-                onTap: () {
+            IconButton(
+                onPressed: () {
                   Navigator.pop(context);
                 },
-                child: const Icon(Icons.arrow_back_ios_new,
-                    color: Colors.black, size: 24)),
+                icon: const Icon(Icons.arrow_back_ios_new,
+                    color: Colors.black, size: 28)),
             SizedBox(width: screenWidth(context) * 0.06),
             Image.asset(ImageResources.driveTruckPlusImage,
                 height: screenHeight(context) * 0.032),
@@ -202,6 +208,7 @@ dismissLoader(BuildContext context) {
 }
 
 alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
+  var prov = Provider.of<AuthViewModel>(context, listen: false);
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -225,7 +232,11 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),
                     customButton(context, 'OK', onTap: () {
-                      doLogout ? (){} : Navigator.pop(context);
+                      doLogout
+                          ? () async {
+                              await prov.logout(context);
+                            }
+                          : Navigator.pop(context);
                     })
                   ],
                 )),
@@ -317,42 +328,52 @@ showLoader(context) {
           ));
 }
 
- normalAppBar(BuildContext context, {required String title}) {
+normalAppBar(BuildContext context,{String title=""}) {
   return PreferredSize(
-      preferredSize: const Size.fromHeight(70.0),
+    preferredSize: const Size.fromHeight(75.0),
     child: AppBar(
       backgroundColor: Colors.white,
       leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-        const  SizedBox(height: 7,),
-          IconButton(
-               onPressed: (){
+          const SizedBox(
+            height: 13,
+          ),
+          GestureDetector(
+              onTap: () {
                 Navigator.pop(context);
-               },
-              icon: const Icon(Icons.arrow_back_ios_new,
-                  color: Colors.black, size: 27,)),
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_new,
+                color: Colors.black,
+                size: 27,
+              )),
         ],
       ),
       title: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-               const  SizedBox(height: 7,),
-          boldText(
-            title,
-            color: Colors.black,
-            fontSize: 24,
+           const SizedBox(
+            height: 23,
           ),
+          Image.asset(ImageResources.driveTruckPlusImage,
+                height: screenHeight(context) * 0.032),
         ],
       ),
-      centerTitle: true,
+       centerTitle: true,
       actions: [
         Column(
           children: [
-             const  SizedBox(height: 7,),
-            IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.notifications, color: Colors.grey, size: 26)),
+            const SizedBox(
+              height: 23,
+            ),
+            GestureDetector(
+                onTap: () {},
+                child: const Icon(Icons.notifications,
+                    color: Colors.grey, size: 26)),
           ],
-        )
+        ),
+     const   SizedBox(width:20)
       ],
     ),
   );
@@ -448,11 +469,8 @@ Widget receiptTitle(context, GlobalKey key) {
   );
 }
 
-Widget receiptDetail(
-  BuildContext context,
-  List<ReceiptDetail> receptDetail1,
-  {double itemSapce=7.0}
-) {
+Widget receiptDetail(BuildContext context, List<ReceiptDetail> receptDetail1,
+    {double itemSapce = 7.0}) {
   return CustomList(
       list: receptDetail1,
       itemSpace: itemSapce,

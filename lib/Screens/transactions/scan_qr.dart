@@ -12,11 +12,12 @@ class ScanQRCode extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: normalAppBar(context, title: AppStrings.qrPayment),
+          appBar: normalAppBar(context),
           backgroundColor: Colors.white,
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              title(context,AppStrings.qrPayment),
               SizedBox(height: screenHeight(context) * 0.07),
               Image.asset(ImageResources.hpLogoReceipt, height: 100),
               SizedBox(height: screenHeight(context) * 0.015),

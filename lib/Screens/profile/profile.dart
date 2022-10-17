@@ -19,10 +19,10 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: normalAppBar(context),
           body: Column(
         children: [
-          header(context),
-          SizedBox(height: screenHeight(context) * 0.02),
+        
           title(context, AppStrings.profile),
           SizedBox(height: screenHeight(context) * 0.06),
           Padding(

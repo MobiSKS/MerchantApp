@@ -74,6 +74,8 @@ class TransactionsProvider extends ChangeNotifier {
       "OTPtype": otpType,
       "TransTypeId": transType,
       "Userip": ip,
+      "Useragent": Utils.checkOs(),
+  
     };
 
     param.addAll(commonReqBody);
@@ -171,8 +173,12 @@ class TransactionsProvider extends ChangeNotifier {
       "Amount": amount,
       "ProductId": productId,
       "Userip": ip,
+       "Useragent": Utils.checkOs(),
+  "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+  "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
+  "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
     };
-    param.addAll(commonReqBody);
+   // param.addAll(commonReqBody);
     Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };

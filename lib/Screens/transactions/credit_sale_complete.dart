@@ -44,6 +44,7 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: normalAppBar(context),
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -51,8 +52,7 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
               key: _formKey,
               child: Column(
                 children: [
-                  header(context),
-                  SizedBox(height: screenHeight(context) * 0.02),
+                 
                   title(context, AppStrings.creditSaleComplete),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),

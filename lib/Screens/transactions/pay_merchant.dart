@@ -38,13 +38,13 @@ class _PayMerchantState extends State<PayMerchant> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: normalAppBar(context),
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Column(
               children: [
-                header(context),
-                SizedBox(height: screenHeight(context) * 0.02),
+             
                 title(context, AppStrings.payMerchant),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),

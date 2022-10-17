@@ -1,16 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'dart:math';
 
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../const/injection.dart';
-import '../model/user_model.dart';
 import '../preferences/shared_preference.dart';
 
 class Utils {
- 
   static final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   static String merchantId =
       _sharedPref.user!.data!.objGetMerchantDetail![0].merchantId!;
@@ -23,9 +22,8 @@ class Utils {
 
   static const int otpTypeForSale = 1;
   static const int otpTypeForCreditSaleComplete = 9;
-   static const int otpTypeForCardBalanceEnquiry = 7;
+  static const int otpTypeForCardBalanceEnquiry = 7;
 
-  
 //=======date format ===== exp: 2022-09-16================
 
   static String convertDateFormatInYYMMDD(DateTime date) {
@@ -89,5 +87,18 @@ class Utils {
 
   static Future<String> getIp() async {
     return await Ipify.ipv4();
+  }
+
+  static String getNameInitials(String? name) {
+    var string = name!.split(" ");
+    if (string.length > 1) {
+      return string[0][0] + string[1][0];
+    } else {
+      return string[0][0];
+    }
+  }
+
+  static Color getRamdomColor() {
+    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
   }
 }

@@ -81,7 +81,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                     SizedBox(height: screenHeight(context) * 0.02),
                     title(context, AppStrings.typeOfSale),
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: 
                           
                            Column(
@@ -120,7 +120,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   Widget submitButton(
       BuildContext context, TransactionsProvider saleReloadViewM) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 00),
       child: SizedBox(
         width: screenWidth(context),
         height: screenHeight(context) * 0.05,
