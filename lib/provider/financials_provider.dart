@@ -32,9 +32,9 @@ class FinancialsProvider extends ChangeNotifier {
   TransactionType? _transactionType;
   TransactionType? get transactionType => _transactionType;
 
-
   ReceivablePayableModel? _receivablePayableResponseModel;
-  ReceivablePayableModel? get receivablePayableResponseModel => _receivablePayableResponseModel;
+  ReceivablePayableModel? get receivablePayableResponseModel =>
+      _receivablePayableResponseModel;
 
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
     showLoader(context);
@@ -104,7 +104,7 @@ class FinancialsProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       _isLoading = false;
-      return alertPopUp(context, e.toString());
+      return alertPopUp(context, e.toString().substring(0, 60));
     }
   }
 
@@ -155,29 +155,37 @@ class FinancialsProvider extends ChangeNotifier {
       return alertPopUp(context, e.toString());
     }
   }
-    Future<void> receivablePayableDetails(
-      context, {
-        String? terminalId,
-        String? fromDate,
-        String? toDate
-      }) async {
+
+  Future<void> receivablePayableDetails(context,
+      {String terminalId='', String? fromDate, String? toDate}) async {
     showLoader(context);
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
     var ip = await Utils.getIp();
     Map param = {
-      "Userip": ip,
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Useragent": Utils.checkOs(),
-      "ToDate": toDate.toString(),
-      "FromDate": fromDate.toString(),
+      "Userip": ip,
+      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "TerminalId": terminalId,
+      "FromDate": fromDate,
+      "ToDate": toDate
     };
-    param.addAll(commonReqBody);
+      Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+   // param.addAll(commonReqBody);
     debugPrint("payload for receivable & payable details ===> $param");
     try {
       var response = await apiServices.post(UrlConstant.receivablePayable,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Success']) {
-        _receivablePayableResponseModel = ReceivablePayableModel.fromJson(response);
-        debugPrint("response of receivable and payable ====>> $_receivablePayableResponseModel");
+        _receivablePayableResponseModel =
+            ReceivablePayableModel.fromJson(response);
+        debugPrint(
+            "response of receivable and payable ====>> $_receivablePayableResponseModel");
         if (_receivablePayableResponseModel!.internelStatusCode != 1000) {
           alertPopUp(context, 'Error Occured');
         }
@@ -190,6 +198,4 @@ class FinancialsProvider extends ChangeNotifier {
       return alertPopUp(context, e.toString());
     }
   }
-
-
 }

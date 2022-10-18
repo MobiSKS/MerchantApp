@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
@@ -95,7 +93,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: screenHeight(context) * 0.03),
+        SizedBox(height: screenHeight(context) * 0.01),
         SlideButton(
             pageController: pageController,
             pageIndex: pageIndex,
@@ -250,6 +248,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
     );
   }
 
+  final _fromDateController = TextEditingController();
+  final _toDateController = TextEditingController();
   Widget _settlementWidget(BuildContext context) {
     return Column(
       children: [
@@ -257,57 +257,33 @@ class _SettlementScreenState extends State<SettlementScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             children: [
-              Row(
-                children: [
-                  DropdownButton(
-                    focusColor: Colors.indigo.shade50,
-                    isExpanded: false,
-                    alignment: Alignment.centerLeft,
-                    underline: Container(
-                      color: Colors.transparent,
-                    ),
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 35,
-                    ),
-                    hint: semiBoldText(
-                      _selectedValuePayment ?? "Today",
-                      color: Colors.grey.shade700,
-                      fontSize: 20,
-                    ),
-                    items: dropdownValues.map((String item) {
-                      return DropdownMenuItem(
-                        value: item,
-                        child: Text(item),
-                      );
-                    }).toList(),
-                    onChanged: (String? newVal) async {
-                      switch (newVal) {
-                        case "Today":
-                          diffPayment = 0;
-                          break;
-                        case "Yesterday":
-                          diffPayment = 1;
-                          break;
-                        case "Last 7 Days":
-                          diffPayment = 7;
-                          break;
-                        default:
-                          _selectedValuePayment = "Today";
-                          break;
-                      }
-
-                      setState(() {
-                        _selectedValuePayment = newVal;
-                      });
-                    },
-                  ),
-                  const Spacer(),
-                  semiBoldText("Settlement Summary",
-                      color: Colors.grey.shade700, fontSize: 20),
-                ],
+              GestureDetector(
+                onTap: () => Utils.selectDatePopup(
+                    context, DateTime.now(), _fromDateController),
+                child: simpleTextField(
+                    context, _fromDateController, 'From Date',
+                    showIcon: true, enabled: false),
               ),
               const SizedBox(height: 15),
+              GestureDetector(
+                onTap: () => Utils.selectDatePopup(
+                    context, DateTime.now(), _toDateController),
+                child: simpleTextField(
+                  context,
+                  _toDateController,
+                  'To Date',
+                  showIcon: true,
+                  enabled:false
+                ),
+              ),
+              const SizedBox(height: 15),
+              simpleTextField(
+                context,
+                _fromDateController,
+                'Terminal Id',
+                showIcon: true,
+              ),
+              const SizedBox(height: 25),
               Row(
                 children: [
                   semiBoldText("Available for Settlements",
@@ -486,10 +462,19 @@ class _SettlementScreenState extends State<SettlementScreen> {
       width: screenWidth(context),
       height: screenHeight(context) * 0.055,
       color: Colors.indigo.shade100,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 30, top: 15),
-        child: semiBoldText(pageIndex == 1 ? "Settlements" : 'Complete Details',
-            color: Colors.black, fontSize: 19),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 30,
+            ),
+            child: semiBoldText(
+                pageIndex == 1 ? "Settlements" : 'Complete Details',
+                color: Colors.black,
+                fontSize: 19),
+          ),
+        ],
       ),
     );
   }

@@ -35,29 +35,13 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   Widget _body(BuildContext context) {
     return Column(
       children: [
-        title(context, AppStrings.receivablePayableDetail),
         _searchFilter(),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-            width: screenWidth(context),
-            height: screenHeight(context) * 0.06,
-            color: Colors.indigo.shade200,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 15),
-              child: boldText(
-                'Search Results',
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
         SizedBox(
           height: screenHeight(context) * 0.03,
         ),
         Expanded(
             child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 00),
           child: _searchResults(),
         )),
       ],
@@ -70,16 +54,21 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
-          SizedBox(height: screenHeight(context) * 0.04),
-          simpleTextField(context, _fromDateController, 'From Date',
-              showIcon: true, onTap: () {
-            Utils.selectDatePopup(context, selectedDate, _fromDateController);
-          }),
+          SizedBox(height: screenHeight(context) * 0.02),
+          GestureDetector(
+            onTap: () {
+              Utils.selectDatePopup(context, selectedDate, _fromDateController);
+            },
+            child: simpleTextField(context, _fromDateController, 'From Date',
+                showIcon: true, enabled: false),
+          ),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _toDateController, 'To Date', showIcon: true,
-              onTap: () {
-            Utils.selectDatePopup(context, selectedDate, _toDateController);
-          }),
+          GestureDetector(
+            onTap: () =>
+                Utils.selectDatePopup(context, selectedDate, _toDateController),
+            child: simpleTextField(context, _toDateController, 'To Date',
+                showIcon: true, enabled: false),
+          ),
           SizedBox(height: screenHeight(context) * 0.01),
           simpleTextField(
               context, _terminalController, "Terminal ID (optional)"),
@@ -99,14 +88,37 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
     return Consumer<FinancialsProvider>(
       builder: (context, value, _) {
         return value.receivablePayableResponseModel != null
-            ? CustomList(
-                list: value.receivablePayableResponseModel!.data!,
-                itemSpace: 20,
-                itemCount: value.receivablePayableResponseModel!.data!.length,
-                child: (context, index) {
-                  return _payableCard(
-                      value.receivablePayableResponseModel!.data![index]);
-                },
+            ? Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5,bottom:20),
+                    child: Container(
+                      width: screenWidth(context),
+                      height: screenHeight(context) * 0.06,
+                      color: Colors.indigo.shade200,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30, top: 15),
+                        child: boldText(
+                          'Search Results',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:25),
+                    child: CustomList(
+                      list: value.receivablePayableResponseModel!.data!,
+                      itemSpace: 20,
+                      itemCount:
+                          value.receivablePayableResponseModel!.data!.length,
+                      child: (context, index) {
+                        return _payableCard(
+                            value.receivablePayableResponseModel!.data![index]);
+                      },
+                    ),
+                  ),
+                ],
               )
             : Container();
       },

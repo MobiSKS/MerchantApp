@@ -45,7 +45,7 @@ class AuthViewModel extends ChangeNotifier {
         _userModel = UserModel.fromJson(response.data);
         log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
-       await _sharedPref.save(SharedPref.userDetails, response.data);
+        await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {
         alertPopUp(context, response.data["Message"]);
@@ -56,9 +56,9 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-   Future<void> logout(BuildContext context) async {
+  Future<void> logout(BuildContext context) async {
     await _sharedPref.preferenceClear();
-     notifyListeners();
+    notifyListeners();
     Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
   }
 }

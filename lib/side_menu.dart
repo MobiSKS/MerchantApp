@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'const/injection.dart';
 import 'model/user_model.dart';
-import 'util/utils.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({super.key});
@@ -80,7 +79,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   ),
                   CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: screenWidth(context) * 0.10)
+                      radius: screenWidth(context) * 0.093)
                 ],
               ),
             ),

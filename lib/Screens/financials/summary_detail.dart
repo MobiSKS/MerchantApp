@@ -23,12 +23,12 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          appBar: normalAppBar(context,title:'Receipt'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            header(context),
-            SizedBox(height: screenHeight(context) * 0.02),
+           
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
           ],

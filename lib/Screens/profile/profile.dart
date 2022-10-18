@@ -19,55 +19,53 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context),
+          appBar: normalAppBar(context, title: AppStrings.profile),
           body: Column(
-        children: [
-        
-          title(context, AppStrings.profile),
-          SizedBox(height: screenHeight(context) * 0.06),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: _headerIcons(),
-          ),
-          SizedBox(height: screenHeight(context) * 0.03),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: index == 0
-                ? GestureDetector(
-                    onHorizontalDragStart: (drag) {
-                      setState(() {
-                        index = 1;
-                      });
-                    },
-                    child: Merchantprofile())
-                : index == 1
+            children: [
+              SizedBox(height: screenHeight(context) * 0.02),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: _headerIcons(),
+              ),
+              SizedBox(height: screenHeight(context) * 0.03),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: index == 0
                     ? GestureDetector(
                         onHorizontalDragStart: (drag) {
                           setState(() {
-                            index = 2;
+                            index = 1;
                           });
                         },
-                        child: RetailOutletAddress())
-                    : index == 2
+                        child: Merchantprofile())
+                    : index == 1
                         ? GestureDetector(
                             onHorizontalDragStart: (drag) {
                               setState(() {
-                                index = 3;
+                                index = 2;
                               });
                             },
-                            child: BusinessDetail())
-                        : index == 3
+                            child: RetailOutletAddress())
+                        : index == 2
                             ? GestureDetector(
                                 onHorizontalDragStart: (drag) {
                                   setState(() {
-                                    index = 0;
+                                    index = 3;
                                   });
                                 },
-                                child: OtherDetail())
-                            : Container(),
-          ),
-        ],
-      )),
+                                child: BusinessDetail())
+                            : index == 3
+                                ? GestureDetector(
+                                    onHorizontalDragStart: (drag) {
+                                      setState(() {
+                                        index = 0;
+                                      });
+                                    },
+                                    child: OtherDetail())
+                                : Container(),
+              ),
+            ],
+          )),
     );
   }
 
@@ -108,7 +106,8 @@ class _ProfileState extends State<Profile> {
                       : ImageResources.basicInfoBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.merchantprofile,   textAlign: TextAlign.center,fontSize:16 )
+          normalText(AppStrings.merchantprofile,
+              textAlign: TextAlign.center, fontSize: 16)
         ],
       ),
     );
@@ -132,8 +131,8 @@ class _ProfileState extends State<Profile> {
                       : ImageResources.addressBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.retailOutletAddress,   textAlign: TextAlign.center,fontSize:16
-            )
+          normalText(AppStrings.retailOutletAddress,
+              textAlign: TextAlign.center, fontSize: 16)
         ],
       ),
     );
@@ -157,7 +156,8 @@ class _ProfileState extends State<Profile> {
                       : ImageResources.officialDetailsBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.keyOfficialDetail,   textAlign: TextAlign.center,fontSize: 16.0)
+          normalText(AppStrings.keyOfficialDetail,
+              textAlign: TextAlign.center, fontSize: 16.0)
         ],
       ),
     );
@@ -179,14 +179,13 @@ class _ProfileState extends State<Profile> {
                   index == 3
                       ? ImageResources.otherDetailsWhite
                       : ImageResources.otherDetailsBlue,
-                      
                   height: 21)),
           const SizedBox(height: 10),
           normalText(
               index == 3
                   ? AppStrings.contactPersonDetail
                   : AppStrings.otherDetails,
-                  textAlign: TextAlign.center,
+              textAlign: TextAlign.center,
               fontSize: 16.0)
         ],
       ),

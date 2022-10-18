@@ -45,12 +45,10 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
       child: Scaffold(
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
-          appBar: normalAppBar(context,),
+          appBar: normalAppBar(context, title: AppStrings.paymentAcceptance),
           body: SingleChildScrollView(
             child: Column(
               children: [
-             
-                title(context, AppStrings.paymentAcceptance),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 40),
                     child: Column(

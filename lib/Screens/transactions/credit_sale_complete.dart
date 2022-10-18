@@ -44,7 +44,7 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context),
+          appBar: normalAppBar(context, title: AppStrings.creditSaleComplete),
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
@@ -52,24 +52,23 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
               key: _formKey,
               child: Column(
                 children: [
-                 
-                  title(context, AppStrings.creditSaleComplete),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: screenHeight(context) * 0.05),
-                          boldText('Enter Card Number',
-                              color: Colors.grey.shade600,
-                              ),
+                          boldText(
+                            'Enter Card Number',
+                            color: Colors.grey.shade600,
+                          ),
                           _enterCardNumber(context),
                           SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(AppStrings.enterAmount,
-                              color: Colors.grey.shade600,
-                              ),
+                          boldText(
+                            AppStrings.enterAmount,
+                            color: Colors.grey.shade600,
+                          ),
                           _enterAmount(context),
-                       
                           otpReceived ? enterOTP(context) : Container(),
                           SizedBox(height: screenHeight(context) * 0.10),
                           customButton(context, AppStrings.submit, onTap: () {
@@ -89,8 +88,10 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
-        boldText(AppStrings.enterOTP,
-            color: Colors.grey.shade600,),
+        boldText(
+          AppStrings.enterOTP,
+          color: Colors.grey.shade600,
+        ),
         _otpTextField(context, _otpController, color: Colors.grey.shade600),
         const SizedBox(height: 10),
       ],
@@ -165,13 +166,16 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
       );
       if (transactionPro.saleByTeminalResponse!.internelStatusCode == 1000) {
         showToast('Payment Successfull', false);
-         Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) =>  CreditCompleteReceipt(creditCompResp: transactionPro.saleByTeminalResponse!,)),
-          );
-      }else{
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CreditCompleteReceipt(
+                    creditCompResp: transactionPro.saleByTeminalResponse!,
+                  )),
+        );
+      } else {
         setState(() {
-          otpReceived =false;
+          otpReceived = false;
         });
       }
     }

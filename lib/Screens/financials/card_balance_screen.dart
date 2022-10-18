@@ -28,14 +28,14 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? otp;
 
-  // bool _validate() {
-  //   final FormState? form = _formKey.currentState;
-  //   if (form!.validate()) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // }
+  bool _validate() {
+    final FormState? form = _formKey.currentState;
+    if (form!.validate()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,37 +59,45 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: screenHeight(context) * 0.05),
+              SizedBox(height: screenHeight(context) * 0.03),
               semiBoldText('Mobile Number', color: Colors.grey.shade600),
               _enterMobileNo(context),
               _otpReceived ? enterOTP(context) : Container(),
-              SizedBox(height: screenHeight(context) * 0.10),
+              SizedBox(height: screenHeight(context) * 0.06),
               customButton(context, AppStrings.submit, onTap: () {
                 submit();
               }),
             ]),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 20),
-            child: Container(
-              width: screenWidth(context),
-              height: screenHeight(context) * 0.06,
-              color: Colors.indigo.shade200,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, top: 15),
-                child: semiBoldText(
-                  'Card Balance Detail',
-                  color: Colors.black,
-                ),
-              ),
-            ),
-          ),
+          _otpReceived
+              ? Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: Container(
+                    width: screenWidth(context),
+                    height: screenHeight(context) * 0.06,
+                    color: Colors.indigo.shade200,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 30,
+                          ),
+                          child: semiBoldText(
+                            'Card Balance Detail',
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : Container(),
           SizedBox(height: screenHeight(context) * 0.02),
           transactionPro.cardEnquiryResponseModel != null
-              ? _cardBalanceDetail(context,transactionPro.cardEnquiryResponseModel!.data![0])
-              : const Center(
-                  child: Text("No Balance Record Found"),
-                ),
+              ? _cardBalanceDetail(
+                  context, transactionPro.cardEnquiryResponseModel!.data![0])
+              : Container(),
         ],
       ),
     );
@@ -166,13 +174,17 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     );
   }
 
-  Widget _cardBalanceDetail(BuildContext context, Data data,) {
+  Widget _cardBalanceDetail(
+    BuildContext context,
+    Data data,
+  ) {
     List<CommonList> cardBalanceEntity = [
       CommonList(key: 'Date', value: '22/09/2022'),
       CommonList(key: 'Time', value: '2:10 PM'),
       CommonList(key: 'Monthly Limit', value: 'Rs ${data.monthlyLimit}'),
       CommonList(key: 'Monthly Spent', value: 'Rs ${data.monthlySpent}'),
-      CommonList(key: 'Monthly Limit Balance', value: 'Rs ${data.monthlyLimitBal}'),
+      CommonList(
+          key: 'Monthly Limit Balance', value: 'Rs ${data.monthlyLimitBal}'),
       CommonList(key: 'Daily Limit', value: 'Rs ${data.dailyLimit}'),
       CommonList(key: 'Daily Spent', value: 'Rs ${data.dailySpent}'),
       CommonList(key: 'Daily Limit Balance', value: 'Rs ${data.dailyLimitBal}'),
@@ -233,7 +245,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
           _otpReceived = false;
           _mobileController.text = "";
         });
-      }else{
+      } else {
         setState(() {
           _otpReceived = false;
           _mobileController.text = "";

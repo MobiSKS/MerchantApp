@@ -42,7 +42,7 @@ class _SettlementDetailState extends State<SettlementDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context),
+        appBar: normalAppBar(context,title: 'Settlement Details'),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(child: _body(context)),
       ),
@@ -53,8 +53,6 @@ class _SettlementDetailState extends State<SettlementDetail> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // SizedBox(height: screenHeight(context) * 0.03),
-        title(context,'Settlement Details'),
         _settlementWidget(context),
       ],
     );
@@ -70,16 +68,16 @@ class _SettlementDetailState extends State<SettlementDetail> {
             children: [
               const SizedBox(height: 20),
               semiBoldText("Summary",
-                  color: Colors.grey.shade700, fontSize: 20),
+                  color: Colors.grey.shade800, fontSize: 20),
               const SizedBox(height: 10),
               semiBoldText("No. of Transactions : 05",
-                  color: Colors.grey.shade700, fontSize: 20),
+                  color: Colors.grey.shade800, fontSize: 20),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   semiBoldText("Settlement on: 08-Sep-2022",
-                      color: Colors.grey.shade700, fontSize: 20),
+                      color: Colors.grey.shade800, fontSize: 20),
                   Row(
                     children: [
                       shareButton(),
@@ -150,7 +148,7 @@ class _SettlementDetailState extends State<SettlementDetail> {
               SizedBox(width: screenWidth(context) * 0.03),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 semiBoldText(data.name!,
-                    color: Colors.grey.shade700, fontSize: 22.0),
+                    color: Colors.grey.shade900, fontSize: 22.0),
                 const SizedBox(height: 5),
                 Row(
                   children: [
@@ -171,7 +169,7 @@ class _SettlementDetailState extends State<SettlementDetail> {
           Row(
             children: [
               semiBoldText('₹ ${data.amount!}',
-                  color: Colors.grey.shade700, fontSize: 22),
+                  color: Colors.grey.shade900, fontSize: 22),
             ],
           )
         ],
@@ -184,9 +182,14 @@ class _SettlementDetailState extends State<SettlementDetail> {
       width: screenWidth(context),
       height: screenHeight(context) * 0.055,
       color: Colors.indigo.shade100,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 30, top: 15),
-        child: semiBoldText("Transactions", color: Colors.black, fontSize: 19),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 30, ),
+            child: semiBoldText("Transactions", color: Colors.black, fontSize: 19),
+          ),
+        ],
       ),
     );
   }

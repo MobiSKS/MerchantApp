@@ -231,13 +231,10 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                         color: Colors.black,
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),
-                    customButton(context, 'OK', onTap: () {
-                      doLogout
-                          ? () async {
-                              await prov.logout(context);
-                            }
-                          : Navigator.pop(context);
-                    })
+                    customButton(context, 'OK',
+                        onTap: () => doLogout
+                            ? () async => await prov.logout(context)
+                            : Navigator.pop(context))
                   ],
                 )),
           ),
@@ -290,10 +287,11 @@ Widget horizontalDivider(BuildContext context) {
 
 Widget simpleTextField(
     BuildContext context, TextEditingController controller, String hintText,
-    {bool showIcon = false, Function? onTap}) {
+    {bool showIcon = false, Function? onTap,bool enabled = true}) {
   return SizedBox(
     width: screenWidth(context),
     child: TextFormField(
+      enabled: enabled,
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -306,7 +304,7 @@ Widget simpleTextField(
                 )
               : null,
           hintText: hintText,
-          hintStyle: const TextStyle(fontWeight: FontWeight.bold)),
+          hintStyle:  TextStyle(fontWeight: FontWeight.bold,color:Colors.grey.shade700,fontFamily: FontFamilyHelper.sourceSansSemiBold)),
     ),
   );
 }
@@ -328,52 +326,66 @@ showLoader(context) {
           ));
 }
 
-normalAppBar(BuildContext context,{String title=""}) {
+normalAppBar(BuildContext context, {String title = ''}) {
   return PreferredSize(
-    preferredSize: const Size.fromHeight(75.0),
-    child: AppBar(
-      backgroundColor: Colors.white,
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const SizedBox(
-            height: 13,
-          ),
-          GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: const Icon(
-                Icons.arrow_back_ios_new,
-                color: Colors.black,
-                size: 27,
-              )),
-        ],
-      ),
-      title: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-           const SizedBox(
-            height: 23,
-          ),
-          Image.asset(ImageResources.driveTruckPlusImage,
-                height: screenHeight(context) * 0.032),
-        ],
-      ),
-       centerTitle: true,
-      actions: [
-        Column(
-          children: [
-            const SizedBox(
-              height: 23,
+    preferredSize: Size.fromHeight(screenHeight(context) * 0.157),
+    child: Column(
+      children: [
+        SizedBox(
+          height: 70,
+          child: AppBar(
+            backgroundColor: Colors.white,
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 13,
+                ),
+                GestureDetector(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios_new,
+                      color: Colors.black,
+                      size: 27,
+                    )),
+              ],
             ),
-            GestureDetector(
-                onTap: () {},
-                child: const Icon(Icons.notifications,
-                    color: Colors.grey, size: 26)),
-          ],
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 23,
+                ),
+                Image.asset(ImageResources.driveTruckPlusImage,
+                    height: screenHeight(context) * 0.032),
+              ],
+            ),
+            centerTitle: true,
+            actions: [
+              Column(
+                children: [
+                  const SizedBox(
+                    height: 23,
+                  ),
+                  GestureDetector(
+                      onTap: () {},
+                      child: const Icon(Icons.notifications,
+                          color: Colors.grey, size: 26)),
+                ],
+              ),
+              const SizedBox(width: 20)
+            ],
+          ),
         ),
-     const   SizedBox(width:20)
+        Container(
+          width: screenWidth(context),
+          height: screenHeight(context) * 0.06,
+          color: Colors.blue.shade100,
+          child:
+              Center(child: boldText(title, color: Colors.black, fontSize: 22)),
+        )
       ],
     ),
   );

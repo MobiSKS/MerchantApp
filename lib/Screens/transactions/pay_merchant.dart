@@ -38,23 +38,22 @@ class _PayMerchantState extends State<PayMerchant> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context),
+          appBar: normalAppBar(context, title: AppStrings.payMerchant),
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           body: SingleChildScrollView(
             child: Column(
               children: [
-             
-                title(context, AppStrings.payMerchant),
                 Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
-                        boldText(AppStrings.enterPayCode,
-                            color: Colors.grey.shade600,
-                            ),
+                        boldText(
+                          AppStrings.enterPayCode,
+                          color: Colors.grey.shade600,
+                        ),
                         _enterpayCode(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.submit, onTap: () {

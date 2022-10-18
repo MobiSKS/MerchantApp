@@ -23,11 +23,11 @@ class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetail
     return SafeArea(
         child: Scaffold(
           backgroundColor: Colors.white,
+          appBar: normalAppBar(context,title:AppStrings.receivablePayableDetail),
           body: SingleChildScrollView(
             child: Column(
               children: [
-                header(context),
-                SizedBox(height: screenHeight(context) * 0.02),
+             
                 _body(context),
                 SizedBox(height: screenHeight(context) * 0.02),
               ],
@@ -44,12 +44,9 @@ class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetail
       ReceiptDetail(
           title: 'BatchId', value: '${widget.dataItem.batchId}'),
       ReceiptDetail(title: 'Settlement Date', value: '${widget.dataItem.settlementDate.toString().characters.take(10)}'),
-      // ReceiptDetail(title: AppStrings.amount, value: '₹ '),
       ReceiptDetail(title: 'Receivable', value: '${widget.dataItem.receivable}'),
       ReceiptDetail(title: 'Payable', value: '${widget.dataItem.payable}'),
-      // ReceiptDetail(title: 'Voided By ROC', value: /*widget.dataItem.voidedByRoc*/''),
-      // ReceiptDetail(title: 'Product', value: /*widget.dataItem.product*/''),
-      // ReceiptDetail(title: 'Price', value: '₹ '),
+      
     ];
 
     return Screenshot(
@@ -67,9 +64,9 @@ class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetail
                   SizedBox(height: screenHeight(context) * 0.02),
                   Image.asset(ImageResources.hpLogoReceipt, height: 100),
                   SizedBox(height: screenHeight(context) * 0.015),
-                  boldText('Transaction  Detail',
+                  boldText('Receivable & Payable',
                       color: Colors.black, fontSize: 24.0),
-                  SizedBox(height: screenHeight(context) * 0.07),
+                  SizedBox(height: screenHeight(context) * 0.04),
                   receiptDetail(context, transDetail,itemSapce: 17.0),
                 ],
               )),

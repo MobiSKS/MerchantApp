@@ -58,11 +58,10 @@ class TransactionsProvider extends ChangeNotifier {
       int otpType = 1}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
-
- Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
@@ -75,7 +74,6 @@ class TransactionsProvider extends ChangeNotifier {
       "TransTypeId": transType,
       "Userip": ip,
       "Useragent": Utils.checkOs(),
-  
     };
 
     param.addAll(commonReqBody);
@@ -106,11 +104,10 @@ class TransactionsProvider extends ChangeNotifier {
       int productId = 0}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
-
- Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
@@ -173,17 +170,17 @@ class TransactionsProvider extends ChangeNotifier {
       "Amount": amount,
       "ProductId": productId,
       "Userip": ip,
-       "Useragent": Utils.checkOs(),
-  "UserId": user.data!.objGetMerchantDetail![0].merchantId,
-  "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
-  "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
+      "Useragent": Utils.checkOs(),
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
+      "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
     };
-   // param.addAll(commonReqBody);
+    // param.addAll(commonReqBody);
     Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
-  log('===>token ${user.data!.objGetMerchantDetail![0].token}');
+    log('===>token ${user.data!.objGetMerchantDetail![0].token}');
     try {
       var response = await apiServices.post(UrlConstant.generateQR,
           body: param, requestHeader: header);
@@ -221,7 +218,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Userip": ip,
     };
     param.addAll(commonReqBody);
-   
+
     try {
       var response = await apiServices.post(UrlConstant.otpForFastTag,
           body: param, requestHeader: header);
@@ -290,11 +287,10 @@ class TransactionsProvider extends ChangeNotifier {
       String? invoiceDate}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
-
- Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
@@ -343,11 +339,10 @@ class TransactionsProvider extends ChangeNotifier {
   }) async {
     showLoader(context);
     var ip = await Utils.getIp();
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
-
- Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
@@ -400,7 +395,7 @@ class TransactionsProvider extends ChangeNotifier {
     }
   }
 
-   Future<void> cardEnquiryDetails(
+  Future<void> cardEnquiryDetails(
     context, {
     String? mobileNo,
     String? OTP,

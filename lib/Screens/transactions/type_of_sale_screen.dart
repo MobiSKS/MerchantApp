@@ -67,6 +67,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+          appBar: normalAppBar(context, title: AppStrings.typeOfSale),
           resizeToAvoidBottomInset: true,
           backgroundColor: Colors.white,
           body: BaseView<TransactionsProvider>(
@@ -77,38 +78,33 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                 autovalidateMode: AutovalidateMode.always,
                 child: Column(
                   children: [
-                    header(context),
-                    SizedBox(height: screenHeight(context) * 0.02),
-                    title(context, AppStrings.typeOfSale),
                     Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: 
-                          
-                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(height: screenHeight(context) * 0.05),
-                              boldText(AppStrings.selectPaymentType,
-                                  color: Colors.grey.shade600),
-                              _selectPaymentType(context),
-                              _payType == '505'
-                                  ? _selectBank(context)
-                                  : Container(),
-                              _payType == '505'
-                                  ? _enterVehicleNo(context)
-                                  : Container(),
-                              SizedBox(height: screenHeight(context) * 0.05),
-                              boldText(
-                                AppStrings.mobileNum,
-                                color: Colors.grey.shade600,
-                              ),
-                              _enterMobileNo(context),
-                              _otpSent.value ? enterOTP(context) : Container(),
-                              SizedBox(height: screenHeight(context) * 0.10),
-                              submitButton(context, saleReloadViewM)
-                            ],
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: screenHeight(context) * 0.05),
+                          boldText(AppStrings.selectPaymentType,
+                              color: Colors.grey.shade600),
+                          _selectPaymentType(context),
+                          _payType == '505'
+                              ? _selectBank(context)
+                              : Container(),
+                          _payType == '505'
+                              ? _enterVehicleNo(context)
+                              : Container(),
+                          SizedBox(height: screenHeight(context) * 0.05),
+                          boldText(
+                            AppStrings.mobileNum,
+                            color: Colors.grey.shade600,
                           ),
-                        )
+                          _enterMobileNo(context),
+                          _otpSent.value ? enterOTP(context) : Container(),
+                          SizedBox(height: screenHeight(context) * 0.10),
+                          submitButton(context, saleReloadViewM)
+                        ],
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -459,7 +455,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                 )),
       );
     } else {
-     _otpSent.value= false;
+      _otpSent.value = false;
     }
   }
 }

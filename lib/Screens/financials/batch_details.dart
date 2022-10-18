@@ -25,7 +25,7 @@ class _BatchDetailsState extends State<BatchDetails> {
     return SafeArea(
         child: Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar:normalAppBar(context, ),
+      appBar:normalAppBar(context, title:'Batch Details'),
       body: _body(context),
     ));
   }
