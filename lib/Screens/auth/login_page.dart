@@ -3,6 +3,7 @@ import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../base/base_view.dart';
 import 'auth_view_model.dart';
 
@@ -89,7 +90,8 @@ class _LoginPageState extends State<LoginPage> {
                         onTap: () {
                           Navigator.pushNamed(context, "/forgotPassword");
                         },
-                        child: underlinedText(AppStrings.forgotPassword,fontSize: 16))
+                        child: underlinedText(AppStrings.forgotPassword,
+                            fontSize: 16))
                   ],
                 ),
               ),
@@ -116,7 +118,8 @@ class _LoginPageState extends State<LoginPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          semiBoldText(AppStrings.welcomeBack,fontSize: 22.0,color:Colors.white),
+          semiBoldText(AppStrings.welcomeBack,
+              fontSize: 22.0, color: Colors.white),
           SizedBox(height: screenHeight(context) * 0.030),
           _userNameField(),
           SizedBox(height: screenHeight(context) * 0.030),
@@ -132,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
       child: TextFormField(
         controller: userNameController,
         keyboardType: TextInputType.number,
+        inputFormatters: [LengthLimitingTextInputFormatter(10)],
         validator: (val) => val!.isEmpty ? AppStrings.userNameEmptyMsg : null,
         decoration: InputDecoration(
             prefixIcon: const Icon(Icons.person, size: 20),
@@ -141,8 +145,10 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             filled: true,
-        
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 18,fontFamily: FontFamilyHelper.sourceSansRegular),
+            hintStyle: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 18,
+                fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.userName,
             fillColor: Colors.white),
       ),
@@ -173,7 +179,10 @@ class _LoginPageState extends State<LoginPage> {
               borderRadius: BorderRadius.circular(16.0),
             ),
             filled: true,
-            hintStyle: TextStyle(color: Colors.grey[800], fontSize: 18,fontFamily: FontFamilyHelper.sourceSansRegular),
+            hintStyle: TextStyle(
+                color: Colors.grey[800],
+                fontSize: 18,
+                fontFamily: FontFamilyHelper.sourceSansRegular),
             hintText: AppStrings.password,
             fillColor: Colors.white),
       ),
@@ -194,7 +203,7 @@ class _LoginPageState extends State<LoginPage> {
                 });
               }),
         ),
-        semiBoldText(AppStrings.rememberMe,color: Colors.black)
+        semiBoldText(AppStrings.rememberMe, color: Colors.black)
       ],
     );
   }
@@ -253,7 +262,9 @@ class _LoginPageState extends State<LoginPage> {
         child: const Text(
           AppStrings.submit,
           style: TextStyle(
-              fontSize: 22, fontFamily: FontFamilyHelper.sourceSansBold, color: Colors.white),
+              fontSize: 22,
+              fontFamily: FontFamilyHelper.sourceSansBold,
+              color: Colors.white),
         ),
       ),
     );

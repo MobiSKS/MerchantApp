@@ -40,9 +40,12 @@ class _CardFeeReceiptState extends State<CardFeeReceipt> {
             SizedBox(height: screenHeight(context) * 0.02),
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            customButton(context, 'Download Merchant Copy', onTap: () {
-              _downLoadMerchantCopy();
-            })
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: customButton(context, 'Download Merchant Copy', onTap: () {
+                _downLoadMerchantCopy();
+              }),
+            )
           ],
         ),
       ),

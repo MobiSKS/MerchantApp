@@ -3,8 +3,11 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:dtplusmerchant/base/api_services.dart';
+import 'package:dtplusmerchant/model/change_password_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:flutter/material.dart';
+import '../../const/common_param.dart';
 import '../../const/injection.dart';
 import '../../const/url_constant.dart';
 import '../../preferences/shared_preference.dart';
@@ -14,7 +17,7 @@ import '../../util/utils.dart';
 class AuthViewModel extends ChangeNotifier {
   final Dio _dio = Injection.injector.get<Dio>();
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
-
+  ApiServices apiServices = ApiServices();
   final bool _isLoading = false;
   bool get isLoading => _isLoading;
 
@@ -22,6 +25,9 @@ class AuthViewModel extends ChangeNotifier {
 
   UserModel? _userModel;
   UserModel? get userModel => _userModel;
+
+  ChangePasswordModel? _changePasswordModel;
+  ChangePasswordModel? get changePasswordModel => _changePasswordModel;
 
   Future<void> loginApi(context, String userId, String password) async {
     _dio.options.headers['API_Key'] = UrlConstant.apiKey;
@@ -56,9 +62,52 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> changePasswordApi(context,
+      {String? newPass, String? oldPass, String? confirmNewPass}) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+
+    Map body = { 
+      "Useragent": Utils.checkOs(),
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Userip": ip,
+      "UserName": user.data!.objGetMerchantDetail![0].merchantId,
+      "OldPassword": oldPass,
+      "NewPassword": newPass,
+      "ConfirmNewPassword": confirmNewPass,
+    };
+
+    try {
+      var response = await apiServices.post(UrlConstant.changePassword,
+          body: body, requestHeader: header);
+      if (response['Success']) {
+        dismissLoader(context);
+        _changePasswordModel = ChangePasswordModel.fromJson(response);
+      } else {
+        dismissLoader(context);
+        alertPopUp(context, response["Message"],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+       dismissLoader(context);
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<void> forgetPassword(BuildContext context) async {}
+
   Future<void> logout(BuildContext context) async {
     await _sharedPref.preferenceClear();
     notifyListeners();
     Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
   }
 }
+  

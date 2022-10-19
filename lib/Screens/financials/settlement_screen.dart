@@ -268,13 +268,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
               GestureDetector(
                 onTap: () => Utils.selectDatePopup(
                     context, DateTime.now(), _toDateController),
-                child: simpleTextField(
-                  context,
-                  _toDateController,
-                  'To Date',
-                  showIcon: true,
-                  enabled:false
-                ),
+                child: simpleTextField(context, _toDateController, 'To Date',
+                    showIcon: true, enabled: false),
               ),
               const SizedBox(height: 15),
               simpleTextField(

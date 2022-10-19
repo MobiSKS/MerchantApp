@@ -91,12 +91,12 @@ Widget customTextField(
           contentPadding:
               const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16.0),
+            borderRadius: BorderRadius.circular(13.0),
           ),
           filled: true,
           hintStyle: TextStyle(
-              color: Colors.grey[800],
-              fontSize: 13,
+              color: Colors.grey.shade800,
+              fontSize: 16,
               fontFamily: FontFamilyHelper.sourceSansSemiBold),
           hintText: hintText,
           fillColor: Colors.white),
@@ -231,10 +231,13 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                         color: Colors.black,
                         textAlign: TextAlign.center),
                     const SizedBox(height: 20),
-                    customButton(context, 'OK',
-                        onTap: () => doLogout
-                            ? () async => await prov.logout(context)
-                            : Navigator.pop(context))
+                    customButton(context, 'OK', onTap: () async {
+                      if (doLogout) {
+                        await prov.logout(context);
+                      } else {
+                        Navigator.pop(context);
+                      }
+                    })
                   ],
                 )),
           ),
@@ -287,7 +290,7 @@ Widget horizontalDivider(BuildContext context) {
 
 Widget simpleTextField(
     BuildContext context, TextEditingController controller, String hintText,
-    {bool showIcon = false, Function? onTap,bool enabled = true}) {
+    {bool showIcon = false, Function? onTap, bool enabled = true}) {
   return SizedBox(
     width: screenWidth(context),
     child: TextFormField(
@@ -304,7 +307,11 @@ Widget simpleTextField(
                 )
               : null,
           hintText: hintText,
-          hintStyle:  TextStyle(fontWeight: FontWeight.bold,color:Colors.grey.shade700,fontFamily: FontFamilyHelper.sourceSansSemiBold)),
+          hintStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.grey.shade700,
+              fontSize: 20,
+              fontFamily: FontFamilyHelper.sourceSansSemiBold)),
     ),
   );
 }
