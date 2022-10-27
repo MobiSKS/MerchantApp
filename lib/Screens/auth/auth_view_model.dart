@@ -1,7 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/model/change_password_model.dart';
@@ -36,7 +34,7 @@ class AuthViewModel extends ChangeNotifier {
     var ip = await Utils.getIp();
     Map param = {
       "UserId": userId,
-      "Useragent": Utils.checkOs(),
+      "Useragent":Utils.checkOs(),
       "Userip": ip,
       "Latitude": "1133.2323.23",
       "Longitude": "11.2.12.2",
@@ -45,17 +43,20 @@ class AuthViewModel extends ChangeNotifier {
       "Password": password
     };
     try {
+   //  var postion = await  Utils.getLocation();
       Response response = await _dio.post(UrlConstant.loginApi, data: param);
       dismissLoader(context);
       if (response.data['Success']) {
         _userModel = UserModel.fromJson(response.data);
         log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
+      //  await _sharedPref.save('lat', postion.latitude.toString());
+      //  await _sharedPref.save('long', postion.latitude.toString());
         await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {
         alertPopUp(context, response.data["Message"]);
-      }
+      } 
     } on DioError catch (e) {
       dismissLoader(context);
       return alertPopUp(context, e.response!.statusMessage!);

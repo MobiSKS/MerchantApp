@@ -19,7 +19,6 @@ class Utils {
       _sharedPref.user!.data!.objOutletDetails![0].retailOutletName!;
   static String userToken =
       'Bearer ${_sharedPref.user!.data!.objGetMerchantDetail![0].token!}';
-
   static const int otpTypeForSale = 1;
   static const int otpTypeForCreditSaleComplete = 9;
   static const int otpTypeForCardBalanceEnquiry = 7;
@@ -68,12 +67,19 @@ class Utils {
     }
   }
 
+  // static Future<Position> getLocation() async {
+  //   await Geolocator.checkPermission();
+
+  //   Position position = await Geolocator.getCurrentPosition();
+  //   return position;
+  // }
+
   static String? checkOs() {
     String? os;
     if (Platform.isAndroid) {
       os = "Android";
     } else if (Platform.isIOS) {
-      os = "IOS";
+      os = "IOS";    
     } else if (Platform.isWindows) {
       os = "Windows";
     }
@@ -81,6 +87,7 @@ class Utils {
   }
 
 //=======Date Format exp:  yyyy-MM-dd'T'HH:mm:ss.SSSZ========
+
   static String isoDateTimeFormat() {
     return "${DateTime.now().toIso8601String()}Z";
   }

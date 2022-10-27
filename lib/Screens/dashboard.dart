@@ -28,11 +28,12 @@ class _DashboardState extends State<Dashboard> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        backgroundColor:_selectedIndex==2?Colors.white: Colors.white,
+        backgroundColor:
+            _selectedIndex == 2 ? Colors.white : const Color(0xffe4ecf9),
         key: _scaffoldKey,
         drawer: const NavDrawer(),
         bottomNavigationBar: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed, 
+          type: BottomNavigationBarType.fixed,
           backgroundColor: Colors.indigo.shade900,
           selectedItemColor: Colors.white,
           unselectedItemColor: Colors.white,

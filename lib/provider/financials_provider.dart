@@ -1,5 +1,9 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
+import 'package:dtplusmerchant/model/settlement_model.dart';
 import 'package:flutter/material.dart';
 import '../const/common_param.dart';
 import '../const/injection.dart';
@@ -15,6 +19,7 @@ import '../util/utils.dart';
 
 class FinancialsProvider extends ChangeNotifier {
   ApiServices apiServices = ApiServices();
+   final Dio _dio = Injection.injector.get<Dio>();
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -35,6 +40,9 @@ class FinancialsProvider extends ChangeNotifier {
   ReceivablePayableModel? _receivablePayableResponseModel;
   ReceivablePayableModel? get receivablePayableResponseModel =>
       _receivablePayableResponseModel;
+
+  SettlementModel? _settlementModel;
+  SettlementModel? get settlementModel => _settlementModel;
 
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
     showLoader(context);
@@ -157,7 +165,7 @@ class FinancialsProvider extends ChangeNotifier {
   }
 
   Future<void> receivablePayableDetails(context,
-      {String terminalId='', String? fromDate, String? toDate}) async {
+      {String terminalId = '', String? fromDate, String? toDate}) async {
     showLoader(context);
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
@@ -171,11 +179,11 @@ class FinancialsProvider extends ChangeNotifier {
       "FromDate": fromDate,
       "ToDate": toDate
     };
-      Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);
-   // param.addAll(commonReqBody);
+    // param.addAll(commonReqBody);
     debugPrint("payload for receivable & payable details ===> $param");
     try {
       var response = await apiServices.post(UrlConstant.receivablePayable,
@@ -192,6 +200,46 @@ class FinancialsProvider extends ChangeNotifier {
       } else {
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<void> getSettlement(context,
+      {String? fromDate, String? toDate, String terminalID = ""}
+      ) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    // Map<String, String> header = {
+    //   "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    // };
+    // header.addAll(commonHeader);
+
+    Map param = {
+      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Useragent": Utils.checkOs(),
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Userip": ip,
+      "TerminalId": terminalID,
+      "FromDate": fromDate,
+      "ToDate": toDate
+    };
+
+    try {
+      var response = await _dio.post(UrlConstant.settlementApi,
+          data: param, );
+          log('===>token ${user.data!.objGetMerchantDetail![0].token}');
+      dismissLoader(context);
+      if (response.data['Success']) {
+        _settlementModel = SettlementModel.fromJson(response.data);
+      } else {
+        alertPopUp(context, response.data['Message'],
+            doLogout: response.data['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
     } catch (e) {

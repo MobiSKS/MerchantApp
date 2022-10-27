@@ -1,7 +1,6 @@
 import 'package:dtplusmerchant/Screens/financials/summary_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';

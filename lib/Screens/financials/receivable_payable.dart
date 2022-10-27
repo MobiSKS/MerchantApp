@@ -36,9 +36,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
     return Column(
       children: [
         _searchFilter(),
-        SizedBox(
-          height: screenHeight(context) * 0.03,
-        ),
+        SizedBox(height: screenHeight(context) * 0.03),
         Expanded(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 00),
@@ -91,7 +89,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
             ? Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 5,bottom:20),
+                    padding: const EdgeInsets.only(top: 5, bottom: 20),
                     child: Container(
                       width: screenWidth(context),
                       height: screenHeight(context) * 0.06,
@@ -106,12 +104,10 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:25),
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
                     child: CustomList(
                       list: value.receivablePayableResponseModel!.data!,
-                      itemSpace: 20,
-                      itemCount:
-                          value.receivablePayableResponseModel!.data!.length,
+                      itemSpace: 20,            
                       child: (context, index) {
                         return _payableCard(
                             value.receivablePayableResponseModel!.data![index]);
