@@ -65,76 +65,91 @@ class _HomeState extends State<Home> {
   }
 
   Widget _body(BuildContext context) {
-    return Container(
-      color: const Color(0xffe4ecf9),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const SizedBox(height: 10),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _banner(context),
-                const SizedBox(height: 10),
-                _merchantId(context),
-                const SizedBox(height: 10),
-                _financialgridView(context),
-                const SizedBox(height: 10),
-                _transactiongridView(context)
-              ],
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const SizedBox(height: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _banner(context),
+              const SizedBox(height: 10),
+              _merchantId(context),
+              const SizedBox(height: 10),
+              _financialgridView(context),
+              const SizedBox(height: 10),
+              _transactiongridView(context)
+            ],
+          ),
+        ],
       ),
     );
   }
 
   Widget _merchantId(context) {
-    return Container(
-      width: screenWidth(context),
-      height: screenHeight(context) * 0.13,
-      decoration: const BoxDecoration(
-          color: Color(0xff011d66),
-          borderRadius: BorderRadius.all(Radius.circular(12))),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                semiBoldText(
-                    'Hi ! ${_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!}',
-                    fontSize: 20,
-                    color: Colors.white),
-                const SizedBox(height: 2),
-                semiBoldText(
-                    '${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
-                    fontSize: 18,
-                    color: Colors.white,
-                    fontFamily: FontFamilyHelper.sourceSansRegular),
-              ],
-            ),
-            Container(
-              height: screenHeight(context) * 0.035,
-              width: screenWidth(context) * 0.17,
-              decoration: BoxDecoration(
-                  color: const Color(0xff011d66),
-                  border: Border.all(
-                    color: Colors.white,
-                  ),
-                  borderRadius: const BorderRadius.all(Radius.circular(12))),
-              child: Center(
-                child: semiBoldText('Edit', color: Colors.white, fontSize: 15),
+    return SizedBox(
+      height: screenHeight(context) * 0.14,
+      child: Stack(
+        children: [
+          Container(
+            height: screenHeight(context) * 0.14,
+            decoration: const BoxDecoration(
+                image: DecorationImage(
+                    image: AssetImage(
+                      ImageResources.merchantIdBg,
+                    ),
+                    fit: BoxFit.fill),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+          ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        semiBoldText(
+                            'Hi ! ${_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!}',
+                            fontSize: 20,
+                            color: Colors.white),
+                        const SizedBox(height: 2),
+                        semiBoldText(
+                            '${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontFamily: FontFamilyHelper.sourceSansRegular),
+                      ],
+                    ),
+                    SizedBox(width: screenWidth(context) * 0.30),
+                    Container(
+                      height: screenHeight(context) * 0.030,
+                      width: screenWidth(context) * 0.17,
+                      decoration: BoxDecoration(
+                          color: const Color(0xff011d66),
+                          border: Border.all(
+                            color: Colors.white,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(12))),
+                      child: Center(
+                        child: semiBoldText('Edit',
+                            color: Colors.white, fontSize: 15),
+                      ),
+                    )
+                  ],
+                ),
               ),
-            )
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -154,9 +169,8 @@ class _HomeState extends State<Home> {
 
   Widget _financialgridView(BuildContext context) {
     return Card(
-      color: Colors.white,
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.white70, width: 1),
+        side: const BorderSide(color: Color(0xffcecfd1), width: 1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
@@ -206,15 +220,16 @@ class _HomeState extends State<Home> {
   Widget _transactiongridView(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
-        side: const BorderSide(color: Colors.white70, width: 1),
+        side: const BorderSide(color: Color(0xffcecfd1), width: 1),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-                 boldText(AppStrings.transactions, fontSize: 23, color: Colors.black),
+            boldText(AppStrings.transactions,
+                fontSize: 23, color: Colors.black),
             const SizedBox(height: 10),
             GridView.count(
                 crossAxisCount: 4,
@@ -256,7 +271,7 @@ class _HomeState extends State<Home> {
           );
         }
       },
-      child:  Column(
+      child: Column(
         children: [
           CircleAvatar(
             backgroundColor: const Color(0xffe4ecf9),
