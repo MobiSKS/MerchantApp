@@ -1,3 +1,4 @@
+import 'package:dtplusmerchant/Screens/financials/settlement_screen.dart';
 import 'package:dtplusmerchant/Screens/home.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
@@ -18,7 +19,7 @@ class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-    Container(),
+   const SettlementScreen(navbar: true),
     const Contacts(),
     Container(),
   ];

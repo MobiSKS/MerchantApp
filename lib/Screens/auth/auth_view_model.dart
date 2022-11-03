@@ -49,9 +49,7 @@ class AuthViewModel extends ChangeNotifier {
       if (response.data['Success']) {
         _userModel = UserModel.fromJson(response.data);
         log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
-        await _sharedPref.saveBool(SharedPref.isLogin, true);
-      //  await _sharedPref.save('lat', postion.latitude.toString());
-      //  await _sharedPref.save('long', postion.latitude.toString());
+        await _sharedPref.saveBool(SharedPref.isLogin, true); 
         await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {

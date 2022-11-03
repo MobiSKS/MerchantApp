@@ -39,6 +39,7 @@ class AppStrings {
   static const String next = "Next";
   static const String generateQR = "Generate QR";
   static const String sale = "Sale";
+    static const String saleWithOtp = "Sale With OTP";
   static const String procced = "Proceed";
   static const String typeOfSale = "Type of Sale";
   static const String paymentAcceptance = "Payment Acceptance";

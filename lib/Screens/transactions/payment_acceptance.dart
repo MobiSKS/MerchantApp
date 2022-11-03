@@ -21,7 +21,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   String _selectedProduct = "";
   String? _productName;
   final _amountController = TextEditingController();
-  List<String> payMode = [AppStrings.generateQR, AppStrings.sale];
+  List<String> payMode = [AppStrings.generateQR,AppStrings.saleWithOtp];
   late String selectedMode;
 
   @override
@@ -59,6 +59,10 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                             color: Colors.grey.shade600),
                         _selectProduct(context),
                         SizedBox(height: screenHeight(context) * 0.05),
+                          boldText(AppStrings.selectPaymentType,
+                              color: Colors.grey.shade600),
+                        _selectPaymentType(context),
+                           SizedBox(height: screenHeight(context) * 0.05),
                         boldText(AppStrings.enterAmount,
                             color: Colors.grey.shade600),
                         _enterAmount(context),
@@ -71,6 +75,48 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
               ],
             ),
           )),
+    );
+  }
+  String _payType="";
+  Widget _selectPaymentType(BuildContext context) {
+    var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(bottom: BorderSide(color: Colors.grey.shade400))),
+      height: 45,
+      child: Center(
+        child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+              enabledBorder: InputBorder.none, enabled: false),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
+          icon: const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.keyboard_arrow_down),
+          ),
+          hint: const Text(AppStrings.selectPAYType),
+          value: _payType.isEmpty ? null : _payType,
+          items: paymentTypeList.map((value) {
+            return DropdownMenuItem(
+              value: value.transType.toString(),
+              child: Text(value.transName!),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _payType = value!;
+             
+              // transType = paymentTypeList
+              //     .where((e) => e.transType == int.parse(_payType))
+              //     .toList()[0]
+              //     .transName!;
+            });
+          },
+        ),
+      ),
     );
   }
 
@@ -143,7 +189,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                                 width: screenWidth(context) * 0.75,
                                 child: customButton(context, AppStrings.procced,
                                     onTap: () {
-                                  selectedMode == AppStrings.sale
+                                  selectedMode == AppStrings.saleWithOtp
                                       ? sale()
                                       : generateQR();
                                 }))
@@ -175,6 +221,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
     if (_validate() && _amountController.text.isNotEmpty) {
       await saleViewM.generateQR(context,
           amount: double.parse(_amountController.text),
+          transTypeId: int.parse(_payType),
           productId: _selectedProduct);
       if (saleViewM.generateQrResponse!.internelStatusCode == 1000) {
         // ignore: use_build_context_synchronously

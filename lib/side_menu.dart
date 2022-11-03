@@ -17,7 +17,7 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
- final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
+  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   String? name;
   String? id;
 
@@ -27,8 +27,9 @@ class _NavDrawerState extends State<NavDrawer> {
     getNameId();
   }
 
-  getNameId() async{
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails) as UserModel;
+  getNameId() async {
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
     String firstName = user.data!.objGetMerchantDetail![0].merchantName!;
     String lastName = "";
     String userId = user.data!.objGetMerchantDetail![0].merchantId!;
@@ -57,17 +58,15 @@ class _NavDrawerState extends State<NavDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: screenHeight(context) * 0.02),
-                      boldText(AppStrings.welcome, fontSize: 20,color:Colors.white),
+                      semiBoldText("${AppStrings.welcome} !",
+                          fontSize: 20, color: Colors.white),
                       SizedBox(height: screenHeight(context) * 0.01),
-                      boldText(
-                        name ?? "",
-                        fontSize: 24,
-                        color:Colors.white
-                      ),
+                      semiBoldText(name ?? "", fontSize: 24, color: Colors.white),
                       SizedBox(height: screenHeight(context) * 0.01),
                       Row(
                         children: [
-                          boldText('Id : ${id ??'' }', fontSize: 20,color:Colors.white),
+                          semiBoldText('Id : ${id ?? ''}',
+                              fontSize: 20, color: Colors.white),
                           const SizedBox(width: 20),
                           GestureDetector(
                               onTap: () {},
@@ -77,16 +76,14 @@ class _NavDrawerState extends State<NavDrawer> {
                       ),
                     ],
                   ),
-                  CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: screenWidth(context) * 0.093)
                 ],
               ),
             ),
           ),
           ListTile(
             leading: Image.asset(ImageResources.profileIcon, height: 23),
-            title: semiBoldText(AppStrings.myProfile, color: Colors.black,fontSize: 18.0),
+            title: semiBoldText(AppStrings.myProfile,
+                color: Colors.black, fontSize: 18.0),
             onTap: () {
               Navigator.push(
                 context,
@@ -96,7 +93,8 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           const Divider(color: Colors.grey),
           ListTile(
-            leading: Image.asset(ImageResources.notificationIcon, height: 20),
+            leading: Image.asset(ImageResources.notificationIconM,
+                height: 20, ),
             title: semiBoldText(AppStrings.notification,
                 color: Colors.black, fontSize: 18.0),
             onTap: () => {
@@ -111,7 +109,8 @@ class _NavDrawerState extends State<NavDrawer> {
           ListTile(
             leading:
                 Image.asset(ImageResources.changePasswortdIcon, height: 20),
-            title: semiBoldText(AppStrings.changepassword, color: Colors.black,fontSize: 18.0),
+            title: semiBoldText(AppStrings.changepassword,
+                color: Colors.black, fontSize: 18.0),
             onTap: () => {
               Navigator.push(
                 context,
@@ -124,9 +123,10 @@ class _NavDrawerState extends State<NavDrawer> {
           const Divider(color: Colors.grey),
           ListTile(
             leading: Image.asset(ImageResources.logoutIcon, height: 20),
-            title: semiBoldText(AppStrings.logout, color: Colors.black,fontSize: 18.0),
-            onTap: ()async {
-              var authPro =Provider.of<AuthViewModel>(context,listen:false);
+            title: semiBoldText(AppStrings.logout,
+                color: Colors.black, fontSize: 18.0),
+            onTap: () async {
+              var authPro = Provider.of<AuthViewModel>(context, listen: false);
               await authPro.logout(context);
             },
           ),

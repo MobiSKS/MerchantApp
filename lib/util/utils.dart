@@ -2,7 +2,6 @@
 
 import 'dart:io';
 import 'dart:math';
-
 import 'package:dart_ipify/dart_ipify.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

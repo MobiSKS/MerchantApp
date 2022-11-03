@@ -308,9 +308,8 @@ Widget simpleTextField(
               : null,
           hintText: hintText,
           hintStyle: TextStyle(
-              fontWeight: FontWeight.bold,
               color: Colors.grey.shade700,
-              fontSize: 20,
+              fontSize: 18,
               fontFamily: FontFamilyHelper.sourceSansSemiBold)),
     ),
   );
@@ -333,9 +332,11 @@ showLoader(context) {
           ));
 }
 
-normalAppBar(BuildContext context, {String title = ''}) {
+normalAppBar(BuildContext context, {String title = '', bool showTitle = true}) {
   return PreferredSize(
-    preferredSize: Size.fromHeight(screenHeight(context) * 0.157),
+    preferredSize: showTitle
+        ? Size.fromHeight(screenHeight(context) * 0.157)
+        : Size.fromHeight(screenHeight(context) * 0.085),
     child: Column(
       children: [
         SizedBox(
@@ -386,13 +387,15 @@ normalAppBar(BuildContext context, {String title = ''}) {
             ],
           ),
         ),
-        Container(
-          width: screenWidth(context),
-          height: screenHeight(context) * 0.06,
-          color: Colors.blue.shade100,
-          child:
-              Center(child: boldText(title, color: Colors.black, fontSize: 22)),
-        )
+        showTitle
+            ? Container(
+                width: screenWidth(context),
+                height: screenHeight(context) * 0.06,
+                color: Colors.blue.shade100,
+                child: Center(
+                    child: boldText(title, color: Colors.black, fontSize: 22)),
+              )
+            : Container()
       ],
     ),
   );
@@ -570,5 +573,53 @@ Widget downloadButton() {
     onTap: () {
       // captureAndSharePng(context, key, pop: false);
     },
+  );
+}
+
+Widget searchWidget(BuildContext context, TextEditingController? controller,
+    {Function? onTap,String?hintText, Function ?onChanged}) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Container(
+        width: screenWidth(context) * 0.80,
+        height: screenHeight(context) * 0.06,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.grey.shade500,
+          ),
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: TextFormField(
+          onChanged: (val){
+            onChanged!();
+          },
+          controller: controller,
+          decoration: InputDecoration(
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.only(top: 15),
+              prefixIcon: Column(
+                children: const [
+                  SizedBox(height: 12),
+                  Icon(
+                    Icons.search,
+                    size: 30,
+                  ),
+                ],
+              ),
+              hintText: hintText,
+              hintStyle: const TextStyle(
+                  fontFamily: FontFamilyHelper.sourceSansRegular,
+                  fontSize: 19)),
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          onTap!();
+        },
+        child: Image.asset(ImageResources.filterIcon, height: 30, width: 30),
+      )
+    ],
   );
 }

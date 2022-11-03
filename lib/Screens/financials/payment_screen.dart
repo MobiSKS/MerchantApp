@@ -1,7 +1,15 @@
-import 'package:dtplusmerchant/Screens/financials/settlement_screen.dart';
-import 'package:flutter/material.dart';
+// ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
+import 'package:dtplusmerchant/provider/financials_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../base/base_view.dart';
 import '../../common/custom_list.dart';
+import '../../const/app_strings.dart';
+import '../../model/transaction_detail_model.dart';
 import '../../util/uiutil.dart';
 import '../../util/utils.dart';
 
@@ -13,252 +21,252 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  final transdata1 = ValueNotifier<List<Data>>([]);
+  List<Data> transdata = [];
   List<String> dropdownValues = ["Today", "Yesterday", "Last 7 Days"];
   late int diffPayment;
   String? _selectedValuePayment;
- 
-   final List<Payment> transactions = [
-    Payment(
-        name: 'Ram Kumar',
-        amount: '520',
-        date: '13 JUL 2022',
-        time: '10:00 AM'),
-    Payment(
-        name: 'John Cena',
-        amount: '678',
-        date: '13 JUL 2022',
-        time: '10:55 AM'),
-    Payment(
-        name: 'Ram Kumar',
-        amount: '520',
-        date: '13 JUL 2022',
-        time: '10:00 AM'),
-    Payment(
-        name: 'John Cena',
-        amount: '678',
-        date: '13 JUL 2022',
-        time: '10:55 AM'),
-    Payment(
-        name: 'Ram Kumar',
-        amount: '520',
-        date: '13 JUL 2022',
-        time: '10:00 AM'),
-    Payment(
-        name: 'John Cena',
-        amount: '678',
-        date: '13 JUL 2022',
-        time: '10:55 AM'),
-    Payment(
-        name: 'Shyam Kumar',
-        amount: '520',
-        date: '13 JUL 2022',
-        time: '10:00 AM'),
-    Payment(
-        name: 'Rohan Singh',
-        amount: '78',
-        date: '13 JUL 2022',
-        time: '10:55 AM'),
-  ];
-
+  final TextEditingController _paymentSearchController =
+      TextEditingController();
+  final TextEditingController _fromDateController = TextEditingController(
+      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(
+      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _terminalIdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return  Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 8, right: 8, bottom: 8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    DropdownButton(
-                      focusColor: Colors.indigo.shade50,
-                      isExpanded: false,
-                      alignment: Alignment.centerLeft,
-                      underline: Container(
-                        color: Colors.transparent,
-                      ),
-                      icon: const Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 35,
-                      ),
-                      hint: semiBoldText(_selectedValuePayment ?? "Today",
-                          color: Colors.grey.shade700, fontSize: 22),
-                      items: dropdownValues.map((String item) {
-                        return DropdownMenuItem(
-                          value: item,
-                          child: Text(item),
-                        );
-                      }).toList(),
-                      onChanged: (String? newVal) async {
-                        switch (newVal) {
-                          case "Today":
-                            diffPayment = 0;
-                            break;
-                          case "Yesterday":
-                            diffPayment = 1;
-                            break;
-                          case "Last 7 Days":
-                            diffPayment = 7;
-                            break;
-                          default:
-                            _selectedValuePayment = "Today";
-                            break;
-                        }
-
-                        setState(() {
-                          _selectedValuePayment = newVal;
-                        });
-                      },
-                    ),
-                    const Spacer(),
-                    semiBoldText("Payment Trends",
-                        color: Colors.grey.shade700, fontSize: 22),
-                  ],
-                ),
-                const SizedBox(height: 15),
-                Divider(indent: 0, endIndent: 0, color: Colors.grey.shade600),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    semiBoldText("No of Transactions",
-                        color: Colors.grey.shade700, fontSize: 22),
-                    const Spacer(),
-                    semiBoldText("Total",
-                        color: Colors.grey.shade700, fontSize: 22),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    boldText(
-                      '50',
-                      color: Colors.black,
-                    ),
-                    const Spacer(),
-                    boldText(
-                      "₹ 20,979",
-                      color: Colors.black,
-                    ),
-                  ],
-                ),
-                SizedBox(height: screenHeight(context) * 0.03),
-              ],
-            ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Column(
+            children: [
+              SizedBox(height: screenHeight(context) * 0.020),
+              searchWidget(context, _paymentSearchController,
+                  hintText: 'Search Payments',
+                  onTap: showBottomModalSheet,
+                  onChanged: onChanged),
+            ],
           ),
-        ),
-        Column(
+          Expanded(
+            child: BaseView<FinancialsProvider>(onModelReady: (model) async {
+              await model.getTransactionDetail(context);
+            }, builder: (context, financeViewM, child) {
+              transdata = financeViewM.isLoading ||
+                      financeViewM.transactionDetailModel == null
+                  ? []
+                  : financeViewM.transactionDetailModel!.data!;
+              transdata1.value = transdata;
+              return financeViewM.isLoading
+                  ? Column(
+                      children: [
+                        SizedBox(height: screenHeight(context) * 0.30),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  : financeViewM.transactionDetailModel != null
+                      ? SingleChildScrollView(child: _paymentData())
+                      : Column(
+                          children: [
+                            SizedBox(height: screenHeight(context) * 0.30),
+                            semiBoldText('No Transaction found'),
+                          ],
+                        );
+            }),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void onChanged() {
+    if (_paymentSearchController.text.isNotEmpty) {
+      transdata1.value = transdata
+          .where((e) => e.nameOnCard!
+              .toUpperCase()
+              .contains(_paymentSearchController.text.toUpperCase()))
+          .toList();
+      _paymentData();
+
+      log(transdata1.value.length.toString());
+    } else {
+      transdata1.value = transdata;
+    }
+  }
+
+  Widget _paymentData() {
+    return ValueListenableBuilder(
+        valueListenable: transdata1,
+        builder: (_, value, __) => transdata1.value.isEmpty
+            ? Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.3),
+                  Center(child: semiBoldText('No Data Found')),
+                ],
+              )
+            : Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.03),
+                  CustomList(
+                      list: value,
+                      itemSpace: 5,
+                      child: (Data data, index) {
+                        return Column(
+                          children: [
+                            _listItem(context, data),
+                            const SizedBox(height: 10),
+                            Divider(
+                              color: Colors.grey.shade700,
+                              // endIndent: 20,
+                              // indent: 20,
+                            )
+                          ],
+                        );
+                      }),
+                ],
+              ));
+  }
+
+  Widget _listItem(BuildContext context, Data data) {
+    log('===>data${data.amount}');
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            _searchResultBar(
-              context,
+            CircleAvatar(
+              backgroundColor: Utils.getRamdomColor(),
+              child: Center(
+                  child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
+                      color: Colors.white, fontSize: 20)),
             ),
+            SizedBox(width: screenWidth(context) * 0.03),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              semiBoldText(data.nameOnCard!,
+                  color: Colors.grey.shade800, fontSize: 18.0),
+              const SizedBox(height: 5),
+              semiBoldText('TID : ${data.terminalId!}',
+                  color: Colors.grey.shade500, fontSize: 18.0),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      semiBoldText(
+                        data.transactionDate!,
+                        fontSize: 18.0,
+                        color: Colors.grey.shade500,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
           ],
         ),
-        SizedBox(height: screenHeight(context) * 0.03),
-        transactions.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.all(38.0),
-                child: Center(
-                  child: Text("No Transactions Found"),
-                ),
-              )
-            : Expanded(
-                child: SingleChildScrollView(
-                    child: CustomList(
-                        list: transactions,
-                        itemSpace: 5,
-                        child: (Payment data, index) {
-                          return Column(
-                            children: [
-                              _listItem(context, data),
-                              const SizedBox(height: 10),
-                              Divider(
-                                color: Colors.grey.shade700,
-                                endIndent: 20,
-                                indent: 20,
-                              )
-                            ],
-                          );
-                        })),
-              ),
+        Row(
+          children: [
+            semiBoldText(
+              '₹ ${data.amount!}',
+              color: Colors.grey.shade800,
+            ),
+            const SizedBox(width: 8)
+          ],
+        )
       ],
     );
   }
-  Widget _listItem(BuildContext context, Payment data) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundColor: Utils.getRamdomColor(),
-                child: Center(
-                    child: semiBoldText(Utils.getNameInitials(data.name),
-                        color: Colors.white, fontSize: 20)),
-              ),
-              SizedBox(width: screenWidth(context) * 0.03),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                semiBoldText(data.name!,
-                    color: Colors.grey.shade800, fontSize: 20.0),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Row(
+
+  void showBottomModalSheet() {
+    showModalBottomSheet<void>(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: ((BuildContext context, StateSetter setState) {
+            return SizedBox(
+              height: screenHeight(context) * 0.45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: semiBoldText('Search Filter',
+                        color: Colors.black, fontSize: 25),
+                  ),
+                  Divider(
+                    color: Colors.grey.shade900,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(
                       children: [
-                        semiBoldText(
-                          data.date!,
-                          color: Colors.grey.shade500,
+                        GestureDetector(
+                          onTap: () => Utils.selectDatePopup(
+                              context, DateTime.now(), _fromDateController),
+                          child: simpleTextField(
+                              context, _fromDateController, 'From Date',
+                              showIcon: true, enabled: false),
                         ),
-                        const SizedBox(width: 5),
-                        semiBoldText(
-                          data.time!,
-                          color: Colors.grey.shade500,
+                        const SizedBox(height: 15),
+                        GestureDetector(
+                          onTap: () => Utils.selectDatePopup(
+                              context, DateTime.now(), _toDateController),
+                          child: simpleTextField(
+                              context, _toDateController, 'To Date',
+                              showIcon: true, enabled: false),
                         ),
+                        const SizedBox(height: 15),
+                        simpleTextField(
+                          context,
+                          _terminalIdController,
+                          'Terminal Id (Optional)',
+                        ),
+                        SizedBox(height: screenHeight(context) * 0.07),
+                        customButton(context, AppStrings.submit, onTap: () {
+                          getFilterData();
+                        }),
+                        SizedBox(height: screenHeight(context) * 0.02),
                       ],
                     ),
-                  ],
-                ),
-              ]),
-            ],
-          ),
-          Row(
-            children: [
-              boldText(
-                '₹ ${data.amount!}',
-                color: Colors.grey.shade800,
+                  ),
+                ],
               ),
-            ],
-          )
-        ],
-      ),
-    );
+            );
+          }));
+        });
   }
-  Widget _searchResultBar(BuildContext context) {
-    return Container(
-      width: screenWidth(context),
-      height: screenHeight(context) * 0.055,
-      color: Colors.indigo.shade100,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 30,
-            ),
-            child: semiBoldText(
-                 "Complete Details",
-                color: Colors.black,
-                fontSize: 19),
-          ),
-        ],
-      ),
-    );
+
+  Future<void> getFilterData() async {
+    FinancialsProvider fPro =
+        Provider.of<FinancialsProvider>(context, listen: false);
+    if (_fromDateController.text.isNotEmpty &&
+        _toDateController.text.isNotEmpty) {
+      showLoader(context);
+      await fPro.getTransactionDetail(context,
+          fromDate: _fromDateController.text,
+          toDate: _toDateController.text,
+          terminalId: _terminalIdController.text);
+      dismissLoader(context);
+
+      if (fPro.transactionDetailModel != null &&
+          fPro.transactionDetailModel!.internelStatusCode == 1000) {
+        _paymentSearchController.clear();
+        Navigator.pop(context);
+      }else{
+        Navigator.pop(context);
+      }
+    } else {
+      alertPopUp(context, 'Please enter from and to date');
+    }
   }
 }

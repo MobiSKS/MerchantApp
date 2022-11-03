@@ -1,33 +1,21 @@
-import 'dart:math';
-
 import 'package:dtplusmerchant/common/custom_list.dart';
-import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
-import '../../const/app_strings.dart';
+import '../../base/base_view.dart';
+import '../../provider/financials_provider.dart';
 import '../../util/uiutil.dart';
+import '../../model/settlement_model.dart';
+import '../../model/batch_detail_model.dart' as batch;
 
 class SettlementDetail extends StatefulWidget {
-  const SettlementDetail({super.key});
+  final Data? settlementData;
+  const SettlementDetail({super.key, this.settlementData});
   @override
   State<SettlementDetail> createState() => _SettlementDetailState();
 }
 
 class _SettlementDetailState extends State<SettlementDetail> {
   double columnPadding = 20;
-  final List<Payment> transactions = [
-    Payment(
-        name: 'Ram Kumar', amount: '520', date: '8-Sep-2022', time: '10:00 AM'),
-    Payment(
-        name: 'John Cena', amount: '678', date: '8-Sep-2022', time: '10:55 AM'),
-    Payment(
-        name: 'Ram Kumar', amount: '520', date: '8-Sep-2022', time: '10:00 AM'),
-    Payment(
-        name: 'John Cena', amount: '678', date: '8-Sep-2022', time: '10:55 AM'),
-    Payment(
-        name: 'Ram Kumar', amount: '520', date: '8-Sep-2022', time: '10:00 AM'),
-    Payment(
-        name: 'John Cena', amount: '678', date: '8-Sep-2022', time: '10:55 AM'),
-  ];
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +30,7 @@ class _SettlementDetailState extends State<SettlementDetail> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context,title: 'Settlement Details'),
+        appBar: normalAppBar(context, title: 'Settlement Details'),
         backgroundColor: Colors.white,
         body: SingleChildScrollView(child: _body(context)),
       ),
@@ -70,14 +58,18 @@ class _SettlementDetailState extends State<SettlementDetail> {
               semiBoldText("Summary",
                   color: Colors.grey.shade800, fontSize: 20),
               const SizedBox(height: 10),
-              semiBoldText("No. of Transactions : 05",
-                  color: Colors.grey.shade800, fontSize: 20),
+              semiBoldText(
+                  "No. of Transactions : ${widget.settlementData!.noofTransactions!}",
+                  color: Colors.grey.shade800,
+                  fontSize: 20),
               const SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  semiBoldText("Settlement on: 08-Sep-2022",
-                      color: Colors.grey.shade800, fontSize: 20),
+                  semiBoldText(
+                      "Settlement on: ${widget.settlementData!.settlementDate}",
+                      color: Colors.grey.shade800,
+                      fontSize: 20),
                   Row(
                     children: [
                       shareButton(),
@@ -97,83 +89,96 @@ class _SettlementDetailState extends State<SettlementDetail> {
           ],
         ),
         SizedBox(height: screenHeight(context) * 0.03),
-        transactions.isEmpty
-            ? const Padding(
-                padding: EdgeInsets.all(38.0),
-                child: Center(
-                  child: Text("No Transactions Found"),
-                ),
-              )
-            : SizedBox(
-                child: SingleChildScrollView(
-                    child: CustomList(
-                        list: transactions,
-                        itemSpace: 5,
-                        child: (Payment data, index) {
-                          return Column(
-                            children: [
-                              _listItem(context, data),
-                              const SizedBox(height: 10),
-                              Divider(
-                                color: Colors.grey.shade700,
-                                endIndent: 20,
-                                indent: 20,
-                              )
-                            ],
-                          );
-                        })),
-              ),
+        BaseView<FinancialsProvider>(onModelReady: (model) async {
+          await model.getbatchtDetail(context,
+              terminalId: widget.settlementData!.terminalId!,
+              batchId: widget.settlementData!.batchId!);
+        }, builder: (context, financialpro, child) {
+          return financialpro.isLoading
+              ? Column(
+                  children: [
+                    SizedBox(height: screenHeight(context) * .03),
+                    const CircularProgressIndicator()
+                  ],
+                )
+              : SizedBox(
+                  child: SingleChildScrollView(
+                      child: CustomList(
+                          list: financialpro.batchDetailModel!.data!,
+                          itemSpace: 5,
+                          child: (batch.Data data, index) {
+                            return Column(
+                              children: [
+                                _listItem(context, data),
+                                const SizedBox(height: 10),
+                                Divider(
+                                  color: Colors.grey.shade700,
+                                  endIndent: 20,
+                                  indent: 20,
+                                )
+                              ],
+                            );
+                          })),
+                );
+        })
       ],
     );
   }
 
-  Widget _listItem(BuildContext context, Payment data) {
+  Widget _listItem(BuildContext context, batch.Data data) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                backgroundColor:
-                  Utils.getRamdomColor(),
-                child: Center(
-                    child: semiBoldText(Utils.getNameInitials(data.name),
-                        color: Colors.white, fontSize: 22)),
-              ),
-              SizedBox(width: screenWidth(context) * 0.03),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                semiBoldText(data.name!,
-                    color: Colors.grey.shade900, fontSize: 22.0),
-                const SizedBox(height: 5),
-                Row(
-                  children: [
-                    Row(
-                      children: [
-                        semiBoldText(data.date!,
-                            color: Colors.grey.shade700, fontSize: 18.0),
-                        const SizedBox(width: 5),
-                        semiBoldText(data.time!,
-                            color: Colors.grey.shade700, fontSize: 18.0),
-                      ],
-                    ),
-                  ],
-                ),
-              ]),
-            ],
-          ),
-          Row(
-            children: [
-              semiBoldText('₹ ${data.amount!}',
-                  color: Colors.grey.shade900, fontSize: 22),
-            ],
-          )
-        ],
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Account No:',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.cardNo!,
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Transaction Date/Time : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.transactionDate!,
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Transaction Type : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.transactionType!,
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Amount : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText('₹ ${data.invoiceAmount!}',
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('CCMS/Cash Balance : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText('₹ ${data.ccmsCashBalance!}',
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+      ]),
     );
   }
 
@@ -186,8 +191,11 @@ class _SettlementDetailState extends State<SettlementDetail> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, ),
-            child: semiBoldText("Transactions", color: Colors.black, fontSize: 19),
+            padding: const EdgeInsets.only(
+              left: 30,
+            ),
+            child:
+                semiBoldText("Transactions", color: Colors.black, fontSize: 19),
           ),
         ],
       ),

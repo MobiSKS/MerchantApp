@@ -1,9 +1,10 @@
-import 'package:dtplusmerchant/Screens/financials/summary_detail.dart';
+// ignore_for_file: use_build_context_synchronously
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../provider/financials_provider.dart';
 import '../../util/utils.dart';
@@ -16,12 +17,15 @@ class TransactionDetails extends StatefulWidget {
 }
 
 class _TransactionDetailsState extends State<TransactionDetails> {
+  final TextEditingController _tDSearchController = TextEditingController();
+  final transDdata1 = ValueNotifier<List<Data>>([]);
+  List<Data> transDdata = [];
   DateTime selectedDate = DateTime.now();
-  bool _dataReceived = false;
   String _selectedType = "";
+
   final TextEditingController _terminalIdController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController();
-  final TextEditingController _toDateController = TextEditingController();
+  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -35,48 +39,180 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Widget _body(BuildContext context) {
-    return BaseView<FinancialsProvider>(onModelReady: (model) async {
-      await model.getTransactionType(context);
-    }, builder: (context, financialPro, child) {
-      return financialPro.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                _searchFilter(financialPro),
-                _dataReceived
-                    ? Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Container(
-                          width: screenWidth(context),
-                          height: screenHeight(context) * 0.06,
-                          color: Colors.indigo.shade200,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 30, top: 15),
-                            child: boldText(
-                              'Search Results',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                      )
-                    : Container(),
-                SizedBox(
-                  height: screenHeight(context) * 0.03,
-                ),
-                _dataReceived
-                    ? Expanded(
-                        child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30),
-                        child:
-                            _searchResults(financialPro.transactionDetailModel),
-                      ))
-                    : Container()
-              ],
-            );
-    });
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          searchWidget(context, _tDSearchController,
+              hintText: 'Search Transaction', onTap: showSearchFilter,onChanged: onChanged),
+             const SizedBox(height:15),
+          Expanded(
+            child: BaseView<FinancialsProvider>(onModelReady: (model) async {
+              await model.getTransactionType(context);
+              await model.getTransactionDetail(context);
+            }, builder: (context, financeViewM, child) {
+              transDdata = financeViewM.isLoading ||
+                      financeViewM.transactionDetailModel == null
+                  ? []
+                  : financeViewM.transactionDetailModel!.data!;
+              transDdata1.value = transDdata;
+              return financeViewM.isLoading
+                  ? Column(
+                      children: [
+                        SizedBox(height: screenHeight(context) * 0.30),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  : financeViewM.transactionDetailModel != null
+                      ? SingleChildScrollView(child: _transactionDetail())
+                      : Column(
+                          children: [
+                            SizedBox(height: screenHeight(context) * 0.30),
+                            semiBoldText('No Transaction found'),
+                          ],
+                        );
+            }),
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _searchFilter(FinancialsProvider financialPro) {
+  void onChanged() {
+    if (_tDSearchController.text.isNotEmpty) {
+      transDdata1.value = transDdata
+          .where((e) => e.nameOnCard!
+              .toUpperCase()
+              .contains(_tDSearchController.text.toUpperCase()))
+          .toList();
+      _transactionDetail();
+    } else {
+      transDdata1.value = transDdata;
+    }
+  }
+
+  Widget _transactionDetail() {
+    return ValueListenableBuilder(
+        valueListenable: transDdata1,
+        builder: (_, value, __) => transDdata1.value.isEmpty
+            ? Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.3),
+                  Center(child: semiBoldText('No Data Found')),
+                ],
+              )
+            : Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.03),
+                  CustomList(
+                      list: value,
+                      itemSpace: 5,
+                      child: (Data data, index) {
+                        return Column(
+                          children: [
+                            _listItem(context, data),
+                            const SizedBox(height: 10),
+                            Divider(
+                              color: Colors.grey.shade700,
+                              // endIndent: 20,
+                              // indent: 20,
+                            )
+                          ],
+                        );
+                      }),
+                ],
+              ));
+  }
+
+  Widget _listItem(BuildContext context, Data data) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            CircleAvatar(
+              backgroundColor: Utils.getRamdomColor(),
+              child: Center(
+                  child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
+                      color: Colors.white, fontSize: 20)),
+            ),
+            SizedBox(width: screenWidth(context) * 0.03),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              semiBoldText(data.nameOnCard!,
+                  color: Colors.grey.shade800, fontSize: 18.0),
+              const SizedBox(height: 5),
+              semiBoldText('TID : ${data.terminalId!}',
+                  color: Colors.grey.shade500, fontSize: 18.0),
+              const SizedBox(height: 5),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      semiBoldText(
+                        data.transactionDate!,
+                        fontSize: 18.0,
+                        color: Colors.grey.shade500,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ]),
+          ],
+        ),
+        Row(
+          children: [
+            semiBoldText(
+              '₹ ${data.amount!}',
+              color: Colors.grey.shade800,
+            ),
+            const SizedBox(width: 8)
+          ],
+        )
+      ],
+    );
+  }
+
+  void showSearchFilter() {
+    showModalBottomSheet<void>(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: ((BuildContext context, StateSetter setState) {
+            return SizedBox(
+              // height: screenHeight(context) * 0.45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: semiBoldText('Search Filter',
+                        color: Colors.black, fontSize: 25),
+                  ),
+                  Divider(
+                    color: Colors.grey.shade900,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: _searchFilter()),
+                ],
+              ),
+            );
+          }));
+        });
+  }
+
+  Widget _searchFilter() {
+    FinancialsProvider financialPro =
+        Provider.of<FinancialsProvider>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
@@ -92,26 +228,46 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),
-            child: simpleTextField(
-              context,
-              _toDateController,
-              'To Date',
-              showIcon: true,
-              enabled:false
-            ),
+            child: simpleTextField(context, _toDateController, 'To Date',
+                showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
           simpleTextField(
               context, _terminalIdController, "Terminal Id (Optional) "),
           SizedBox(height: screenHeight(context) * 0.01),
           _selectTransactionType(context, financialPro),
-          SizedBox(height: screenHeight(context) * 0.04),
+          SizedBox(height: screenHeight(context) * 0.06),
           customButton(context, AppStrings.search, onTap: () {
-            getTransactionDetail(financialPro);
+            getTransFilterData();
           })
         ],
       ),
     );
+  }
+   Future<void> getTransFilterData() async {
+    FinancialsProvider fPro =
+        Provider.of<FinancialsProvider>(context, listen: false);
+    if (_fromDateController.text.isNotEmpty &&
+        _toDateController.text.isNotEmpty) {
+      showLoader(context);
+      await fPro.getTransactionDetail(context,
+          fromDate: _fromDateController.text,
+          toDate: _toDateController.text,
+          transType: _selectedType,
+          terminalId: _terminalIdController.text);
+      dismissLoader(context);
+
+      if (fPro.transactionDetailModel != null &&
+          fPro.transactionDetailModel!.internelStatusCode == 1000) {
+        _tDSearchController.clear();
+        Navigator.pop(context);
+      }else{
+         Navigator.pop(context);
+      }
+    } else {
+      transDdata1.value =[];
+      alertPopUp(context, 'Please enter from and to date');
+    }
   }
 
   Future<void> getTransactionDetail(FinancialsProvider financialPro) async {
@@ -124,15 +280,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           terminalId: _terminalIdController.text,
           transType: _selectedType);
 
-      if (financialPro.transactionDetailModel!.internelStatusCode == 1000) {
-        setState(() {
-          _dataReceived = true;
-        });
-      } else {
-        setState(() {
-          _dataReceived = false;
-        });
-      }
+      if (financialPro.transactionDetailModel!.internelStatusCode == 1000) {}
     } else {
       alertPopUp(context, 'Please fill all required details');
     }
@@ -157,8 +305,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             padding: EdgeInsets.only(right: 8.0),
             child: Icon(Icons.keyboard_arrow_down),
           ),
-          hint: boldText('Select Transaction Type',
-              color: Colors.grey.shade700, fontSize: 17),
+          hint: semiBoldText('Select Transaction Type',
+              color: Colors.grey.shade700, fontSize: 18),
           value: _selectedType.isEmpty ? null : _selectedType,
           items: financialPro.transactionType!.data!.map((value) {
             return DropdownMenuItem(
@@ -172,157 +320,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             });
           },
         ),
-      ),
-    );
-  }
-
-  Widget _searchResults(TransactionDetailModel? transactionDetailModel) {
-    return CustomList(
-      list: transactionDetailModel!.data!,
-      itemSpace: 20,
-      child: (Data data, index) {
-        return _transactionCard(data);
-      },
-    );
-  }
-
-  Widget _transactionCard(Data data) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TransactionSummarydetail(data: data)));
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-            width: screenWidth(context),
-            decoration: BoxDecoration(
-                color: Colors.blueGrey.shade100,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    boldText('Transaction Summary',
-                        color: Colors.black, fontSize: 16),
-                    Row(
-                      children: [
-                        normalText('View Detail'),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(Icons.arrow_forward_ios,
-                            size: 15, color: Colors.black)
-                      ],
-                    )
-                  ],
-                ),
-                Divider(color: Colors.indigo.shade400),
-                const SizedBox(height: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            normalText(
-                              'Name',
-                              color: Colors.black,
-                            ),
-                            boldText(
-                              data.nameOnCard!,
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            normalText(
-                              'Amount',
-                              color: Colors.black,
-                            ),
-                            boldText(
-                              '₹${data.amount!}',
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: screenHeight(context) * 0.02),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            normalText(
-                              'Mobile no.',
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            boldText(data.mobileNo!,
-                                color: Colors.black, fontSize: 16),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            normalText(
-                              'Card no.',
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            boldText(data.cardNo!,
-                                color: Colors.black, fontSize: 16),
-                          ],
-                        )
-                      ],
-                    ),
-                    SizedBox(height: screenHeight(context) * 0.01),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          _transactionID(data)
-        ],
-      ),
-    );
-  }
-
-  Widget _transactionID(Data data) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-          color: Colors.indigo.shade200,
-          borderRadius: const BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          normalText(
-            data.transactionDate!,
-            color: Colors.black,
-          ),
-          normalText(
-            'Terminal ID: ${data.terminalId}',
-            color: Colors.black,
-          ),
-        ],
       ),
     );
   }

@@ -159,21 +159,21 @@ class TransactionsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> generateQR(context, {double? amount, String? productId}) async {
+  Future<void> generateQR(context,
+      {double? amount, String? productId, int? transTypeId}) async {
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
     showLoader(context);
     var ip = await Utils.getIp();
     Map param = {
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
       "Amount": amount,
       "ProductId": productId,
       "Userip": ip,
       "Useragent": Utils.checkOs(),
       "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
-      "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
+      "MobileNo": user.data!.objGetMerchantDetail![0].mobileNo,
+      "TransType": transTypeId
     };
     // param.addAll(commonReqBody);
     Map<String, String> header = {

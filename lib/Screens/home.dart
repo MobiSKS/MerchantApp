@@ -70,18 +70,19 @@ class _HomeState extends State<Home> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 10),
           Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              
+              _merchantId(context),
+              const SizedBox(height: 5),
+              _financialgridView(context),
+              const SizedBox(height: 5),
+              _transactiongridView(context),
+                 const SizedBox(height: 15),
               _banner(context),
               const SizedBox(height: 10),
-              _merchantId(context),
-              const SizedBox(height: 10),
-              _financialgridView(context),
-              const SizedBox(height: 10),
-              _transactiongridView(context)
             ],
           ),
         ],
@@ -91,7 +92,7 @@ class _HomeState extends State<Home> {
 
   Widget _merchantId(context) {
     return SizedBox(
-      height: screenHeight(context) * 0.14,
+      height: screenHeight(context) * 0.12,
       child: Stack(
         children: [
           Container(
@@ -104,17 +105,18 @@ class _HomeState extends State<Home> {
                     fit: BoxFit.fill),
                 borderRadius: BorderRadius.all(Radius.circular(20))),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+          Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
+              SizedBox(width:screenWidth(context)*0.25),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         semiBoldText(
                             'Hi ! ${_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!}',
@@ -128,24 +130,8 @@ class _HomeState extends State<Home> {
                             fontFamily: FontFamilyHelper.sourceSansRegular),
                       ],
                     ),
-                    SizedBox(width: screenWidth(context) * 0.30),
-                    Container(
-                      height: screenHeight(context) * 0.030,
-                      width: screenWidth(context) * 0.17,
-                      decoration: BoxDecoration(
-                          color: const Color(0xff011d66),
-                          border: Border.all(
-                            color: Colors.white,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(12))),
-                      child: Center(
-                        child: semiBoldText('Edit',
-                            color: Colors.white, fontSize: 15),
-                      ),
-                    )
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

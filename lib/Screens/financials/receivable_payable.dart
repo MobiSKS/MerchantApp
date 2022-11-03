@@ -1,12 +1,14 @@
-import 'package:dtplusmerchant/Screens/financials/receivable_payable_detail_screen.dart';
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/model/receivable_payable_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../base/base_view.dart';
+import '../../util/font_family_helper.dart';
 import '../../util/utils.dart';
 
 class ReceivablePayable extends StatefulWidget {
@@ -18,9 +20,12 @@ class ReceivablePayable extends StatefulWidget {
 
 class _ReceivablePayableState extends State<ReceivablePayable> {
   DateTime selectedDate = DateTime.now();
+  final rcvPayList1 = ValueNotifier<List<Data>>([]);
+  List<Data> rcvPayList = [];
+  final TextEditingController _rcvPaySearchController = TextEditingController();
   final TextEditingController _terminalController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController();
-  final TextEditingController _toDateController = TextEditingController();
+  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -33,17 +38,178 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   }
 
   Widget _body(BuildContext context) {
-    return Column(
-      children: [
-        _searchFilter(),
-        SizedBox(height: screenHeight(context) * 0.03),
-        Expanded(
-            child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 00),
-          child: _searchResults(),
-        )),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          searchWidget(context, _rcvPaySearchController,
+              hintText: 'Search Transaction', onTap: showSearchFilter, onChanged: () {}),
+          const SizedBox(height: 15),
+          Expanded(
+            child: BaseView<FinancialsProvider>(onModelReady: (model) async {
+              await model.receivablePayableDetails(context);
+            }, builder: (context, financeViewM, child) {
+              rcvPayList = financeViewM.isLoading ||
+                      financeViewM.receivablePayableResponseModel == null
+                  ? []
+                  : financeViewM.receivablePayableResponseModel!.data!;
+              rcvPayList1.value = rcvPayList;
+              return financeViewM.isLoading
+                  ? Column(
+                      children: [
+                        SizedBox(height: screenHeight(context) * 0.30),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  : financeViewM.receivablePayableResponseModel != null
+                      ? SingleChildScrollView(child: _rcvPayableData())
+                      : Column(
+                          children: [
+                            SizedBox(height: screenHeight(context) * 0.30),
+                            semiBoldText('No Data found'),
+                          ],
+                        );
+            }),
+          ),
+        ],
+      ),
     );
+  }
+
+   void onChanged() {
+    if (_rcvPaySearchController.text.isNotEmpty) {
+      rcvPayList1.value = rcvPayList
+          .where(
+              (e) => e.batchId.toString() == _rcvPaySearchController.text)
+          .toList();
+      _rcvPayableData();
+    } else {
+      rcvPayList1.value = rcvPayList ;
+    }
+  }
+
+  Widget _rcvPayableData() {
+    return ValueListenableBuilder(
+        valueListenable: rcvPayList1,
+        builder: (_, value, __) => rcvPayList1.value.isEmpty
+            ? Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.3),
+                  Center(child: semiBoldText('No Data Found')),
+                ],
+              )
+            : Column(
+                children: [
+                  SizedBox(height: screenHeight(context) * 0.03),
+                  CustomList(
+                      list: value,
+                      itemSpace: 10,
+                      child: (data, index) {
+                        return Column(
+                          children: [
+                            GestureDetector(
+                                onTap: () {},
+                                child: _settlementList(context, data)),
+                            const SizedBox(height: 10),
+                            Divider(
+                              color: Colors.grey.shade700,
+                            )
+                          ],
+                        );
+                      })
+                ],
+              ));
+  }
+
+  Widget _settlementList(BuildContext context, Data data) {
+     return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Batch Id:',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.batchId!.toString(),
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Terminal Id',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.terminalId!,
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Payable Amount : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText(data.payable!.toString(),
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Receivable Amount : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText('₹ ${data.receivable}',
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            semiBoldText('Settlement Detail : ',
+                color: Colors.grey.shade900, fontSize: 18.0),
+            semiBoldText('₹ ${data.settlementDate!}',
+                color: Colors.grey.shade600, fontSize: 18.0),
+          ],
+        ),
+      ]),
+    );
+  }
+
+  void showSearchFilter() {
+    showModalBottomSheet<void>(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: ((BuildContext context, StateSetter setState) {
+            return SizedBox(
+              // height: screenHeight(context) * 0.45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: semiBoldText('Search Filter',
+                        color: Colors.black, fontSize: 25),
+                  ),
+                  Divider(
+                    color: Colors.grey.shade900,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: _searchFilter()),
+                ],
+              ),
+            );
+          }));
+        });
   }
 
   Widget _searchFilter() {
@@ -71,185 +237,35 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           simpleTextField(
               context, _terminalController, "Terminal ID (optional)"),
           SizedBox(height: screenHeight(context) * 0.04),
-          customButton(context, AppStrings.search, onTap: () async {
-            await financialPro.receivablePayableDetails(context,
-                fromDate: _fromDateController.text,
-                terminalId: _terminalController.text,
-                toDate: _toDateController.text);
+          customButton(context, AppStrings.search, onTap: ()  {
+            getFilterData(financialPro);
+      
           })
         ],
       ),
     );
   }
 
-  Widget _searchResults() {
-    return Consumer<FinancialsProvider>(
-      builder: (context, value, _) {
-        return value.receivablePayableResponseModel != null
-            ? Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5, bottom: 20),
-                    child: Container(
-                      width: screenWidth(context),
-                      height: screenHeight(context) * 0.06,
-                      color: Colors.indigo.shade200,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 30, top: 15),
-                        child: boldText(
-                          'Search Results',
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25),
-                    child: CustomList(
-                      list: value.receivablePayableResponseModel!.data!,
-                      itemSpace: 20,            
-                      child: (context, index) {
-                        return _payableCard(
-                            value.receivablePayableResponseModel!.data![index]);
-                      },
-                    ),
-                  ),
-                ],
-              )
-            : Container();
-      },
-    );
-  }
+  void getFilterData(FinancialsProvider fPro)async{
+        if (_fromDateController.text.isNotEmpty &&
+        _toDateController.text.isNotEmpty) {
+      showLoader(context);
+      await fPro.receivablePayableDetails(context,
+          fromDate: _fromDateController.text,
+          toDate: _toDateController.text,
+          terminalId: _terminalController.text
+          );
+      dismissLoader(context);
 
-  Widget _payableCard(Data data) {
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ReceivablePayableDetailsScreen(
-                      dataItem: data,
-                    )));
-      },
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-            width: screenWidth(context),
-            decoration: BoxDecoration(
-                color: Colors.blueGrey.shade100,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    topLeft: Radius.circular(20))),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    boldText(
-                      'Transaction Summary',
-                      color: Colors.black,
-                      fontSize: 16,
-                    ),
-                    Row(
-                      children: [
-                        normalText(
-                          'View Detail',
-                        ),
-                        const SizedBox(
-                          width: 5,
-                        ),
-                        const Icon(Icons.arrow_forward_ios,
-                            size: 15, color: Colors.black)
-                      ],
-                    )
-                  ],
-                ),
-                Divider(color: Colors.indigo.shade400),
-                const SizedBox(height: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    normalText(
-                      'Settlement Date',
-                      color: Colors.black,
-                      textAlign: TextAlign.start,
-                    ),
-                    boldText(
-                        /*'25-06-2021'*/ "${data.settlementDate.toString().characters.take(10)}",
-                        color: Colors.black,
-                        fontSize: 16),
-                    SizedBox(height: screenHeight(context) * 0.01),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            normalText(
-                              'Receivable Amount',
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            boldText(
-                              '₹${data.receivable}',
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(width: 25),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            normalText(
-                              'Payable Amount',
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                            ),
-                            boldText(
-                              '₹${data.payable}',
-                              color: Colors.black,
-                              fontSize: 16,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: screenHeight(context) * 0.01),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          _transactionID(data)
-        ],
-      ),
-    );
-  }
-
-  Widget _transactionID(Data data) {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-          color: Colors.indigo.shade300,
-          borderRadius: const BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20))),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          normalText(
-            'Batch ID: ${data.batchId}',
-            color: Colors.black,
-          ),
-          normalText(
-            'Terminal ID: ${data.terminalId}',
-            color: Colors.black,
-          ),
-        ],
-      ),
-    );
+      if (fPro.transactionDetailModel != null &&
+          fPro.transactionDetailModel!.internelStatusCode == 1000) {
+        _rcvPaySearchController.clear();
+        Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
+      }
+    } else {
+      alertPopUp(context, 'Please enter from and to date');
+    }
   }
 }

@@ -47,46 +47,34 @@ class SettlementModel {
 }
 
 class Data {
-  int? srNumber;
-  String? terminalId;
   int? batchId;
+  String? terminalId;
+  String? status;
+  String? noofTransactions;
   String? settlementDate;
-  double? sale;
-  double? reload;
-  double? earning;
-  String? jDEStatus;
 
   Data(
-      {this.srNumber,
+      {this.batchId,
       this.terminalId,
-      this.batchId,
-      this.settlementDate,
-      this.sale,
-      this.reload,
-      this.earning,
-      this.jDEStatus});
+      this.status,
+      this.noofTransactions,
+      this.settlementDate});
 
   Data.fromJson(Map<String, dynamic> json) {
-    srNumber = json['SrNumber'];
-    terminalId = json['TerminalId'];
     batchId = json['BatchId'];
+    terminalId = json['TerminalId'];
+    status = json['Status'];
+    noofTransactions = json['NoofTransactions'];
     settlementDate = json['SettlementDate'];
-    sale = json['Sale'];
-    reload = json['Reload'];
-    earning = json['Earning'];
-    jDEStatus = json['JDEStatus'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['SrNumber'] = this.srNumber;
-    data['TerminalId'] = this.terminalId;
     data['BatchId'] = this.batchId;
+    data['TerminalId'] = this.terminalId;
+    data['Status'] = this.status;
+    data['NoofTransactions'] = this.noofTransactions;
     data['SettlementDate'] = this.settlementDate;
-    data['Sale'] = this.sale;
-    data['Reload'] = this.reload;
-    data['Earning'] = this.earning;
-    data['JDEStatus'] = this.jDEStatus;
     return data;
   }
 }
