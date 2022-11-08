@@ -1,4 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
+import 'package:dtplusmerchant/Screens/financials/transaction_summary_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
@@ -125,54 +126,62 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Widget _listItem(BuildContext context, Data data) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              backgroundColor: Utils.getRamdomColor(),
-              child: Center(
-                  child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
-                      color: Colors.white, fontSize: 20)),
-            ),
-            SizedBox(width: screenWidth(context) * 0.03),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              semiBoldText(data.nameOnCard!,
-                  color: Colors.grey.shade800, fontSize: 18.0),
-              const SizedBox(height: 5),
-              semiBoldText('TID : ${data.terminalId!}',
-                  color: Colors.grey.shade500, fontSize: 18.0),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      semiBoldText(
-                        data.transactionDate!,
-                        fontSize: 18.0,
-                        color: Colors.grey.shade500,
-                      ),
-                    ],
-                  ),
-                ],
+    return GestureDetector(
+      onTap: (){
+         Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>   TransactionSummarydetail(data: data)),
+  );
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor: Utils.getRamdomColor(),
+                child: Center(
+                    child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
+                        color: Colors.white, fontSize: 20)),
               ),
-            ]),
-          ],
-        ),
-        Row(
-          children: [
-            semiBoldText(
-              '₹ ${data.amount!}',
-              color: Colors.grey.shade800,
-            ),
-            const SizedBox(width: 8)
-          ],
-        )
-      ],
+              SizedBox(width: screenWidth(context) * 0.03),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                semiBoldText(data.nameOnCard!,
+                    color: Colors.grey.shade800, fontSize: 18.0),
+                const SizedBox(height: 5),
+                semiBoldText('TID : ${data.terminalId!}',
+                    color: Colors.grey.shade500, fontSize: 18.0),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        semiBoldText(
+                          data.transactionDate!,
+                          fontSize: 18.0,
+                          color: Colors.grey.shade500,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
+            ],
+          ),
+          Row(
+            children: [
+              semiBoldText(
+                '₹ ${data.amount!}',
+                color: Colors.grey.shade800,
+              ),
+              const SizedBox(width: 8)
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -216,8 +225,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.023),
+          semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
           GestureDetector(
             onTap: () => Utils.selectDatePopup(
                 context, selectedDate, _fromDateController),
@@ -225,6 +236,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
+          semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),

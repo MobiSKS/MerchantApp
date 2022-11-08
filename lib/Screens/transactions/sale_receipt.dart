@@ -29,7 +29,7 @@ class _SaleReceiptState extends State<SaleReceipt> {
 
   final ScreenshotController screenshotController = ScreenshotController();
 
-  final GlobalKey _key = GlobalKey();
+ final GlobalKey _key = GlobalKey();
   String _copyType = AppStrings.customerCopy;
 
   @override

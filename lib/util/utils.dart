@@ -33,17 +33,14 @@ class Utils {
     return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
   }
 
-  static Future<void> selectDatePopup(
-    BuildContext context,
-    DateTime initialDate,
-    TextEditingController controller,
-  ) async {
+  static Future<void> selectDatePopup(BuildContext context,
+      DateTime initialDate, TextEditingController controller) async {
     final DateTime? picked = await showDatePicker(
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(2022),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
@@ -66,19 +63,12 @@ class Utils {
     }
   }
 
-  // static Future<Position> getLocation() async {
-  //   await Geolocator.checkPermission();
-
-  //   Position position = await Geolocator.getCurrentPosition();
-  //   return position;
-  // }
-
   static String? checkOs() {
     String? os;
     if (Platform.isAndroid) {
       os = "Android";
     } else if (Platform.isIOS) {
-      os = "IOS";    
+      os = "IOS";
     } else if (Platform.isWindows) {
       os = "Windows";
     }

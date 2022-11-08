@@ -398,10 +398,12 @@ class TransactionsProvider extends ChangeNotifier {
   Future<void> cardEnquiryDetails(
     context, {
     String? mobileNo,
-    String? OTP,
+    String? otp,
+    Function?callBack
   }) async {
     showLoader(context);
     var ip = await Utils.getIp();
+     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails);
     Map param = {
       "Userip": ip,
       "Latitude": "1133.2323.23",
@@ -409,17 +411,21 @@ class TransactionsProvider extends ChangeNotifier {
       "Cardno": "",
       "Useragent": Utils.checkOs(),
       "Mobileno": mobileNo,
-      "OTP": OTP.toString(),
+      "OTP":otp,
       "Pin": "",
       "Sourceid": "8",
       "CreatedBy": "5063857578",
       "Formfactor": "3",
     };
+     Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
     param.addAll(commonReqBody);
     debugPrint("payload for card enquiry ===> $param");
     try {
       var response = await apiServices.post(UrlConstant.cardbalance,
-          body: param, requestHeader: commonHeader);
+          body: param, requestHeader: header);
       dismissLoader(context);
       if (response['Success']) {
         _cardEnquiryResponseModel = CardEnquiryModel.fromJson(response);
@@ -427,7 +433,8 @@ class TransactionsProvider extends ChangeNotifier {
           alertPopUp(context, _cardEnquiryResponseModel!.data![0].reason!);
         }
       } else {
-        alertPopUp(context, response['Message'],
+        callBack!();
+        alertPopUp(context, response["Data"][0]["Reason"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

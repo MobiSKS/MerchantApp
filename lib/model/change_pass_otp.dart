@@ -1,4 +1,4 @@
-class ChangePasswordModel {
+class ChangePasswordOTp {
   bool? success;
   int? statusCode;
   int? internelStatusCode;
@@ -7,7 +7,7 @@ class ChangePasswordModel {
   List<Data>? data;
   Null? modelState;
 
-  ChangePasswordModel(
+  ChangePasswordOTp(
       {this.success,
       this.statusCode,
       this.internelStatusCode,
@@ -16,7 +16,7 @@ class ChangePasswordModel {
       this.data,
       this.modelState});
 
-  ChangePasswordModel.fromJson(Map<String, dynamic> json) {
+  ChangePasswordOTp.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
     statusCode = json['Status_Code'];
     internelStatusCode = json['Internel_Status_Code'];
@@ -47,27 +47,21 @@ class ChangePasswordModel {
 }
 
 class Data {
-  String? email;
-  Null? name;
-  String? mobileNo;
+  String? oTP;
   int? status;
   String? reason;
 
-  Data({this.email, this.name, this.mobileNo, this.status, this.reason});
+  Data({this.oTP, this.status, this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
-    email = json['Email'];
-    name = json['Name'];
-    mobileNo = json['MobileNo'];
+    oTP = json['OTP'];
     status = json['Status'];
     reason = json['Reason'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Email'] = this.email;
-    data['Name'] = this.name;
-    data['MobileNo'] = this.mobileNo;
+    data['OTP'] = this.oTP;
     data['Status'] = this.status;
     data['Reason'] = this.reason;
     return data;

@@ -16,7 +16,7 @@ import '../../util/uiutil.dart';
 
 class SettlementScreen extends StatefulWidget {
   final bool navbar;
-  const SettlementScreen({super.key,this.navbar=false});
+  const SettlementScreen({super.key, this.navbar = false});
 
   @override
   State<SettlementScreen> createState() => _SettlementScreenState();
@@ -50,20 +50,20 @@ class _SettlementScreenState extends State<SettlementScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: widget.navbar? 
-      SingleChildScrollView(
-            physics:
-                const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            child: _body(context))
-      :Scaffold(
-        appBar: normalAppBar(context,
-            title: AppStrings.paymentNsettlement, showTitle: false),
-        backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-            physics:
-                const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-            child: _body(context)),
-      ),
+      child: widget.navbar
+          ? SingleChildScrollView(
+              physics:
+                  const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
+              child: _body(context))
+          : Scaffold(
+              appBar: normalAppBar(context,
+                  title: AppStrings.paymentNsettlement, showTitle: false),
+              backgroundColor: Colors.white,
+              body: SingleChildScrollView(
+                  physics: const ScrollPhysics(
+                      parent: NeverScrollableScrollPhysics()),
+                  child: _body(context)),
+            ),
     );
   }
 
@@ -85,7 +85,9 @@ class _SettlementScreenState extends State<SettlementScreen> {
 
   Widget _pageViewWidget(BuildContext context) {
     return SizedBox(
-      height:widget.navbar?screenHeight(context) * 0.71: screenHeight(context) * 0.75,
+      height: widget.navbar
+          ? screenHeight(context) * 0.71
+          : screenHeight(context) * 0.75,
       child: PageView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
@@ -278,7 +280,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              height: screenHeight(context) * 0.45,
+              height: screenHeight(context) * 0.50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -293,9 +295,12 @@ class _SettlementScreenState extends State<SettlementScreen> {
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        semiBoldText('From Date',
+                            color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _fromDateController),
@@ -304,6 +309,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
                               showIcon: true, enabled: false),
                         ),
                         const SizedBox(height: 15),
+                        semiBoldText('To Date',
+                            color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _toDateController),

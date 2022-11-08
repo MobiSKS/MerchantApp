@@ -1,4 +1,4 @@
-class ChangePasswordModel {
+class ForgetOTPverify {
   bool? success;
   int? statusCode;
   int? internelStatusCode;
@@ -7,7 +7,7 @@ class ChangePasswordModel {
   List<Data>? data;
   Null? modelState;
 
-  ChangePasswordModel(
+  ForgetOTPverify(
       {this.success,
       this.statusCode,
       this.internelStatusCode,
@@ -16,7 +16,7 @@ class ChangePasswordModel {
       this.data,
       this.modelState});
 
-  ChangePasswordModel.fromJson(Map<String, dynamic> json) {
+  ForgetOTPverify.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
     statusCode = json['Status_Code'];
     internelStatusCode = json['Internel_Status_Code'];
@@ -47,15 +47,23 @@ class ChangePasswordModel {
 }
 
 class Data {
-  String? email;
-  Null? name;
+  String? password;
+  Null? email;
+  String? name;
   String? mobileNo;
   int? status;
   String? reason;
 
-  Data({this.email, this.name, this.mobileNo, this.status, this.reason});
+  Data(
+      {this.password,
+      this.email,
+      this.name,
+      this.mobileNo,
+      this.status,
+      this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
+    password = json['Password'];
     email = json['Email'];
     name = json['Name'];
     mobileNo = json['MobileNo'];
@@ -65,6 +73,7 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['Password'] = this.password;
     data['Email'] = this.email;
     data['Name'] = this.name;
     data['MobileNo'] = this.mobileNo;

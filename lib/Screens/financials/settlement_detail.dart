@@ -1,5 +1,6 @@
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:flutter/material.dart';
+import 'package:screenshot/screenshot.dart';
 import '../../base/base_view.dart';
 import '../../provider/financials_provider.dart';
 import '../../util/uiutil.dart';
@@ -14,8 +15,10 @@ class SettlementDetail extends StatefulWidget {
 }
 
 class _SettlementDetailState extends State<SettlementDetail> {
-  double columnPadding = 20;
+  final ScreenshotController screenshotController = ScreenshotController();
 
+  double columnPadding = 20;
+  final GlobalKey _key1 = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -72,9 +75,9 @@ class _SettlementDetailState extends State<SettlementDetail> {
                       fontSize: 20),
                   Row(
                     children: [
-                      shareButton(),
+                      shareButton(context,_key1),
                       SizedBox(width: MediaQuery.of(context).size.width * .04),
-                      downloadButton()
+                      downloadButton(context,_key1)
                     ],
                   )
                 ],
@@ -101,30 +104,35 @@ class _SettlementDetailState extends State<SettlementDetail> {
                     const CircularProgressIndicator()
                   ],
                 )
-              : SizedBox(
-                  child: SingleChildScrollView(
-                      child: CustomList(
-                          list: financialpro.batchDetailModel!.data!,
-                          itemSpace: 5,
-                          child: (batch.Data data, index) {
-                            return Column(
-                              children: [
-                                _listItem(context, data),
-                                const SizedBox(height: 10),
-                                Divider(
-                                  color: Colors.grey.shade700,
-                                  endIndent: 20,
-                                  indent: 20,
-                                )
-                              ],
-                            );
-                          })),
-                );
+              : Screenshot(
+                controller: screenshotController,
+                child: RepaintBoundary(
+                  key: _key1,
+                  child: SizedBox(
+                      child: SingleChildScrollView(
+                          child: CustomList(
+                              list: financialpro.batchDetailModel!.data!,
+                              itemSpace: 5,
+                              child: (batch.Data data, index) {
+                                return Column(
+                                  children: [
+                                    _listItem(context, data),
+                                    const SizedBox(height: 10),
+                                    Divider(
+                                      color: Colors.grey.shade700,
+                                      endIndent: 20,
+                                      indent: 20,
+                                    )
+                                  ],
+                                );
+                              })),
+                    ),
+                ),
+              );
         })
       ],
     );
   }
-
   Widget _listItem(BuildContext context, batch.Data data) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -201,13 +209,4 @@ class _SettlementDetailState extends State<SettlementDetail> {
       ),
     );
   }
-}
-
-class Payment {
-  String? name;
-  String? date;
-  String? time;
-  String? amount;
-  String? payMode;
-  Payment({this.amount, this.date, this.name, this.payMode, this.time});
 }

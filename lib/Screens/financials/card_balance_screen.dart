@@ -104,7 +104,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   }
 
   Widget enterOTP(BuildContext context) {
-    return Column(
+    return Column( 
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
@@ -202,9 +202,9 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        boldText(data.key!, color: Colors.black, fontSize: 16),
-                        boldText(data.value!,
-                            color: Colors.blueGrey, fontSize: 16)
+                        semiBoldText(data.key!, color: Colors.black, fontSize: 18),
+                        semiBoldText(data.value!,
+                            color: Colors.blueGrey, fontSize: 18,)
                       ],
                     ),
                   ),
@@ -237,21 +237,23 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
       }
     } else {
       await transactionPro.cardEnquiryDetails(context,
-          mobileNo: _mobileController.text, OTP: otp);
+          mobileNo: _mobileController.text, otp: otp,callBack: refreshCallBack);
       if (transactionPro.cardEnquiryResponseModel!.internelStatusCode == 1000) {
         debugPrint('===>otp ${transactionPro.cardEnquiryResponseModel!.data}');
         showToast(transactionPro.cardEnquiryResponseModel!.message!, false);
         setState(() {
           _otpReceived = false;
-          _mobileController.text = "";
+         
         });
-      } else {
-        setState(() {
-          _otpReceived = false;
-          _mobileController.text = "";
-        });
-      }
+      } else {}
     }
+  }
+
+  void refreshCallBack() {
+    setState(() {
+      _otpReceived = false;
+      _mobileController.text = "";
+    });
   }
 }
 

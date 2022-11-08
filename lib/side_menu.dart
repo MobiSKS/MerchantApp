@@ -7,6 +7,7 @@ import 'package:dtplusmerchant/preferences/shared_preference.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'Screens/auth/change_password_screen.dart';
 import 'const/injection.dart';
 import 'model/user_model.dart';
 
@@ -116,7 +117,7 @@ class _NavDrawerState extends State<NavDrawer> {
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        const ForgotPassword(isChangePassword: true)),
+                        const ChangePasswordScreen()),
               )
             },
           ),

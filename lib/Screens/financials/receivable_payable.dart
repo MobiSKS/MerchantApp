@@ -150,7 +150,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           children: [
             semiBoldText('Payable Amount : ',
                 color: Colors.grey.shade900, fontSize: 18.0),
-            semiBoldText(data.payable!.toString(),
+            semiBoldText('₹ ${data.receivable}',
                 color: Colors.grey.shade600, fontSize: 18.0),
           ],
         ),
@@ -168,9 +168,9 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            semiBoldText('Settlement Detail : ',
+            semiBoldText('Settlement Date : ',
                 color: Colors.grey.shade900, fontSize: 18.0),
-            semiBoldText('₹ ${data.settlementDate!}',
+            semiBoldText(' ${data.settlementDate!}',
                 color: Colors.grey.shade600, fontSize: 18.0),
           ],
         ),
@@ -188,7 +188,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              // height: screenHeight(context) * 0.45,
+               height: screenHeight(context) * 0.50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -217,8 +217,10 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.02),
+             semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
           GestureDetector(
             onTap: () {
               Utils.selectDatePopup(context, selectedDate, _fromDateController);
@@ -227,6 +229,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
+             semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),

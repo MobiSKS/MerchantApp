@@ -6,7 +6,6 @@ import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/Screens/financials/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
-import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +43,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _checkLogin() async {
-    bool isLoggedin = await sharedPref.readBool(SharedPref.isLogin);       
+    bool isLoggedin = await sharedPref.readBool(SharedPref.isLogin);
     setState(() {
       isLogin = isLoggedin;
     });
@@ -52,6 +51,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.indigo.shade500,
+    ));
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
@@ -76,7 +78,7 @@ class _MyAppState extends State<MyApp> {
           "/dashboard": (context) => const Dashboard(),
           "/typeofSale": (context) => const TypeOfSale(),
           "/editProfile": (context) => const Profile(),
-          "/forgotPassword": (context) =>const ForgotPassword(),
+          "/forgotPassword": (context) => const ForgotPassword(),
           "/paymentAcceptance": (context) => const PaymentAcceptance(),
           "/scanQRcode": (context) => const ScanQRCode(),
           "/receivablePayable": (context) => const ReceivablePayable(),

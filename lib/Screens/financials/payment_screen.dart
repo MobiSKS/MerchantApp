@@ -2,6 +2,7 @@
 
 import 'dart:developer';
 
+import 'package:dtplusmerchant/Screens/financials/transaction_summary_detail.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
   @override
-  State<PaymentScreen> createState() => _PaymentScreenState();
+  State<PaymentScreen> createState() =>  _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
@@ -27,7 +28,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
   List<Data> transdata = [];
   List<String> dropdownValues = ["Today", "Yesterday", "Last 7 Days"];
   late int diffPayment;
-  String? _selectedValuePayment;
   final TextEditingController _paymentSearchController =
       TextEditingController();
   final TextEditingController _fromDateController = TextEditingController(
@@ -110,6 +110,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   SizedBox(height: screenHeight(context) * 0.03),
                   CustomList(
+                    physics: const AlwaysScrollableScrollPhysics(),
                       list: value,
                       itemSpace: 5,
                       child: (Data data, index) {
@@ -119,8 +120,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             const SizedBox(height: 10),
                             Divider(
                               color: Colors.grey.shade700,
-                              // endIndent: 20,
-                              // indent: 20,
+                            
                             )
                           ],
                         );
@@ -130,55 +130,62 @@ class _PaymentScreenState extends State<PaymentScreen> {
   }
 
   Widget _listItem(BuildContext context, Data data) {
-    log('===>data${data.amount}');
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            CircleAvatar(
-              backgroundColor: Utils.getRamdomColor(),
-              child: Center(
-                  child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
-                      color: Colors.white, fontSize: 20)),
-            ),
-            SizedBox(width: screenWidth(context) * 0.03),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              semiBoldText(data.nameOnCard!,
-                  color: Colors.grey.shade800, fontSize: 18.0),
-              const SizedBox(height: 5),
-              semiBoldText('TID : ${data.terminalId!}',
-                  color: Colors.grey.shade500, fontSize: 18.0),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  Row(
-                    children: [
-                      semiBoldText(
-                        data.transactionDate!,
-                        fontSize: 18.0,
-                        color: Colors.grey.shade500,
-                      ),
-                    ],
-                  ),
-                ],
+    return GestureDetector(
+    onTap: (){
+    Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) =>  TransactionSummarydetail(data:data)),
+  );
+    },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              CircleAvatar(
+                backgroundColor: Utils.getRamdomColor(),
+                child: Center(
+                    child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
+                        color: Colors.white, fontSize: 20)),
               ),
-            ]),
-          ],
-        ),
-        Row(
-          children: [
-            semiBoldText(
-              '₹ ${data.amount!}',
-              color: Colors.grey.shade800,
-            ),
-            const SizedBox(width: 8)
-          ],
-        )
-      ],
+              SizedBox(width: screenWidth(context) * 0.03),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                semiBoldText(data.nameOnCard!,
+                    color: Colors.grey.shade800, fontSize: 18.0),
+                const SizedBox(height: 5),
+                semiBoldText('TID : ${data.terminalId!}',
+                    color: Colors.grey.shade500, fontSize: 18.0),
+                const SizedBox(height: 5),
+                Row(
+                  children: [
+                    Row(
+                      children: [
+                        semiBoldText(
+                          data.transactionDate!,
+                          fontSize: 18.0,
+                          color: Colors.grey.shade500,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ]),
+            ],
+          ),
+          Row(
+            children: [
+              semiBoldText(
+                '₹ ${data.amount!}',
+                color: Colors.grey.shade800,
+              ),
+              const SizedBox(width: 8)
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -192,7 +199,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              height: screenHeight(context) * 0.45,
+              height: screenHeight(context) * 0.50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -207,9 +214,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   ),
                   const SizedBox(height: 20),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _fromDateController),
@@ -218,6 +227,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               showIcon: true, enabled: false),
                         ),
                         const SizedBox(height: 15),
+                        semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
+                         
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _toDateController),
@@ -262,7 +273,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           fPro.transactionDetailModel!.internelStatusCode == 1000) {
         _paymentSearchController.clear();
         Navigator.pop(context);
-      }else{
+      } else {
         Navigator.pop(context);
       }
     } else {

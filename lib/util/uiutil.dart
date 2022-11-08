@@ -280,6 +280,40 @@ Widget mobileTextField(
   );
 }
 
+Widget emailTextField(
+    BuildContext context, TextEditingController controller, String hintText,
+    {bool prefixIcon = true, String valMessage = ""}) {
+  return SizedBox(
+    width: screenWidth(context),
+    child: TextFormField(
+      controller: controller,
+      validator: (val) {
+        String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
+        RegExp regex = RegExp(pattern);
+        if (!regex.hasMatch(val!)) {
+          return 'Enter Valid email Id';
+        } else {
+          return null;
+        }
+      },
+      decoration: InputDecoration(
+          prefixIcon: prefixIcon ? const Icon(Icons.person, size: 20) : null,
+          contentPadding:
+              const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          filled: true,
+          hintStyle: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 18,
+              fontFamily: FontFamilyHelper.sourceSansSemiBold),
+          hintText: hintText,
+          fillColor: Colors.white),
+    ),
+  );
+}
+
 Widget horizontalDivider(BuildContext context) {
   return Container(
     height: 1,
@@ -540,7 +574,7 @@ Widget normalText(String text,
           TextStyle(color: color, fontSize: fontSize, fontFamily: fontFamily));
 }
 
-Widget shareButton() {
+Widget shareButton(context, GlobalKey key) {
   return InkWell(
     child: CircleAvatar(
       backgroundColor: Colors.indigo.shade900,
@@ -553,12 +587,12 @@ Widget shareButton() {
       ),
     ),
     onTap: () {
-      //  sharePng(context, key);
+      sharePng(context, key);
     },
   );
 }
 
-Widget downloadButton() {
+Widget downloadButton(BuildContext context, GlobalKey key) {
   return InkWell(
     child: CircleAvatar(
       backgroundColor: Colors.indigo.shade900,
@@ -571,13 +605,13 @@ Widget downloadButton() {
       ),
     ),
     onTap: () {
-      // captureAndSharePng(context, key, pop: false);
+      captureAndSharePng(context, key, pop: false);
     },
   );
 }
 
 Widget searchWidget(BuildContext context, TextEditingController? controller,
-    {Function? onTap,String?hintText, Function ?onChanged}) {
+    {Function? onTap, String? hintText, Function? onChanged}) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -592,7 +626,7 @@ Widget searchWidget(BuildContext context, TextEditingController? controller,
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: TextFormField(
-          onChanged: (val){
+          onChanged: (val) {
             onChanged!();
           },
           controller: controller,

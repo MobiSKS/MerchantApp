@@ -17,11 +17,12 @@ class PaymentAcceptance extends StatefulWidget {
 
 class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
+  String _payType = "";
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String _selectedProduct = "";
   String? _productName;
   final _amountController = TextEditingController();
-  List<String> payMode = [AppStrings.generateQR,AppStrings.saleWithOtp];
+  List<String> payMode = [AppStrings.generateQR, AppStrings.saleWithOtp];
   late String selectedMode;
 
   @override
@@ -59,10 +60,10 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                             color: Colors.grey.shade600),
                         _selectProduct(context),
                         SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(AppStrings.selectPaymentType,
-                              color: Colors.grey.shade600),
+                        boldText(AppStrings.selectPaymentType,
+                            color: Colors.grey.shade600),
                         _selectPaymentType(context),
-                           SizedBox(height: screenHeight(context) * 0.05),
+                        SizedBox(height: screenHeight(context) * 0.05),
                         boldText(AppStrings.enterAmount,
                             color: Colors.grey.shade600),
                         _enterAmount(context),
@@ -77,7 +78,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           )),
     );
   }
-  String _payType="";
+
   Widget _selectPaymentType(BuildContext context) {
     var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
     return Container(
@@ -108,11 +109,6 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           onChanged: (value) {
             setState(() {
               _payType = value!;
-             
-              // transType = paymentTypeList
-              //     .where((e) => e.transType == int.parse(_payType))
-              //     .toList()[0]
-              //     .transName!;
             });
           },
         ),
