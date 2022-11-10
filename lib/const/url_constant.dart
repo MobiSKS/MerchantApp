@@ -1,7 +1,7 @@
 class UrlConstant {
   static const String baseUrl =
-      //"http://dtpuat.mloyalcapture.com/api/dtplus/";
-      "https://dtpapi.mloyalretail.com/api/dtplus/";
+      "http://dtpapi.mloyalcapture.com/api/dtplus/"; // UAT url
+     // "https://dtpapi.mloyalretail.com/api/dtplus/";  //Dev url
   static const String hpPayLink = "https://www.hppay.in";
   static const String loginApi =
       "merchant/get_merchant_registration_parameters";

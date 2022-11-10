@@ -222,7 +222,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _fromDateController),
-                          child: simpleTextField(
+                          child: dateTextField(
                               context, _fromDateController, 'From Date',
                               showIcon: true, enabled: false),
                         ),
@@ -232,7 +232,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _toDateController),
-                          child: simpleTextField(
+                          child: dateTextField(
                               context, _toDateController, 'To Date',
                               showIcon: true, enabled: false),
                         ),

@@ -228,19 +228,19 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.023),
-          semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
+          semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18,),
           GestureDetector(
             onTap: () => Utils.selectDatePopup(
                 context, selectedDate, _fromDateController),
-            child: simpleTextField(context, _fromDateController, 'From Date',
+            child: dateTextField(context, _fromDateController, 'From Date',showLabel: false,
                 showIcon: true, enabled: false),
           ),
-          SizedBox(height: screenHeight(context) * 0.01),
+          SizedBox(height: screenHeight(context) * 0.02),
           semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),
-            child: simpleTextField(context, _toDateController, 'To Date',
+            child: dateTextField(context, _toDateController, 'To Date',
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),

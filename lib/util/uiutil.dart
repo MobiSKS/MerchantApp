@@ -226,7 +226,7 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 25),
-                    boldText(message,
+                    semiBoldText(message,
                         fontSize: 18,
                         color: Colors.black,
                         textAlign: TextAlign.center),
@@ -324,14 +324,26 @@ Widget horizontalDivider(BuildContext context) {
 
 Widget simpleTextField(
     BuildContext context, TextEditingController controller, String hintText,
-    {bool showIcon = false, Function? onTap, bool enabled = true}) {
+    {bool showIcon = false,
+    Function? onTap,
+    bool enabled = true,
+    bool showLabel = true,
+    FocusNode? focusNode,
+    Function? onClick}) {
   return SizedBox(
     width: screenWidth(context),
     child: TextFormField(
+      focusNode: focusNode,
       enabled: enabled,
+      onTap: () {
+        if (focusNode != null) {
+          onClick!();
+        }
+      },
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
+        contentPadding:const EdgeInsets.only(top:5,bottom:5),
           suffixIcon: showIcon
               ? GestureDetector(
                   onTap: () {
@@ -340,11 +352,48 @@ Widget simpleTextField(
                   child: const Icon(Icons.date_range),
                 )
               : null,
-          hintText: hintText,
-          hintStyle: TextStyle(
-              color: Colors.grey.shade700,
-              fontSize: 18,
+          labelText: hintText,
+          labelStyle: TextStyle(
+              fontSize: focusNode != null
+                  ? focusNode.hasFocus || controller.text.isNotEmpty
+                      ? 23
+                      : 18
+                  : 18,
+              color: focusNode != null
+                  ? focusNode.hasFocus
+                      ? Colors.grey.shade700
+                      : Colors.grey.shade700
+                  : Colors.grey.shade700,
               fontFamily: FontFamilyHelper.sourceSansSemiBold)),
+    ),
+  );
+}
+
+Widget dateTextField(
+    BuildContext context, TextEditingController controller, String hintText,
+    {bool showIcon = false,
+    Function? onTap,
+    bool enabled = true,
+    bool showLabel = true,
+    FocusNode? focusNode}) {
+  return SizedBox(
+    width: screenWidth(context),
+    child: TextFormField(
+      focusNode: focusNode,
+      enabled: enabled,
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        suffixIcon: showIcon
+            ? GestureDetector(
+                onTap: () {
+                  onTap!();
+                },
+                child: const Icon(Icons.date_range),
+              )
+            : null,
+        hintText: hintText,
+      ),
     ),
   );
 }
@@ -436,7 +485,10 @@ normalAppBar(BuildContext context, {String title = '', bool showTitle = true}) {
 }
 
 Widget receiptHeader(BuildContext context,
-    {String? copyType, ObjGetMerchantDetail? custDetail, String? outletName}) {
+    {String? copyType,
+    ObjGetMerchantDetail? custDetail,
+    String? outletName,
+    String roc = ""}) {
   return Column(
     children: [
       SizedBox(height: screenHeight(context) * 0.02),
@@ -449,6 +501,8 @@ Widget receiptHeader(BuildContext context,
       boldText(custDetail.header2!, color: Colors.black, fontSize: 20.0),
       SizedBox(height: screenHeight(context) * 0.004),
       boldText(outletName!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.004),
+      boldText(roc, color: Colors.black, fontSize: 20.0),
       SizedBox(height: screenHeight(context) * 0.02),
     ],
   );

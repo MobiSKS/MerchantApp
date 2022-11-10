@@ -12,6 +12,8 @@ class SharedPref {
   FastTagOTPResponse? _fastTagData;
   static String isLogin = "isLogin";
   static String invoiceId = "invoiceID";
+  static String lat = "lat";
+  static String long = "long";
   SharedPreferences get prefs => _prefs;
 
   init() async {
@@ -41,7 +43,7 @@ class SharedPref {
   save(String key, value) async {
     await _prefs.setString(key, json.encode(value));
     if (key == userDetails) {
-    await init();
+      await init();
     }
   }
 
@@ -71,11 +73,10 @@ class SharedPref {
   }
 
   preferenceClear() async {
-    
     await _prefs.clear();
   }
 
-  Future<dynamic> getPrefrenceData({dynamic defaultValue, String ?key}) async {
+  Future<dynamic> getPrefrenceData({dynamic defaultValue, String? key}) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
 

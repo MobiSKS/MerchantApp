@@ -13,5 +13,6 @@ Map commonReqBody = {
   "Merchantid": Utils.merchantId,
   "Terminalid": Utils.terminalId,
 };
+const String rupeeSign = "₹";
 
 

@@ -34,21 +34,21 @@ class _CardFeeState extends State<CardFee> {
     return Column(
       children: [
         _searchFilter(),
-        Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-            width: screenWidth(context),
-            height: screenHeight(context) * 0.06,
-            color: Colors.blue.shade100,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 15),
-              child: boldText(
-                AppStrings.results,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ),
+        // Padding(
+        //   padding: const EdgeInsets.only(top: 20),
+        //   child: Container(
+        //     width: screenWidth(context),
+        //     height: screenHeight(context) * 0.06,
+        //     color: Colors.blue.shade100,
+        //     child: Padding(
+        //       padding: const EdgeInsets.only(left: 30, top: 15),
+        //       child: boldText(
+        //         AppStrings.results,
+        //         color: Colors.black,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         SizedBox(height: screenHeight(context) * 0.03),
         Visibility(
           visible: (_formNoController.text.isNotEmpty &&
@@ -63,16 +63,32 @@ class _CardFeeState extends State<CardFee> {
     );
   }
 
+  void _requestFocus1() {
+    setState(() {
+      FocusScope.of(context).requestFocus(focus1);
+    });
+  }
+
+  void _requestFocus2() {
+    setState(() {
+      FocusScope.of(context).requestFocus(focus2);
+    });
+  }
+
+  FocusNode focus1 = FocusNode();
+  FocusNode focus2 = FocusNode();
   Widget _searchFilter() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
           SizedBox(height: screenHeight(context) * 0.04),
-          simpleTextField(context, _formNoController, AppStrings.enterFormNo),
-          SizedBox(height: screenHeight(context) * 0.01),
+          simpleTextField(context, _formNoController, AppStrings.enterFormNo,
+              focusNode: focus1, onClick: _requestFocus1),
+          SizedBox(height: screenHeight(context) * 0.03),
           simpleTextField(
-              context, _cardnumberController, AppStrings.enterCardNo),
+              context, _cardnumberController, AppStrings.enterCardNo,
+              focusNode: focus2, onClick: _requestFocus2),
           SizedBox(height: screenHeight(context) * 0.04),
           customButton(context, AppStrings.submit, onTap: () {
             submit();
@@ -83,26 +99,26 @@ class _CardFeeState extends State<CardFee> {
   }
 
   Future<void> submit() async {
-    var cardFeeProvider =
-        Provider.of<TransactionsProvider>(context, listen: false);
-    await cardFeeProvider.cardFeePaynment(context,
-        formNumber: _formNoController.text,
-        numberOfCards: int.parse(_cardnumberController.text),
-        invoiceAmount: _totalAmount());
-    if (cardFeeProvider.cardFeeResponseModel != null &&
-        cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
-      // ignore: use_build_context_synchronously
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => CardFeeReceipt(
-                  amount: _totalAmount(),
-                  formNum: _formNoController.text,
-                  cardNumber: _cardnumberController.text,
-                  txnId: cardFeeProvider.cardFeeResponseModel!.data![0].refNo,
-                )),
-      );
-    }
+    // var cardFeeProvider =
+    //     Provider.of<TransactionsProvider>(context, listen: false);
+    // await cardFeeProvider.cardFeePaynment(context,
+    //     formNumber: _formNoController.text,
+    //     numberOfCards: int.parse(_cardnumberController.text),
+    //     invoiceAmount: _totalAmount());
+    // if (cardFeeProvider.cardFeeResponseModel != null &&
+    //     cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
+    //   // ignore: use_build_context_synchronously
+    //   Navigator.pushReplacement(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => CardFeeReceipt(
+    //               amount: _totalAmount(),
+    //               formNum: _formNoController.text,
+    //               cardNumber: _cardnumberController.text,
+    //               txnId: cardFeeProvider.cardFeeResponseModel!.data![0].refNo,
+    //             )),
+    //   );
+    // }
   }
 
   Widget _cardFeeWidget() {

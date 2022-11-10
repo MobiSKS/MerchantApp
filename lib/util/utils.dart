@@ -89,7 +89,7 @@ class Utils {
     var string = name!.split(" ");
     if (string.length > 1) {
       return string[0][0] + string[1][0];
-    } else {
+    } else { 
       return string[0][0];
     }
   }

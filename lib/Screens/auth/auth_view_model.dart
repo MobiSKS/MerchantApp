@@ -8,6 +8,7 @@ import 'package:dtplusmerchant/model/forget_otp_verify.dart';
 import 'package:dtplusmerchant/model/forget_password_otp_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../const/common_param.dart';
 import '../../const/injection.dart';
 import '../../const/url_constant.dart';
@@ -44,24 +45,27 @@ class AuthViewModel extends ChangeNotifier {
     _dio.options.headers['Secret_key'] = UrlConstant.secretKey;
     showLoader(context);
     var ip = await Utils.getIp();
+      Position position = await  Geolocator.getCurrentPosition();
     Map param = {
       "UserId": userId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
       "MerchantId": userId,
       "HWSerialNo": "1490147844",
       "Password": password
     };
     try {
-      //  var postion = await  Utils.getLocation();
+      log(param.toString());
       Response response = await _dio.post(UrlConstant.loginApi, data: param);
       dismissLoader(context);
       if (response.data['Success']) {
         _userModel = UserModel.fromJson(response.data);
         log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
+        await _sharedPref.save(SharedPref.lat,position.latitude);
+        await _sharedPref.save(SharedPref.long,position.longitude);
         await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {

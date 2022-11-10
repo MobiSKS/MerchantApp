@@ -8,6 +8,7 @@ import 'package:dtplusmerchant/model/generate_qr_response.dart';
 import 'package:dtplusmerchant/model/otp_response_sale.dart';
 import 'package:dtplusmerchant/model/paycode_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../const/injection.dart';
 import '../const/url_constant.dart';
 import '../model/card_enquiry_model.dart';
@@ -67,6 +68,7 @@ class TransactionsProvider extends ChangeNotifier {
     header.addAll(commonHeader);
     Map param = {
       "CCN": ccn,
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "CreatedBy": "5063857578",
       "Invoiceamount": invoiceAmount,
       "Mobileno": mobileNo,
@@ -104,6 +106,7 @@ class TransactionsProvider extends ChangeNotifier {
       int productId = 0}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+      Position position = await  Geolocator.getCurrentPosition();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
@@ -113,8 +116,8 @@ class TransactionsProvider extends ChangeNotifier {
     header.addAll(commonHeader);
     Map param = {
       "Userip": ip,
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
+      "Latitude":position.latitude ,
+      "Longitude":position.longitude,
       "Cardno": cardNum,
       "Batchid": 1,
       "Invoiceamount": invoiceAmount,
@@ -143,6 +146,7 @@ class TransactionsProvider extends ChangeNotifier {
     try {
       var response = await apiServices.post(UrlConstant.saleByTerminal,
           body: param, requestHeader: header);
+              log(response.toString());
       dismissLoader(context);
       if (response['Success']) {
         _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
@@ -150,7 +154,8 @@ class TransactionsProvider extends ChangeNotifier {
           alertPopUp(context, _saleByTeminalResponse!.data![0].reason!);
         }
       } else {
-        alertPopUp(context, response['Message'],
+          _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
+        alertPopUp(context, response["Data"][0]['Reason'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
@@ -240,10 +245,10 @@ class TransactionsProvider extends ChangeNotifier {
     _dio.options.headers['Authorization'] = Utils.userToken;
     var ip = await Utils.getIp();
     showLoader(context);
-
+     Position position = await  Geolocator.getCurrentPosition();
     Map param = {
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
       "Userip": ip,
       "Formno": formNumber,
       "Batchid": 1,
@@ -324,7 +329,8 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Internel_Status_Code'] == 1000) {
         _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
       } else {
-        alertPopUp(context, response["Data"]["ResMsg"],
+          _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
+        alertPopUp(context, response["Data"][0]["ResMsg"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
@@ -333,12 +339,10 @@ class TransactionsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> payByPaycode(
-    context, {
-    String? payCode,
-  }) async {
+  Future<void> payByPaycode(context, {String? payCode}) async {
     showLoader(context);
     var ip = await Utils.getIp();
+       Position position = await  Geolocator.getCurrentPosition();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
@@ -362,8 +366,8 @@ class TransactionsProvider extends ChangeNotifier {
       "Invoiceamount": 0.0,
       "Invoicedate": Utils.dateTimeFormat(),
       "Invoiceid": "",
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
       "Userip": ip,
       "Odometerreading": "",
       "Mobileno": "9582922934",
@@ -395,29 +399,25 @@ class TransactionsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> cardEnquiryDetails(
-    context, {
-    String? mobileNo,
-    String? otp,
-    Function?callBack
-  }) async {
+  Future<void> cardEnquiryDetails(context,
+      {String? mobileNo, String? otp, Function? callBack}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails);
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails);
     Map param = {
       "Userip": ip,
-      "Latitude": "1133.2323.23",
-      "Longitude": "11.2.12.2",
+      "Latitude": _sharedPref.read(SharedPref.lat),
+      "Longitude":_sharedPref.read(SharedPref.long),
       "Cardno": "",
       "Useragent": Utils.checkOs(),
       "Mobileno": mobileNo,
-      "OTP":otp,
+      "OTP": otp,
       "Pin": "",
       "Sourceid": "8",
       "CreatedBy": "5063857578",
       "Formfactor": "3",
     };
-     Map<String, String> header = {
+    Map<String, String> header = {
       "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
     };
     header.addAll(commonHeader);

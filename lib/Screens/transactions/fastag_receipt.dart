@@ -66,7 +66,7 @@ class _FasTagReceiptState extends State<FasTagReceipt> {
     var outletDetail = _sharedPref.user!.data!.objOutletDetails![0];
     var receiptEntity = _sharedPref.fastTagData!;
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: '14/09/22 12:57:08'),
+      ReceiptDetail(title: AppStrings.dateTime, value: ''),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
+import '../../util/font_family_helper.dart';
 import '../../util/uiutil.dart';
 
 class PaymentAcceptance extends StatefulWidget {
@@ -63,9 +64,9 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                         boldText(AppStrings.selectPaymentType,
                             color: Colors.grey.shade600),
                         _selectPaymentType(context),
-                        SizedBox(height: screenHeight(context) * 0.05),
-                        boldText(AppStrings.enterAmount,
-                            color: Colors.grey.shade600),
+                         SizedBox(height: screenHeight(context) * 0.03),
+                        // boldText(AppStrings.enterAmount,
+                        //     color: Colors.grey.shade600),
                         _enterAmount(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.next, onTap: () {
@@ -268,10 +269,16 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                   .toList()[0]
                   .productName;
             });
-          },
+        },
         ),
       ),
     );
+  }
+FocusNode myFocusNode = FocusNode();
+ void _requestFocus(FocusNode focus) {
+    setState(() {
+      FocusScope.of(context).requestFocus(focus);
+    });
   }
 
   Widget _enterAmount(BuildContext context) {
@@ -279,13 +286,28 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
       width: screenWidth(context),
       child: Form(
         key: _formKey,
+        
         child: TextFormField(
+          focusNode: myFocusNode,
           controller: _amountController,
-          validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
-          keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            hintText: 'Enter Amount',
-          ),
+          onTap: (){
+          _requestFocus(myFocusNode);
+          },
+         style: const TextStyle(
+            fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
+        validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+            labelText: 'Enter Amount',
+            labelStyle: TextStyle(
+                fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                fontSize:
+                    myFocusNode.hasFocus || _amountController.text.isNotEmpty
+                        ? 23
+                        : 18,
+                color: myFocusNode.hasFocus
+                    ? Colors.grey.shade700
+                    : Colors.grey.shade700)),
         ),
       ),
     );

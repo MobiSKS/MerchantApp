@@ -68,7 +68,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               child: Column(
                 children: [
                   _chagePasswordForm(context),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 10),
                   _otpSent
                       ? _otpTextField(context, _otpController)
                       : Container()
@@ -115,7 +115,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         semiBoldText('Enter OTP',color:Colors.white),
-      const  SizedBox(height:10),
+      const  SizedBox(height:13),
         OTPTextField(
           controller: controller,
           length: 6,

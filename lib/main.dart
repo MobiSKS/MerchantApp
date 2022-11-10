@@ -7,6 +7,7 @@ import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/Screens/financials/receivable_payable.dart';
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
+import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,9 +34,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool isLogin = false;
   SharedPref sharedPref = Injection.injector.get<SharedPref>();
-
+  bool _isLoggedIn = false;
   @override
   void initState() {
     super.initState();
@@ -43,10 +43,12 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _checkLogin() async {
-    bool isLoggedin = await sharedPref.readBool(SharedPref.isLogin);
-    setState(() {
-      isLogin = isLoggedin;
-    });
+     var user = await sharedPref.getPrefrenceData(key: SharedPref.userDetails) as UserModel;
+     if(user.data!.objGetMerchantDetail![0].token!=null){
+      setState(() {
+        _isLoggedIn = true;
+      });
+     }
   }
 
   @override
@@ -72,7 +74,7 @@ class _MyAppState extends State<MyApp> {
             const ResponsiveBreakpoint.autoScale(800, name: TABLET),
           ],
         ),
-        home: isLogin ? const Dashboard() : const LoginPage(),
+        home: _isLoggedIn ? const Dashboard() : const LoginPage(),
         routes: {
           "/login": (context) => const LoginPage(),
           "/dashboard": (context) => const Dashboard(),

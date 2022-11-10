@@ -118,4 +118,5 @@ class AppStrings {
   static const String enterPayCode = "Enter Pay Code";
   static const String merchantCopy = "MERCHANT COPY";
   static const String merchantId = "Merchant Id";
+
 }

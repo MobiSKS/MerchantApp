@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../provider/transactions_provider.dart';
+import '../../util/font_family_helper.dart';
 import '../../util/uiutil.dart';
 
 class PayMerchant extends StatefulWidget {
@@ -19,7 +20,7 @@ class _PayMerchantState extends State<PayMerchant> {
 
   final _payCodeController = TextEditingController();
   late String selectedMode;
-
+  FocusNode myFocusNode = FocusNode();
   @override
   void initState() {
     super.initState();
@@ -50,10 +51,6 @@ class _PayMerchantState extends State<PayMerchant> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
-                        boldText(
-                          AppStrings.enterPayCode,
-                          color: Colors.grey.shade600,
-                        ),
                         _enterpayCode(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.submit, onTap: () {
@@ -88,18 +85,36 @@ class _PayMerchantState extends State<PayMerchant> {
     }
   }
 
+  void _requestFocus(FocusNode focus) {
+    setState(() {
+      FocusScope.of(context).requestFocus(focus);
+    });
+  }
+
   Widget _enterpayCode(BuildContext context) {
     return SizedBox(
       width: screenWidth(context),
       child: Form(
         key: _formKey,
         child: TextFormField(
+          onTap: () {
+            _requestFocus(myFocusNode);
+          },
+          focusNode: myFocusNode,
           controller: _payCodeController,
           validator: (val) => val!.isEmpty ? 'Please enter Paycode' : null,
           keyboardType: TextInputType.number,
-          decoration: const InputDecoration(
-            hintText: 'Enter Pay Code',
-          ),
+          decoration: InputDecoration(
+              labelText: 'Enter Pay Code',
+              labelStyle: TextStyle(
+                  fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                  fontSize:
+                      myFocusNode.hasFocus || _payCodeController.text.isNotEmpty
+                          ? 23
+                          : 18,
+                  color: myFocusNode.hasFocus
+                      ? Colors.grey.shade700
+                      : Colors.grey.shade700)),
         ),
       ),
     );

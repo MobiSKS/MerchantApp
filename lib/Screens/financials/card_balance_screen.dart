@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dtplusmerchant/common/custom_list.dart';
+import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/model/card_enquiry_model.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
@@ -13,6 +14,7 @@ import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 
 import '../../const/app_strings.dart';
+import '../../util/font_family_helper.dart';
 
 class CardBalanceScreen extends StatefulWidget {
   const CardBalanceScreen({super.key});
@@ -27,14 +29,13 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   final otpController = OtpFieldController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? otp;
+  FocusNode myFocusNode = FocusNode();
 
-  bool _validate() {
-    final FormState? form = _formKey.currentState;
-    if (form!.validate()) {
-      return true;
-    } else {
-      return false;
-    }
+ 
+   void _requestFocus() {
+    setState(() {
+      FocusScope.of(context).requestFocus(myFocusNode);
+    });
   }
 
   @override
@@ -60,7 +61,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: screenHeight(context) * 0.03),
-              semiBoldText('Mobile Number', color: Colors.grey.shade600),
+//semiBoldText('Mobile Number', color: Colors.grey.shade600),
               _enterMobileNo(context),
               _otpReceived ? enterOTP(context) : Container(),
               SizedBox(height: screenHeight(context) * 0.06),
@@ -104,7 +105,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   }
 
   Widget enterOTP(BuildContext context) {
-    return Column( 
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.07),
@@ -152,6 +153,11 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     return SizedBox(
       width: screenWidth(context),
       child: TextFormField(
+        focusNode:myFocusNode ,
+        autovalidateMode: AutovalidateMode.disabled,
+        onTap: (){
+          _requestFocus();
+        },
         inputFormatters: [
           LengthLimitingTextInputFormatter(10),
         ],
@@ -165,11 +171,19 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             return null;
           }
         },
-        // onFieldSubmitted: submit(),
+       
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          hintText: 'Enter mobile Number',
-        ),
+        decoration: InputDecoration(
+            labelText: 'Enter mobile Number',
+            labelStyle: TextStyle(
+                fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                fontSize:
+                    myFocusNode.hasFocus || _mobileController.text.isNotEmpty
+                        ? 23
+                        : 18,
+                color: myFocusNode.hasFocus
+                    ? Colors.grey.shade700
+                    : Colors.grey.shade700)),
       ),
     );
   }
@@ -179,15 +193,15 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     Data data,
   ) {
     List<CommonList> cardBalanceEntity = [
-      CommonList(key: 'Date', value: '22/09/2022'),
-      CommonList(key: 'Time', value: '2:10 PM'),
-      CommonList(key: 'Monthly Limit', value: 'Rs ${data.monthlyLimit}'),
-      CommonList(key: 'Monthly Spent', value: 'Rs ${data.monthlySpent}'),
+      CommonList(key: 'Date', value: ''),
+      CommonList(key: 'Time', value: ''),
+      CommonList(key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}'),
+      CommonList(key: 'Monthly Spent', value: '$rupeeSign ${data.monthlySpent}'),
       CommonList(
-          key: 'Monthly Limit Balance', value: 'Rs ${data.monthlyLimitBal}'),
-      CommonList(key: 'Daily Limit', value: 'Rs ${data.dailyLimit}'),
-      CommonList(key: 'Daily Spent', value: 'Rs ${data.dailySpent}'),
-      CommonList(key: 'Daily Limit Balance', value: 'Rs ${data.dailyLimitBal}'),
+          key: 'Monthly Limit Balance', value: '$rupeeSign ${data.monthlyLimitBal}'),
+      CommonList(key: 'Daily Limit', value: '$rupeeSign ${data.dailyLimit}'),
+      CommonList(key: 'Daily Spent', value: '$rupeeSign ${data.dailySpent}'),
+      CommonList(key: 'Daily Limit Balance', value: '$rupeeSign ${data.dailyLimitBal}'),
     ];
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -202,9 +216,13 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        semiBoldText(data.key!, color: Colors.black, fontSize: 18),
-                        semiBoldText(data.value!,
-                            color: Colors.blueGrey, fontSize: 18,)
+                        semiBoldText(data.key!,
+                            color: Colors.black, fontSize: 18),
+                        semiBoldText(
+                          data.value!,
+                          color: Colors.blueGrey,
+                          fontSize: 18,
+                        )
                       ],
                     ),
                   ),
@@ -237,13 +255,14 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
       }
     } else {
       await transactionPro.cardEnquiryDetails(context,
-          mobileNo: _mobileController.text, otp: otp,callBack: refreshCallBack);
+          mobileNo: _mobileController.text,
+          otp: otp,
+          callBack: refreshCallBack);
       if (transactionPro.cardEnquiryResponseModel!.internelStatusCode == 1000) {
         debugPrint('===>otp ${transactionPro.cardEnquiryResponseModel!.data}');
         showToast(transactionPro.cardEnquiryResponseModel!.message!, false);
         setState(() {
           _otpReceived = false;
-         
         });
       } else {}
     }

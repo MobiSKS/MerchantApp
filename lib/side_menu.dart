@@ -62,7 +62,8 @@ class _NavDrawerState extends State<NavDrawer> {
                       semiBoldText("${AppStrings.welcome} !",
                           fontSize: 20, color: Colors.white),
                       SizedBox(height: screenHeight(context) * 0.01),
-                      semiBoldText(name ?? "", fontSize: 24, color: Colors.white),
+                      semiBoldText(name ?? "",
+                          fontSize: 24, color: Colors.white),
                       SizedBox(height: screenHeight(context) * 0.01),
                       Row(
                         children: [
@@ -94,8 +95,10 @@ class _NavDrawerState extends State<NavDrawer> {
           ),
           const Divider(color: Colors.grey),
           ListTile(
-            leading: Image.asset(ImageResources.notificationIconM,
-                height: 20, ),
+            leading: Image.asset(
+              ImageResources.notificationIconM,
+              height: 20,
+            ),
             title: semiBoldText(AppStrings.notification,
                 color: Colors.black, fontSize: 18.0),
             onTap: () => {
@@ -116,8 +119,7 @@ class _NavDrawerState extends State<NavDrawer> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) =>
-                        const ChangePasswordScreen()),
+                    builder: (context) => const ChangePasswordScreen()),
               )
             },
           ),

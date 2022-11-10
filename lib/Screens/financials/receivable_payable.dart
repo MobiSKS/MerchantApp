@@ -211,6 +211,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           }));
         });
   }
+  
 
   Widget _searchFilter() {
     var financialPro = Provider.of<FinancialsProvider>(context, listen: false);
@@ -225,7 +226,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
             onTap: () {
               Utils.selectDatePopup(context, selectedDate, _fromDateController);
             },
-            child: simpleTextField(context, _fromDateController, 'From Date',
+            child: dateTextField(context, _fromDateController, 'From Date',
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
@@ -233,7 +234,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),
-            child: simpleTextField(context, _toDateController, 'To Date',
+            child: dateTextField(context, _toDateController, 'To Date',
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),

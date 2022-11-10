@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
@@ -18,7 +20,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? otp;
   bool _dataReceived = false;
-
+  FocusNode focusNode = FocusNode();
   bool _validate() {
     final FormState? form = _formKey.currentState;
     if (form!.validate()) {
@@ -32,10 +34,16 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: normalAppBar(context,title: AppStrings.creditSaleOuts),
+        appBar: normalAppBar(context, title: AppStrings.creditSaleOuts),
         body: SingleChildScrollView(child: _body(context)),
       ),
     );
+  }
+
+  void _requestFocus() {
+    setState(() {
+      FocusScope.of(context).requestFocus(focusNode);
+    });
   }
 
   Widget _body(BuildContext context) {
@@ -51,10 +59,10 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: screenHeight(context) * 0.05),
-                    semiBoldText('Customer ID',
-                        color: Colors.grey.shade900,
-                        ),
-                    _enterCustomerId(context),
+                    simpleTextField(
+                        context, _custIdController, 'Enter Customer Id',
+                        focusNode: focusNode, onClick: _requestFocus),
+                    //   _enterCustomerId(context),
                     SizedBox(height: screenHeight(context) * 0.05),
                     customButton(context, AppStrings.submit, onTap: () {
                       submit(financialProv);
@@ -62,19 +70,23 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
                   ]),
             ),
             SizedBox(height: screenHeight(context) * 0.03),
-            _dataReceived?   Padding(
-              padding: const EdgeInsets.only(top: 20),
-              child: Container(
-                width: screenWidth(context),
-                height: screenHeight(context) * 0.06,
-                color: Colors.blue.shade100,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 30, top: 15),
-                  child: semiBoldText('Search results',
-                      color: Colors.black, ),
-                ),
-              ),
-            ):Container(),
+            _dataReceived
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Container(
+                      width: screenWidth(context),
+                      height: screenHeight(context) * 0.06,
+                      color: Colors.blue.shade100,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 30, top: 15),
+                        child: semiBoldText(
+                          'Search results',
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
             SizedBox(height: screenHeight(context) * 0.02),
             _dataReceived
                 ? Padding(
@@ -97,19 +109,19 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
         });
   }
 
-  Widget _enterCustomerId(BuildContext context) {
-    return SizedBox(
-      width: screenWidth(context),
-      child: TextFormField(
-        controller: _custIdController,
-        validator: (val) => val!.isEmpty ? 'Please Enter Customer Id' : null,
-        keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          hintText: 'Enter Customer Id',
-        ),
-      ),
-    );
-  }
+  // Widget _enterCustomerId(BuildContext context) {
+  //   return SizedBox(
+  //     width: screenWidth(context),
+  //     child: TextFormField(
+  //       controller: _custIdController,
+  //       validator: (val) => val!.isEmpty ? 'Please Enter Customer Id' : null,
+  //       keyboardType: TextInputType.number,
+  //       decoration: const InputDecoration(
+  //         hintText: 'Enter Customer Id',
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _custDetailWidget(MerchantCustomerMappedDetails data) {
     return Column(
@@ -127,10 +139,11 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(AppStrings.creditSaleOuts,
-                      color: Colors.black,
-                      fontSize: 16,
-                 ),
+                  boldText(
+                    AppStrings.creditSaleOuts,
+                    color: Colors.black,
+                    fontSize: 16,
+                  ),
                 ],
               ),
               Divider(color: Colors.indigo.shade400),
@@ -163,24 +176,29 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            semiBoldText('Customer Name',
-                color: Colors.black,
-                textAlign: TextAlign.start,
-               ),
+            semiBoldText(
+              'Customer Name',
+              color: Colors.black,
+              textAlign: TextAlign.start,
+            ),
             boldText(data.individualOrgName!,
-                color: Colors.black,  fontSize: 16),
+                color: Colors.black, fontSize: 16),
           ],
         ),
         SizedBox(height: screenWidth(context) * 0.03),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            normalText('Outstanding',
-                color: Colors.black,
-                textAlign: TextAlign.start,
-             ),
-            boldText("₹${data.outstanding}",
-                color: Colors.black, fontSize: 16,),
+            normalText(
+              'Outstanding',
+              color: Colors.black,
+              textAlign: TextAlign.start,
+            ),
+            boldText(
+              "₹${data.outstanding}",
+              color: Colors.black,
+              fontSize: 16,
+            ),
           ],
         ),
       ],
@@ -194,24 +212,29 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            normalText('Credit Close Limit',
-                color: Colors.black,
-                textAlign: TextAlign.start,
-             ),
+            normalText(
+              'Credit Close Limit',
+              color: Colors.black,
+              textAlign: TextAlign.start,
+            ),
             boldText("₹${data.creditCloseLimit}",
-                color: Colors.black,  fontSize: 16),
+                color: Colors.black, fontSize: 16),
           ],
         ),
         SizedBox(height: screenWidth(context) * 0.03),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            normalText('CCMS Balance Status',
-                color: Colors.black,
-                textAlign: TextAlign.start,
-                ),
-            boldText(data.cCMSBalanceStatus!,
-                color: Colors.black, fontSize: 16, ),
+            normalText(
+              'CCMS Balance Status',
+              color: Colors.black,
+              textAlign: TextAlign.start,
+            ),
+            boldText(
+              data.cCMSBalanceStatus!,
+              color: Colors.black,
+              fontSize: 16,
+            ),
           ],
         ),
       ],
@@ -229,17 +252,21 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          normalText('CustomerId: ${data.customerId}',
-              color: Colors.black, ),
-          normalText('Limit Balance: ${data.limitBalance}',
-              color: Colors.black, ),
+          normalText(
+            'CustomerId: ${data.customerId}',
+            color: Colors.black,
+          ),
+          normalText(
+            'Limit Balance: ${data.limitBalance}',
+            color: Colors.black,
+          ),
         ],
       ),
     );
   }
 
   Future<void> submit(FinancialsProvider financialProv) async {
-    if (_validate()) {
+    if (_custIdController.text.isNotEmpty) {
       await financialProv.getCreditOutstandingDetail(context,
           userId: _custIdController.text);
       if (financialProv.creditOutstandingModel!.internelStatusCode == 1000) {
@@ -247,6 +274,8 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
           _dataReceived = true;
         });
       }
+    } else {
+      alertPopUp(context, 'Please enter customer Id');
     }
   }
 }

@@ -1,10 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:io';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
+import '../../common/custom_lert_box.dart';
+import '../../provider/location_provider.dart';
 import 'auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,7 +41,121 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     _rememberVal = false;
     _passwordVisible = false;
+    _determinePosition();
     super.initState();
+     WidgetsBinding.instance.addPostFrameCallback((_) => _determinePosition());
+  }
+
+  Future<Position> _determinePosition() async {
+  //  LocationProvider deviceInfoProvider = Provider.of(context, listen: false);
+    await Permission.location.request();
+    await Permission.camera.request();
+    await Permission.storage.request();
+    await Permission.phone.request();
+
+    bool serviceEnabled;
+    LocationPermission locationPermission;
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    locationPermission = await Geolocator.checkPermission();
+
+    var phonePermissionIsDenied = await Permission.phone.isDenied;
+    var phonePermissionIsPermanentlyDenied =
+        await Permission.phone.isPermanentlyDenied;
+    if (locationPermission == LocationPermission.denied) {
+      // _determinePosition();
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertBox(
+            dialogText:
+                "Location Permission Required.\n Go to Sitting to grant access",
+            FirstButtonText: "CANCEL",
+            FirstButtonFunction: () => {exit(0)},
+            SecondButtonText: 'OPEN SETTINGS',
+            secondButtonFunction: () => {
+              openAppSettings().then((value) {
+                Navigator.pop(context);
+              })
+            },
+          );
+        },
+      );
+      locationPermission = await Geolocator.requestPermission();
+      if (locationPermission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+    if (locationPermission == LocationPermission.deniedForever) {
+      showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext context) {
+          return AlertBox(
+            dialogText:
+                "Location Permission Required.\n Go to Sitting to grant access",
+            FirstButtonText: "CANCEL",
+            FirstButtonFunction: () => {exit(0)},
+            SecondButtonText: 'OPEN SETTINGS',
+            secondButtonFunction: () => {
+              openAppSettings().then((value) {
+                Navigator.pop(context);
+              })
+            },
+          );
+        },
+      );
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+    // if (phonePermissionIsDenied) {
+    //   showDialog(
+    //     barrierDismissible: false,
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertBox(
+    //         dialogText:
+    //             "Phone Permission Required.\n Go to Sitting to grant access",
+    //         FirstButtonText: "CANCEL",
+    //         FirstButtonFunction: () => {exit(0)},
+    //         SecondButtonText: 'OPEN SETTINGS',
+    //         secondButtonFunction: () => {
+    //           openAppSettings().then((value) {
+    //             Navigator.pop(context);
+    //           })
+    //         },
+    //       );
+    //     },
+    //   );
+    // }
+    // if (phonePermissionIsPermanentlyDenied) {
+    //   showDialog(
+    //     barrierDismissible: false,
+    //     context: context,
+    //     builder: (BuildContext context) {
+    //       return AlertBox(
+    //         dialogText:
+    //             "Phone Permission Required.\n Go to Sitting to grant access",
+    //         FirstButtonText: "CANCEL",
+    //         FirstButtonFunction: () => {exit(0)},
+    //         SecondButtonText: 'OPEN SETTINGS',
+    //         secondButtonFunction: () => {
+    //           openAppSettings().then((value) {
+    //             Navigator.pop(context);
+    //           })
+    //         },
+    //       );
+    //     },
+    //   );
+    // }
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  // await deviceInfoProvider.getLocation(position.latitude, position.longitude);
+    return await Geolocator.getCurrentPosition();
   }
 
   @override

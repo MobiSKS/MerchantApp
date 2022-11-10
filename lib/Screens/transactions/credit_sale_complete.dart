@@ -2,6 +2,7 @@
 import 'dart:developer';
 
 import 'package:dtplusmerchant/Screens/transactions/credit_complete_receipt.dart';
+import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
@@ -58,16 +59,8 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(
-                            'Enter Card Number',
-                            color: Colors.grey.shade600,
-                          ),
                           _enterCardNumber(context),
-                          SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(
-                            AppStrings.enterAmount,
-                            color: Colors.grey.shade600,
-                          ),
+                          SizedBox(height: screenHeight(context) * 0.04),
                           _enterAmount(context),
                           otpReceived ? enterOTP(context) : Container(),
                           SizedBox(height: screenHeight(context) * 0.10),
@@ -181,16 +174,38 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
     }
   }
 
+  void _requestFocus(FocusNode focus) {
+    setState(() {
+      FocusScope.of(context).requestFocus(focus);
+    });
+  }
+
+  FocusNode myFocusNode1 =  FocusNode();
+  FocusNode myFocusNode2 =  FocusNode();
   Widget _enterCardNumber(BuildContext context) {
     return SizedBox(
       width: screenWidth(context),
       child: TextFormField(
+        onTap: () {
+          _requestFocus(myFocusNode1);
+        },
+        focusNode: myFocusNode1,
         controller: _cardNumberController,
         validator: (val) => val!.isEmpty ? 'Please enter card number' : null,
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          hintText: 'Enter Card Number',
-        ),
+        style: const TextStyle(
+            fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
+        decoration: InputDecoration(
+            labelText: 'Enter Card Number',
+            labelStyle: TextStyle(
+                fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                fontSize: myFocusNode1.hasFocus ||
+                        _cardNumberController.text.isNotEmpty
+                    ? 23
+                    : 18,
+                color: myFocusNode1.hasFocus
+                    ? Colors.grey.shade700
+                    : Colors.grey.shade700)),
       ),
     );
   }
@@ -199,13 +214,34 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
     return SizedBox(
       width: screenWidth(context),
       child: TextFormField(
+        focusNode: myFocusNode2,
+        onTap: () {
+          _requestFocus(myFocusNode2);
+        },
         controller: _amountController,
+        style: const TextStyle(
+            fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
         validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
         keyboardType: TextInputType.number,
-        decoration: const InputDecoration(
-          hintText: 'Enter Amount',
-        ),
+        decoration: InputDecoration(
+            labelText: 'Enter Amount',
+            labelStyle: TextStyle(
+                fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                fontSize:
+                    myFocusNode2.hasFocus || _amountController.text.isNotEmpty
+                        ? 23
+                        : 18,
+                color: myFocusNode2.hasFocus
+                    ? Colors.grey.shade700
+                    : Colors.grey.shade700)),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    myFocusNode1.dispose();
+    myFocusNode2.dispose();
   }
 }
