@@ -1,6 +1,7 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/fastag_otp_cofirm_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
@@ -66,11 +67,11 @@ class _FasTagReceiptState extends State<FasTagReceipt> {
     var outletDetail = _sharedPref.user!.data!.objOutletDetails![0];
     var receiptEntity = _sharedPref.fastTagData!;
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: ''),
+      ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: '1'),
+      ReceiptDetail(title: AppStrings.rocNum, value: widget.fastTagDetail!.data!.rocNo),
       ReceiptDetail(title: 'VEH NO.', value: receiptEntity.data!.vRN),
       ReceiptDetail(title: AppStrings.mobileNo, value: widget.mobileNum),
       ReceiptDetail(title: 'BANK NAME', value: widget.bankNAme),

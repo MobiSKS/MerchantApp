@@ -14,5 +14,6 @@ Map commonReqBody = {
   "Terminalid": Utils.terminalId,
 };
 const String rupeeSign = "₹";
-
-
+const int gvFormfactor = 6;
+const int gvTransType = 575;
+const int paycodeTransType = 532;

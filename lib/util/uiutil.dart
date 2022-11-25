@@ -343,7 +343,7 @@ Widget simpleTextField(
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        contentPadding:const EdgeInsets.only(top:5,bottom:5),
+          contentPadding: EdgeInsets.only(bottom: 10),
           suffixIcon: showIcon
               ? GestureDetector(
                   onTap: () {
@@ -415,7 +415,7 @@ showLoader(context) {
           ));
 }
 
-normalAppBar(BuildContext context, {String title = '', bool showTitle = true}) {
+normalAppBar(BuildContext context, {String title = '', bool showTitle = true,bool freezeScreen=false}) {
   return PreferredSize(
     preferredSize: showTitle
         ? Size.fromHeight(screenHeight(context) * 0.157)
@@ -429,13 +429,9 @@ normalAppBar(BuildContext context, {String title = '', bool showTitle = true}) {
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(
-                  height: 13,
-                ),
+                const SizedBox(height: 13),
                 GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap: () =>freezeScreen?(){}: Navigator.pop(context),
                     child: const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.black,
@@ -476,7 +472,8 @@ normalAppBar(BuildContext context, {String title = '', bool showTitle = true}) {
                 height: screenHeight(context) * 0.06,
                 color: Colors.blue.shade100,
                 child: Center(
-                    child: boldText(title, color: Colors.black, fontSize: 22)),
+                    child:
+                        semiBoldText(title, color: Colors.black, fontSize: 22)),
               )
             : Container()
       ],

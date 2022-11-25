@@ -87,7 +87,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
     return SizedBox(
       height: widget.navbar
           ? screenHeight(context) * 0.71
-          : screenHeight(context) * 0.75,
+          : screenHeight(context) * 0.72,
       child: PageView(
         physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics()),
@@ -117,34 +117,32 @@ class _SettlementScreenState extends State<SettlementScreen> {
               onTap: showBottomModalSheet,
               onChanged: onChanged),
           const SizedBox(height: 10),
-          Expanded(
-            child: BaseView<FinancialsProvider>(
-              onModelReady: (model) async {
-                await model.getSettlementDetail(context);
-              },
-              builder: (context, financialpro, child) {
-                settlementdata = financialpro.isLoading ||
-                        financialpro.settlementModel == null
-                    ? []
-                    : financialpro.settlementModel!.data!;
-                settlementdata1.value = settlementdata;
-                return financialpro.isLoading
-                    ? Column(
-                        children: [
-                          SizedBox(height: screenHeight(context) * 0.30),
-                          const CircularProgressIndicator(),
-                        ],
-                      )
-                    : financialpro.settlementModel != null
-                        ? SingleChildScrollView(child: _settlementData())
-                        : Column(
-                            children: [
-                              SizedBox(height: screenHeight(context) * 0.30),
-                              semiBoldText('No Settlement found'),
-                            ],
-                          );
-              },
-            ),
+          BaseView<FinancialsProvider>(
+            onModelReady: (model) async {
+              await model.getSettlementDetail(context);
+            },
+            builder: (context, financialpro, child) {
+              settlementdata = financialpro.isLoading ||
+                      financialpro.settlementModel == null
+                  ? []
+                  : financialpro.settlementModel!.data!;
+              settlementdata1.value = settlementdata;
+              return financialpro.isLoading
+                  ? Column(
+                      children: [
+                        SizedBox(height: screenHeight(context) * 0.30),
+                        const CircularProgressIndicator(),
+                      ],
+                    )
+                  : financialpro.settlementModel != null
+                      ? _settlementData()
+                      : Column(
+                          children: [
+                            SizedBox(height: screenHeight(context) * 0.30),
+                            semiBoldText('No Settlement found'),
+                          ],
+                        );
+            },
           ),
         ],
       ),
@@ -280,7 +278,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              height: screenHeight(context) * 0.50,
+              height: screenHeight(context) * 0.65,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

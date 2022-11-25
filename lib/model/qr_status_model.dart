@@ -1,4 +1,4 @@
-class CardFeeResponseModel {
+class QRStatusModel {
   bool? success;
   int? statusCode;
   int? internelStatusCode;
@@ -7,7 +7,7 @@ class CardFeeResponseModel {
   List<Data>? data;
   Null? modelState;
 
-  CardFeeResponseModel(
+  QRStatusModel(
       {this.success,
       this.statusCode,
       this.internelStatusCode,
@@ -16,7 +16,7 @@ class CardFeeResponseModel {
       this.data,
       this.modelState});
 
-  CardFeeResponseModel.fromJson(Map<String, dynamic> json) {
+  QRStatusModel.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
     statusCode = json['Status_Code'];
     internelStatusCode = json['Internel_Status_Code'];
@@ -47,24 +47,72 @@ class CardFeeResponseModel {
 }
 
 class Data {
-  double? amount;
-  int? noofCards;
+  String? qRRequestId;
+  String? amount;
+  String? invoiceDateTime;
+  String? terminalId;
+  String? batchNo;
+  String? rOCNo;
+  String? mobileNo;
+  String? cardNo;
+  String? product;
+  String? rSP;
+  String? volume;
+  String? balance;
+  String? txnId;
   int? status;
   String? reason;
 
-  Data({this.amount, this.noofCards, this.status, this.reason});
+  Data(
+      {this.qRRequestId,
+      this.amount,
+      this.invoiceDateTime,
+      this.terminalId,
+      this.batchNo,
+      this.rOCNo,
+      this.mobileNo,
+      this.cardNo,
+      this.product,
+      this.rSP,
+      this.volume,
+      this.balance,
+      this.txnId,
+      this.status,
+      this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
+    qRRequestId = json['QRRequestId'];
     amount = json['Amount'];
-    noofCards = json['NoofCards'];
+    invoiceDateTime = json['InvoiceDateTime'];
+    terminalId = json['TerminalId'];
+    batchNo = json['BatchNo'];
+    rOCNo = json['ROCNo'];
+    mobileNo = json['MobileNo'];
+    cardNo = json['CardNo'];
+    product = json['Product'];
+    rSP = json['RSP'];
+    volume = json['Volume'];
+    balance = json['Balance'];
+    txnId = json['TxnId'];
     status = json['Status'];
     reason = json['Reason'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['QRRequestId'] = this.qRRequestId;
     data['Amount'] = this.amount;
-    data['NoofCards'] = this.noofCards;
+    data['InvoiceDateTime'] = this.invoiceDateTime;
+    data['TerminalId'] = this.terminalId;
+    data['BatchNo'] = this.batchNo;
+    data['ROCNo'] = this.rOCNo;
+    data['MobileNo'] = this.mobileNo;
+    data['CardNo'] = this.cardNo;
+    data['Product'] = this.product;
+    data['RSP'] = this.rSP;
+    data['Volume'] = this.volume;
+    data['Balance'] = this.balance;
+    data['TxnId'] = this.txnId;
     data['Status'] = this.status;
     data['Reason'] = this.reason;
     return data;

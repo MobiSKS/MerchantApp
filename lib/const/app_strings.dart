@@ -100,7 +100,7 @@ class AppStrings {
   static const String creditSaleOuts = "Credit Sale Outstanding";
   static const String cardBalance = "Card Balance";
   static const String transactions = "Transactions";
-  static const String payMerchant = "Pay Merchant";
+  static const String payMerchant = "PayCode/Gift Voucher";
   static const String creditSaleComplete = "Credit Sale Complete";
   static const String cardFee = "Card Fee";
   static const String financials = "Financials";

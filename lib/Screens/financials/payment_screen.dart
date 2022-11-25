@@ -1,12 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'dart:developer';
-
 import 'package:dtplusmerchant/Screens/financials/transaction_summary_detail.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../base/base_view.dart';
 import '../../common/custom_list.dart';
 import '../../const/app_strings.dart';
@@ -18,7 +15,7 @@ class PaymentScreen extends StatefulWidget {
   const PaymentScreen({super.key});
 
   @override
-  State<PaymentScreen> createState() =>  _PaymentScreenState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
@@ -110,7 +107,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                 children: [
                   SizedBox(height: screenHeight(context) * 0.03),
                   CustomList(
-                    physics: const AlwaysScrollableScrollPhysics(),
+                      //   physics: const AlwaysScrollableScrollPhysics(),
                       list: value,
                       itemSpace: 5,
                       child: (Data data, index) {
@@ -120,7 +117,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             const SizedBox(height: 10),
                             Divider(
                               color: Colors.grey.shade700,
-                            
                             )
                           ],
                         );
@@ -131,12 +127,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   Widget _listItem(BuildContext context, Data data) {
     return GestureDetector(
-    onTap: (){
-    Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>  TransactionSummarydetail(data:data)),
-  );
-    },
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TransactionSummarydetail(data: data)),
+        );
+      },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +215,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
+                        semiBoldText('From Date',
+                            color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _fromDateController),
@@ -227,8 +225,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               showIcon: true, enabled: false),
                         ),
                         const SizedBox(height: 15),
-                        semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
-                         
+                        semiBoldText('To Date',
+                            color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
                               context, DateTime.now(), _toDateController),

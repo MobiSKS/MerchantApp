@@ -43,11 +43,11 @@ class _LoginPageState extends State<LoginPage> {
     _passwordVisible = false;
     _determinePosition();
     super.initState();
-     WidgetsBinding.instance.addPostFrameCallback((_) => _determinePosition());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _determinePosition());
   }
 
   Future<Position> _determinePosition() async {
-  //  LocationProvider deviceInfoProvider = Provider.of(context, listen: false);
+    //  LocationProvider deviceInfoProvider = Provider.of(context, listen: false);
     await Permission.location.request();
     await Permission.camera.request();
     await Permission.storage.request();
@@ -154,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
     // }
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
-  // await deviceInfoProvider.getLocation(position.latitude, position.longitude);
+    // await deviceInfoProvider.getLocation(position.latitude, position.longitude);
     return await Geolocator.getCurrentPosition();
   }
 
@@ -362,12 +362,11 @@ class _LoginPageState extends State<LoginPage> {
           if (validateAndSave()) {
             await authViewM.loginApi(
                 context, userNameController.text, passwordController.text);
-            if (authViewM.userModel!.internelStatusCode! == 1000) {
+            if (authViewM.userModel != null &&
+                authViewM.userModel!.internelStatusCode! == 1000) {
               showToast('LoggedIn', false);
               Navigator.pushNamedAndRemoveUntil(
                   context, "/dashboard", (route) => false);
-            } else {
-              alertPopUp(context, authViewM.userModel!.message!);
             }
           }
         },

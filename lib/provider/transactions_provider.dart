@@ -1,12 +1,13 @@
 import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:dtplusmerchant/model/generate_qr_response.dart';
+import 'package:dtplusmerchant/model/gift_voucher_model.dart';
 import 'package:dtplusmerchant/model/otp_response_sale.dart';
 import 'package:dtplusmerchant/model/paycode_response_model.dart';
+import 'package:dtplusmerchant/model/qr_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../const/injection.dart';
@@ -51,6 +52,12 @@ class TransactionsProvider extends ChangeNotifier {
   CardEnquiryModel? _cardEnquiryResponseModel;
   CardEnquiryModel? get cardEnquiryResponseModel => _cardEnquiryResponseModel;
 
+  GiftVoucherModel? _giftVoucherModel;
+  GiftVoucherModel? get giftVoucherModel => _giftVoucherModel;
+
+   QRStatusModel? _qrStatusModel;
+  QRStatusModel? get qrStatusModel => _qrStatusModel;
+
   Future<void> generateOTPSale(context,
       {String mobileNo = '',
       double invoiceAmount = 0.0,
@@ -63,7 +70,7 @@ class TransactionsProvider extends ChangeNotifier {
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
     Map param = {
@@ -106,18 +113,18 @@ class TransactionsProvider extends ChangeNotifier {
       int productId = 0}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-      Position position = await  Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+        "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
     Map param = {
       "Userip": ip,
-      "Latitude":position.latitude ,
-      "Longitude":position.longitude,
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
       "Cardno": cardNum,
       "Batchid": 1,
       "Invoiceamount": invoiceAmount,
@@ -146,7 +153,7 @@ class TransactionsProvider extends ChangeNotifier {
     try {
       var response = await apiServices.post(UrlConstant.saleByTerminal,
           body: param, requestHeader: header);
-              log(response.toString());
+      log(response.toString());
       dismissLoader(context);
       if (response['Success']) {
         _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
@@ -154,7 +161,7 @@ class TransactionsProvider extends ChangeNotifier {
           alertPopUp(context, _saleByTeminalResponse!.data![0].reason!);
         }
       } else {
-          _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
+        _saleByTeminalResponse = SaleByTeminalResponse.fromJson(response);
         alertPopUp(context, response["Data"][0]['Reason'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
@@ -165,7 +172,8 @@ class TransactionsProvider extends ChangeNotifier {
   }
 
   Future<void> generateQR(context,
-      {double? amount, String? productId, int? transTypeId}) async {
+      {double? amount, String? productId, int? transTypeId}
+      ) async {
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
     showLoader(context);
@@ -182,19 +190,62 @@ class TransactionsProvider extends ChangeNotifier {
     };
     // param.addAll(commonReqBody);
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
-    log('===>token ${user.data!.objGetMerchantDetail![0].token}');
+    log('===>token ${user.data?.objGetMerchantDetail?.first.token}');
+      log(param.toString());
     try {
       var response = await apiServices.post(UrlConstant.generateQR,
           body: param, requestHeader: header);
+          log(response.toString());
       dismissLoader(context);
       if (response['Success']) {
         _generateQrResponse = GenerateQrResponse.fromJson(response);
+        log("reqId ${_generateQrResponse!.data!.first.requestId!}");
       } else {
+         _generateQrResponse = null;
         alertPopUp(context, response['Data']['message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<void> getQRStatus(context,
+      {String? qRId,String ?transactionType}
+      ) async {
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+    var ip = await Utils.getIp();
+    Map param = {
+    "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+    "Useragent": Utils.checkOs(),
+    "Userip": ip,
+    "LoginType": "",
+    "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+    "QRRequestId": qRId,
+    "TransType": transactionType
+};
+    // param.addAll(commonReqBody);
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
+    };
+    header.addAll(commonHeader);
+    log('===>token ${user.data?.objGetMerchantDetail?.first.token}');
+      log(param.toString());
+    try {
+      var response = await apiServices.post(UrlConstant.getQRStatus,
+          body: param, requestHeader: header);
+          log(response.toString());
+      if (response['Success']) {
+        _qrStatusModel = QRStatusModel.fromJson(response);
+      } else {
+         _qrStatusModel = null;
+        // alertPopUp(context, response['Data']['message'],
+        //     doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
     } catch (e) {
@@ -212,7 +263,7 @@ class TransactionsProvider extends ChangeNotifier {
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?[0].token}',
     };
     header.addAll(commonHeader);
     Map<dynamic, dynamic> param = {
@@ -238,43 +289,48 @@ class TransactionsProvider extends ChangeNotifier {
     } catch (e) {
       alertPopUp(context, e.toString());
     }
-  }
+  }  
 
   Future<void> cardFeePaynment(context,
-      {int? numberOfCards, double? invoiceAmount, String? formNumber}) async {
-    _dio.options.headers['Authorization'] = Utils.userToken;
+      { int? formNumber}) async {
+       showLoader(context);
     var ip = await Utils.getIp();
-    showLoader(context);
-     Position position = await  Geolocator.getCurrentPosition();
+      var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?[0].token}',
+    };
+      header.addAll(commonHeader);
+    Position position = await Geolocator.getCurrentPosition();
     Map param = {
       "Latitude": position.latitude,
       "Longitude": position.longitude,
+       "UserId": Utils.merchantId,
+       "Useragent": Utils.checkOs(),
       "Userip": ip,
       "Formno": formNumber,
-      "Batchid": 1,
-      "Noofcards": numberOfCards,
-      "Invoiceamount": invoiceAmount,
-      "Transtype": "",
-      "Invoiceid": "",
-      "Invoicedate": Utils.isoDateTimeFormat(),
-      "Sourceid": 0,
-      "CreatedBy": "5063857578",
-      "Stan": 0,
-      "Formfactor": 3
+      
     };
-    param.addAll(commonReqBody);
+ 
     try {
-      Response response =
-          await _dio.post(UrlConstant.cardFeePayment, data: param);
+      var response =
+          await apiServices.post(UrlConstant.cardFeePayment, body: param,requestHeader: header);
       dismissLoader(context);
-      if (response.data['Success']) {
-        _cardFeeResponseModel = CardFeeResponseModel.fromJson(response.data);
-      } else {
-        alertPopUp(context, response.data['Data'][0]['Reason'],
-            doLogout: response.data['Status_Code'] == 401 ? true : false);
+      if (response['Success']) {
+        _cardFeeResponseModel = CardFeeResponseModel.fromJson(response);
+      }else if(!response['Success'] && response['Status_Code']==200){
+           _cardFeeResponseModel= CardFeeResponseModel.fromJson(response);
+        alertPopUp(context, response['Data'][0]["Reason"],
+            doLogout: false);
+      }
+       else {
+        _cardFeeResponseModel= null;
+        alertPopUp(context, response['Message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
     } on DioError catch (e) {
+      dismissLoader(context);
       return alertPopUp(context, e.response!.statusMessage!);
     }
   }
@@ -329,7 +385,7 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Internel_Status_Code'] == 1000) {
         _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
       } else {
-          _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
+        _fastTagOtpConfirmModel = FastTagOtpConfirmModel.fromJson(response);
         alertPopUp(context, response["Data"][0]["ResMsg"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
@@ -342,7 +398,7 @@ class TransactionsProvider extends ChangeNotifier {
   Future<void> payByPaycode(context, {String? payCode}) async {
     showLoader(context);
     var ip = await Utils.getIp();
-       Position position = await  Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
@@ -362,7 +418,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Cardno": "",
       "CreatedBy": "5063857578",
       "DCSTokenNo": "",
-      "Formfactor": 6,
+      "Formfactor": gvFormfactor,
       "Invoiceamount": 0.0,
       "Invoicedate": Utils.dateTimeFormat(),
       "Invoiceid": "",
@@ -374,7 +430,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Pin": "",
       "Productid": 0,
       "Sourceid": 8,
-      "Transtype": "532",
+      "Transtype": paycodeTransType,
       "Vehicleno": ""
     };
 
@@ -390,7 +446,8 @@ class TransactionsProvider extends ChangeNotifier {
           alertPopUp(context, _paycodeResponseModel!.data![0].reason!);
         }
       } else {
-        alertPopUp(context, response['Message'],
+         _paycodeResponseModel = PaycodeResponseModel.fromJson(response);
+        alertPopUp(context, _paycodeResponseModel!.data![0].reason!,
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
@@ -407,7 +464,7 @@ class TransactionsProvider extends ChangeNotifier {
     Map param = {
       "Userip": ip,
       "Latitude": _sharedPref.read(SharedPref.lat),
-      "Longitude":_sharedPref.read(SharedPref.long),
+      "Longitude": _sharedPref.read(SharedPref.long),
       "Cardno": "",
       "Useragent": Utils.checkOs(),
       "Mobileno": mobileNo,
@@ -435,6 +492,68 @@ class TransactionsProvider extends ChangeNotifier {
       } else {
         callBack!();
         alertPopUp(context, response["Data"][0]["Reason"],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<void> payByGiftVoucher(context,
+      {String? voucherCode, double? amount}) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    Position position = await Geolocator.getCurrentPosition();
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+    Map param = {
+      "Bankname": "",
+      "Gatewayname": "",
+      "OtherCardNo": "",
+      "Paycode": voucherCode,
+      "Paymentmode": "",
+      "Stan": 0,
+      "TxnRefId": "",
+      "Batchid": 1,
+      "Cardno": "",
+      "CreatedBy": "",
+      "DCSTokenNo": "",
+      "Formfactor": gvFormfactor,
+      "Invoiceamount": amount,
+      "Invoicedate": Utils.dateTimeFormat(),
+      "Invoiceid": "",
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
+      "Userip": ip,
+      "Odometerreading": "",
+      "Mobileno": "",
+      "Pin": "",
+      "Productid": 0,
+      "Sourceid": 8,
+      "Transtype": gvTransType,
+      "Vehicleno": ""
+    };
+
+    param.addAll(commonReqBody);
+
+    try {
+      var response = await apiServices.post(UrlConstant.saleByTerminal,
+          body: param, requestHeader: header);
+      dismissLoader(context);
+      if (response['Internel_Status_Code'] == 1000) {
+        _giftVoucherModel = GiftVoucherModel.fromJson(response);
+        if (_giftVoucherModel!.internelStatusCode != 1000) {
+          alertPopUp(context, _giftVoucherModel!.data![0].reason!);
+        }
+      } else {
+        _giftVoucherModel =  GiftVoucherModel.fromJson(response);
+        alertPopUp(context,_giftVoucherModel!.data![0].reason!,
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

@@ -19,7 +19,7 @@ import 'preferences/shared_preference.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'provider/transactions_provider.dart';
 
-Future<void> main() async {
+Future<void> main()async {
   WidgetsFlutterBinding.ensureInitialized();
   await Injection.initInjection();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);

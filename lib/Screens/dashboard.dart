@@ -19,8 +19,8 @@ class _DashboardState extends State<Dashboard> {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-   const SettlementScreen(navbar: true),
-    const Contacts(), 
+    const SettlementScreen(navbar: true),
+    const Contacts(),
     Container(),
   ];
 
@@ -30,7 +30,7 @@ class _DashboardState extends State<Dashboard> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor:
-            _selectedIndex == 0  ?const Color(0xffe4ecf9) : Colors.white,
+            _selectedIndex == 0 ? const Color(0xffe4ecf9) : Colors.white,
         key: _scaffoldKey,
         drawer: const NavDrawer(),
         bottomNavigationBar: BottomNavigationBar(

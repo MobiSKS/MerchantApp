@@ -57,7 +57,7 @@ class AuthViewModel extends ChangeNotifier {
       "Password": password
     };
     try {
-      log(param.toString());
+      log("param ${param.toString()}");
       Response response = await _dio.post(UrlConstant.loginApi, data: param);
       dismissLoader(context);
       if (response.data['Success']) {
@@ -69,6 +69,8 @@ class AuthViewModel extends ChangeNotifier {
         await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {
+        _userModel= null;
+        notifyListeners();
         alertPopUp(context, response.data["Message"]);
       }
     } on DioError catch (e) {

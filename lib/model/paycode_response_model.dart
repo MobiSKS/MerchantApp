@@ -63,6 +63,7 @@ class Data {
   String? aPIReferenceNo;
   String? getMultipleMobileNo;
   int? status;
+  String ?rocNo;
   String? reason;
 
   Data(
@@ -83,6 +84,7 @@ class Data {
       this.aPIReferenceNo,
       this.getMultipleMobileNo,
       this.status,
+      this.rocNo,
       this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -98,6 +100,7 @@ class Data {
     address = json['Address'];
     limitType = json['LimitType'];
     cCMSLimit = json['CCMSLimit'];
+    rocNo = json['ROCNo'];
     currentCardBalance = json['CurrentCardBalance'];
     currentCCMSBalance = json['CurrentCCMSBalance'];
     aPIReferenceNo = json['APIReferenceNo'];

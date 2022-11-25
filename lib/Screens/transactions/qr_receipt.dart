@@ -1,4 +1,5 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/model/qr_status_model.dart';
 import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:dtplusmerchant/util/utils.dart';
@@ -9,29 +10,21 @@ import '../../const/injection.dart';
 import '../../model/receipt_detal.dart';
 import '../../preferences/shared_preference.dart';
 
-class SaleReceipt extends StatefulWidget {
-  final SaleByTeminalResponse saleResponse;
-  final String mobileNo;
-  final String transType;
-  final String productName;
-  const SaleReceipt(
-      {super.key,
-      required this.saleResponse,
-      required this.mobileNo,
-      required this.transType,
-      required this.productName});
+class QRReceipt extends StatefulWidget {
+  final QRStatusModel? qrStatusResp;
+  const QRReceipt({super.key, this.qrStatusResp});
 
   @override
-  State<SaleReceipt> createState() => _SaleReceiptState();
+  State<QRReceipt> createState() => _QRReceiptState();
 }
 
-class _SaleReceiptState extends State<SaleReceipt> {
+class _QRReceiptState extends State<QRReceipt> {
   final _sharedPref = Injection.injector.get<SharedPref>();
 
   final ScreenshotController screenshotController = ScreenshotController();
 
- final GlobalKey _key = GlobalKey();
-  String _copyType = AppStrings.customerCopy;
+  final GlobalKey _key = GlobalKey();
+  String _copyType = "Merchant Copy";
 
   @override
   Widget build(BuildContext context) {
@@ -46,12 +39,12 @@ class _SaleReceiptState extends State<SaleReceipt> {
             receiptTitle(context, _key),
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: customButton(context, 'Download Merchant Copy', onTap: () {
-                _downLoadMerchantCopy();
-              }),
-            )
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 30),
+            //   child: customButton(context, 'Download Merchant Copy', onTap: () {
+            //     _downLoadMerchantCopy();
+            //   }),
+            // )
           ],
         ),
       ),
@@ -60,31 +53,43 @@ class _SaleReceiptState extends State<SaleReceipt> {
 
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
-    var rocName = _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity;
+    var rocName = _sharedPref.user!.data!.objOutletDetails![0];
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
       ReceiptDetail(
-          title: AppStrings.terminalID, value: custDetail.terminalId!),
+          title: AppStrings.dateTime,
+          value: Utils.checkNullValue(
+              widget.qrStatusResp!.data!.first.invoiceDateTime)),
+      ReceiptDetail(
+          title: AppStrings.terminalID,
+          value: widget.qrStatusResp!.data!.first.terminalId),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: widget.saleResponse.data!.first.rOCNo),
+      ReceiptDetail(
+          title: AppStrings.rocNum,
+          value: Utils.checkNullValue(
+              widget.qrStatusResp!.data!.first.rOCNo.toString())),
       ReceiptDetail(title: AppStrings.mobileNo, value: custDetail.mobileNo),
     ];
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
           title: AppStrings.product,
           value:
-              widget.saleResponse.data![0].productName ?? widget.productName),
+              Utils.checkNullValue(widget.qrStatusResp!.data!.first.product)),
       ReceiptDetail(
-          title: AppStrings.amount, value: widget.saleResponse.data![0].invAmt),
+          title: AppStrings.amount,
+          value: Utils.checkNullValue(widget.qrStatusResp!.data!.first.amount)),
       ReceiptDetail(
-          title: AppStrings.rsp, value: widget.saleResponse.data![0].rSP),
+          title: AppStrings.rsp,
+          value: Utils.checkNullValue(widget.qrStatusResp!.data!.first.rSP)),
       ReceiptDetail(
-          title: AppStrings.volume, value: widget.saleResponse.data![0].volume),
+          title: AppStrings.volume,
+          value: Utils.checkNullValue(widget.qrStatusResp!.data!.first.volume)),
       ReceiptDetail(
           title: AppStrings.balance,
-          value: widget.saleResponse.data![0].balance),
+          value:
+              Utils.checkNullValue(widget.qrStatusResp!.data!.first.balance)),
       ReceiptDetail(
-          title: AppStrings.txnID, value: widget.saleResponse.data![0].refNo),
+          title: AppStrings.txnID,
+          value: Utils.checkNullValue(widget.qrStatusResp!.data!.first.txnId)),
     ];
     return Screenshot(
       controller: screenshotController,
@@ -100,14 +105,11 @@ class _SaleReceiptState extends State<SaleReceipt> {
                   receiptHeader(context,
                       copyType: _copyType,
                       custDetail: custDetail,
-                      roc: rocName!,
-                      outletName:
-                          widget.saleResponse.data![0].retailOutletName),
+                      roc: rocName.retailOutletCity!,
+                      outletName: rocName.retailOutletName!),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.02),
-                  boldText(widget.transType,
-                      color: Colors.black,
-                      fontSize: 20.0),
+                  boldText('CCMS Sale', color: Colors.black, fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.02),
                   receiptDetail(context, receptDetail2),
                   receiptFooter(context, custDetail: custDetail),
@@ -116,16 +118,5 @@ class _SaleReceiptState extends State<SaleReceipt> {
         ),
       ),
     );
-  }
-
-  void _downLoadMerchantCopy() {
-    setState(() {
-      _copyType = AppStrings.merchantCopy;
-    });
-    showLoader(context);
-    Future.delayed(const Duration(milliseconds: 500), () {
-      captureAndSharePng(context, _key, pop: false);
-    });
-    dismissLoader(context);
   }
 }

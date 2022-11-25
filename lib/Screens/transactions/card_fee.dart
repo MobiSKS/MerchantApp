@@ -1,12 +1,16 @@
-import 'package:dtplusmerchant/Screens/transactions/card_fee_receipt.dart';
-import 'package:dtplusmerchant/provider/transactions_provider.dart';
+import 'dart:ffi';
+
+import 'package:dtplusmerchant/model/card_fee_response_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../base/base_view.dart';
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
+import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
+import 'card_fee_receipt.dart';
 
 class CardFee extends StatefulWidget {
   const CardFee({super.key});
@@ -17,9 +21,9 @@ class CardFee extends StatefulWidget {
 class _CardFeeState extends State<CardFee> {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   DateTime selectedDate = DateTime.now();
+  FocusNode focus1 = FocusNode();
   final TextEditingController _formNoController = TextEditingController();
-  final TextEditingController _cardnumberController = TextEditingController();
-
+  bool showdata = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -34,31 +38,7 @@ class _CardFeeState extends State<CardFee> {
     return Column(
       children: [
         _searchFilter(),
-        // Padding(
-        //   padding: const EdgeInsets.only(top: 20),
-        //   child: Container(
-        //     width: screenWidth(context),
-        //     height: screenHeight(context) * 0.06,
-        //     color: Colors.blue.shade100,
-        //     child: Padding(
-        //       padding: const EdgeInsets.only(left: 30, top: 15),
-        //       child: boldText(
-        //         AppStrings.results,
-        //         color: Colors.black,
-        //       ),
-        //     ),
-        //   ),
-        // ),
         SizedBox(height: screenHeight(context) * 0.03),
-        Visibility(
-          visible: (_formNoController.text.isNotEmpty &&
-              _cardnumberController.text.isNotEmpty),
-          child: Expanded(
-              child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: _cardFeeWidget(),
-          )),
-        ),
       ],
     );
   }
@@ -69,147 +49,111 @@ class _CardFeeState extends State<CardFee> {
     });
   }
 
-  void _requestFocus2() {
-    setState(() {
-      FocusScope.of(context).requestFocus(focus2);
+  Widget _searchFilter() {
+    return BaseView<TransactionsProvider>(builder: (context, transPro, child) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30),
+        child: Column(
+          children: [
+            SizedBox(height: screenHeight(context) * 0.04),
+            simpleTextField(context, _formNoController, AppStrings.enterFormNo,
+                focusNode: focus1, onClick: _requestFocus1),
+            SizedBox(height: screenHeight(context) * 0.07),
+            customButton(context, AppStrings.submit, onTap: () {
+              submit();
+            }),
+            SizedBox(height: screenHeight(context) * 0.04),
+          showdata?  _cardFeeWidget(transPro.cardFeeResponseModel):Container(),
+          ],
+        ),
+      );
     });
   }
 
-  FocusNode focus1 = FocusNode();
-  FocusNode focus2 = FocusNode();
-  Widget _searchFilter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: Column(
-        children: [
-          SizedBox(height: screenHeight(context) * 0.04),
-          simpleTextField(context, _formNoController, AppStrings.enterFormNo,
-              focusNode: focus1, onClick: _requestFocus1),
-          SizedBox(height: screenHeight(context) * 0.03),
-          simpleTextField(
-              context, _cardnumberController, AppStrings.enterCardNo,
-              focusNode: focus2, onClick: _requestFocus2),
-          SizedBox(height: screenHeight(context) * 0.04),
-          customButton(context, AppStrings.submit, onTap: () {
-            submit();
-          })
-        ],
-      ),
-    );
-  }
-
   Future<void> submit() async {
-    // var cardFeeProvider =
-    //     Provider.of<TransactionsProvider>(context, listen: false);
-    // await cardFeeProvider.cardFeePaynment(context,
-    //     formNumber: _formNoController.text,
-    //     numberOfCards: int.parse(_cardnumberController.text),
-    //     invoiceAmount: _totalAmount());
-    // if (cardFeeProvider.cardFeeResponseModel != null &&
-    //     cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(
-    //         builder: (context) => CardFeeReceipt(
-    //               amount: _totalAmount(),
-    //               formNum: _formNoController.text,
-    //               cardNumber: _cardnumberController.text,
-    //               txnId: cardFeeProvider.cardFeeResponseModel!.data![0].refNo,
-    //             )),
-    //   );
-    // }
+    var cardFeeProvider =
+        Provider.of<TransactionsProvider>(context, listen: false);
+    if (_formNoController.text.isNotEmpty) {
+      await cardFeeProvider.cardFeePaynment(
+        context,
+        formNumber: int.parse(_formNoController.text).toUnsigned(64),
+      );
+      if (cardFeeProvider.cardFeeResponseModel != null &&
+          cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
+            setState(() {
+              showdata= true;
+            });
+          }
+    } else {
+      alertPopUp(context, 'Please enter form number');
+    }
   }
 
-  Widget _cardFeeWidget() {
+  Widget _cardFeeWidget(CardFeeResponseModel? cardFee) {
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
           width: screenWidth(context),
-          decoration: BoxDecoration(
-              color: Colors.blueGrey.shade100,
-              borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  boldText(
-                    AppStrings.cardFeeTransaction,
-                    color: Colors.black,
-                    fontSize: 16,
-                  ),
-                ],
-              ),
-              Divider(color: Colors.indigo.shade400),
+             
+          
               const SizedBox(height: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Row(
+                  Column(
+                    
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          boldText(AppStrings.formNo,
+                          semiBoldText(AppStrings.formNo,
                               color: Colors.black,
                               textAlign: TextAlign.start,
                               fontFamily: FontFamilyHelper.sourceSansRegular),
-                          boldText(_formNoController.text,
+                          semiBoldText(_formNoController.text,
                               color: Colors.black, fontSize: 16),
                         ],
                       ),
                       SizedBox(width: screenWidth(context) * 0.10),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          normalText(AppStrings.numberOfCards,
+                          semiBoldText(AppStrings.numberOfCards,
                               color: Colors.black, textAlign: TextAlign.start),
-                          boldText(_cardnumberController.text,
-                              color: Colors.black, fontSize: 16),
+                                semiBoldText(cardFee!.data!.first.noofCards!.toString(),
+                              color: Colors.black, textAlign: TextAlign.start),
                         ],
                       ),
                     ],
                   ),
                   SizedBox(height: screenHeight(context) * 0.01),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          semiBoldText('Total Amount',
-                              color: Colors.black, textAlign: TextAlign.start),
-                          boldText(
-                            '₹${_totalAmount().toString()}',
-                            color: Colors.black,
-                            fontSize: 16,
-                          ),
-                        ],
+                      semiBoldText('Amount',
+                          color: Colors.black, textAlign: TextAlign.start),
+                      boldText(
+                        cardFee.data!.first.amount!.toString(),
+                        color: Colors.black,
+                        fontSize: 16,
                       ),
-                      const SizedBox(width: 25),
                     ],
                   ),
+                  const SizedBox(width: 25),
                   SizedBox(height: screenHeight(context) * 0.01),
                 ],
               ),
             ],
           ),
         ),
-        _footerWidget()
+
       ],
     );
-  }
-
-  double _totalAmount() {
-    var amount =
-        _sharedPref.user!.data!.objGetMerchantDetail![0].cardFeeAmount!;
-    return _cardnumberController.text.isNotEmpty
-        ? double.parse(amount) * (double.parse(_cardnumberController.text))
-        : 0.0;
   }
 
   Widget _footerWidget() {

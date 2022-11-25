@@ -29,7 +29,7 @@ class _BatchDetailsState extends State<BatchDetails> {
     ));
   }
 
-  Widget _body(BuildContext context) {
+  Widget _body(BuildContext context) { 
     return Column(
       children: [
         _searchFilter(),

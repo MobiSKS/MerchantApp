@@ -1,5 +1,6 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
@@ -55,7 +56,7 @@ class _CardFeeReceiptState extends State<CardFeeReceipt> {
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: ''),
+      ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),

@@ -54,14 +54,14 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
 
     Map param = {
-      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Userip": ip,
     };
 
@@ -90,13 +90,13 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
 
     Map param = {
       "Useragent": Utils.checkOs(),
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Userip": ip
     };
 
@@ -130,15 +130,15 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
 
     Map body = {
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "MerchantId": user.data?.objGetMerchantDetail?.first. merchantId,
       "TerminalId": terminalId,
       "TransactionType": transType,
       "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
@@ -154,10 +154,11 @@ class FinancialsProvider extends ChangeNotifier {
         _transactionDetailModel = TransactionDetailModel.fromJson(response);
       } else if (response['Status_Code'] != 200) {
         _isLoading = false;
+        _transactionDetailModel = TransactionDetailModel.fromJson(response);
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
-        _transactionDetailModel=null;
+        _transactionDetailModel = TransactionDetailModel.fromJson(response);
         _isLoading = false;
       }
       notifyListeners();
@@ -174,38 +175,36 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
     var ip = await Utils.getIp();
     Map param = {
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId ?? "" ,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "TerminalId": terminalId,
       "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
       "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
     };
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
-    // param.addAll(commonReqBody);
-    debugPrint("payload for receivable & payable details ===> $param");
     try {
       var response = await apiServices.post(UrlConstant.receivablePayable,
           body: param, requestHeader: header);
-    
+
       if (response['Success']) {
-         _isLoading = false;
+        _isLoading = false;
         _receivablePayableResponseModel =
             ReceivablePayableModel.fromJson(response);
-       
-        if (_receivablePayableResponseModel!.internelStatusCode != 1000) {
+
+        if (_receivablePayableResponseModel?.internelStatusCode != 1000) {
           alertPopUp(context, 'Error Occured');
         }
-      } else  if (response['Status_Code'] != 200){
+      } else if (response['Status_Code'] != 200) {
         _isLoading = false;
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
-      }else{
-        _receivablePayableResponseModel= null;
+      } else {
+        _receivablePayableResponseModel = null;
         _isLoading = false;
       }
       notifyListeners();
@@ -225,15 +224,15 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
 
     Map body = {
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "MerchantId": user.data!.objGetMerchantDetail![0].merchantId,
+      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "TerminalId": terminalId,
       "TransactionType": transType,
       "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
@@ -251,7 +250,7 @@ class FinancialsProvider extends ChangeNotifier {
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
-        _settlementModel=null;
+        _settlementModel = null;
         _isLoading = false;
       }
       notifyListeners();
@@ -261,27 +260,24 @@ class FinancialsProvider extends ChangeNotifier {
     }
   }
 
-
   Future<void> getbatchtDetail(context,
-      {String ?terminalId,
-      int?batchId
-      }) async {
+      {String? terminalId, int? batchId}) async {
     _isLoading = true;
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
     Map<String, String> header = {
-      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
 
     Map body = {
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
       "TerminalId": terminalId,
-       "BatchId": batchId
+      "BatchId": batchId
     };
 
     try {

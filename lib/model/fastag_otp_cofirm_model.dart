@@ -51,6 +51,7 @@ class Data {
   String? invoiceid;
   int? batchid;
   String? rSP;
+  String?rocNo;
   String? volume;
   int? status;
   String? reason;
@@ -68,6 +69,7 @@ class Data {
       this.invoiceid,
       this.batchid,
       this.rSP,
+      this.rocNo,
       this.volume,
       this.status,
       this.reason});
@@ -79,6 +81,7 @@ class Data {
     txnId = json['TxnId'];
     txnTime = json['txnTime'];
     tagId = json['TagId'];
+      rocNo = json['ROCNo'];
     mobileNo = json['MobileNo'];
     vRN = json['VRN'];
     txnNo = json['TxnNo'];

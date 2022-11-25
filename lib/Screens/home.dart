@@ -60,32 +60,33 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(child: _body(context)),
+      child: _body(context),
     );
   }
 
   Widget _body(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              
-              _merchantId(context),
-              const SizedBox(height: 5),
-              _financialgridView(context),
-              const SizedBox(height: 5),
-              _transactiongridView(context),
-                 const SizedBox(height: 15),
-              _banner(context),
-              const SizedBox(height: 10),
-            ],
-          ),
-        ],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [            
+                _merchantId(context),
+                 SizedBox(height: screenHeight(context)*0.005),
+                _financialgridView(context),
+               SizedBox(height: screenHeight(context)*0.005),
+                _transactiongridView(context),
+              SizedBox(height: screenHeight(context)*0.005),
+                _banner(context),
+            //    const SizedBox(height: 10),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -170,8 +171,8 @@ class _HomeState extends State<Home> {
                 crossAxisCount: 4,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 15,
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
                 children: List.generate(_financialOptions.length, (index) {
                   return _financialgridWidget(context, index);
                 })),
@@ -221,8 +222,8 @@ class _HomeState extends State<Home> {
                 crossAxisCount: 4,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                crossAxisSpacing: 5,
-                mainAxisSpacing: 15,
+                crossAxisSpacing: 0,
+                mainAxisSpacing: 0,
                 children: List.generate(_transactionsOptions.length, (index) {
                   return _transactionsGridWidget(context, index);
                 })),

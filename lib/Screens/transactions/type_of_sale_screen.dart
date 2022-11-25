@@ -20,7 +20,15 @@ class TypeOfSale extends StatefulWidget {
   final String? amount;
   final int? productId;
   final String? product;
-  const TypeOfSale({super.key, this.amount, this.productId, this.product});
+  final String? transTypeId;
+  final String? transtype;
+  const TypeOfSale(
+      {super.key,
+      this.amount,
+      this.productId,
+      this.product,
+      this.transTypeId,
+      this.transtype});
 
   @override
   State<TypeOfSale> createState() => _TypeOfSaleState();
@@ -29,8 +37,8 @@ class TypeOfSale extends StatefulWidget {
 class _TypeOfSaleState extends State<TypeOfSale> {
   final _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  late String _payType;
-  late String transType;
+  // late String _payType;
+  // late String transType;
   late String _selectedbank;
   String otp = "";
   late int _otplength;
@@ -41,10 +49,13 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   final _timerController = CountdownController();
   bool enabledButton = false;
   final ValueNotifier<bool> _otpSent = ValueNotifier<bool>(false);
+  TextEditingController _paymentTypeController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    _payType = "";
+    // _payType = "";
+    _paymentTypeController.text = widget.transtype!;
     _selectedbank = "";
   }
 
@@ -84,19 +95,19 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(AppStrings.selectPaymentType,
-                              color: Colors.grey.shade600),
+                          semiBoldText('Selected Payment Type',
+                              color: Colors.grey.shade700),
                           _selectPaymentType(context),
-                          _payType == '505'
+                          widget.transTypeId == '505'
                               ? _selectBank(context)
                               : Container(),
-                          _payType == '505'
+                          widget.transTypeId == '505'
                               ? _enterVehicleNo(context)
                               : Container(),
                           SizedBox(height: screenHeight(context) * 0.05),
-                          boldText(
+                          semiBoldText(
                             AppStrings.mobileNum,
-                            color: Colors.grey.shade600,
+                            color: Colors.grey.shade700,
                           ),
                           _enterMobileNo(context),
                           _otpSent.value ? enterOTP(context) : Container(),
@@ -199,9 +210,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.04),
-        boldText(
+        semiBoldText(
           AppStrings.selectBank,
-          color: Colors.grey.shade600,
+          color: Colors.grey.shade700,
         ),
         _selectBankList(context),
       ],
@@ -238,7 +249,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.05),
-        boldText(
+        semiBoldText(
           'Vehicle Number',
           color: Colors.grey.shade600,
         ),
@@ -269,37 +280,46 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           border: Border(bottom: BorderSide(color: Colors.grey.shade400))),
       height: 45,
       child: Center(
-        child: DropdownButtonFormField(
+        child: TextFormField(
+          enabled: false,
+          controller: _paymentTypeController,
+          keyboardType: TextInputType.number,
           decoration: const InputDecoration(
-              enabledBorder: InputBorder.none, enabled: false),
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.black,
+            contentPadding: EdgeInsets.only(bottom: 8),
           ),
-          icon: const Padding(
-            padding: EdgeInsets.only(right: 8.0),
-            child: Icon(Icons.keyboard_arrow_down),
-          ),
-          hint: const Text(AppStrings.selectPAYType),
-          value: _payType.isEmpty ? null : _payType,
-          items: paymentTypeList.map((value) {
-            return DropdownMenuItem(
-              value: value.transType.toString(),
-              child: Text(value.transName!),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              _payType = value!;
-              _mobileController.clear();
-              transType = paymentTypeList
-                  .where((e) => e.transType == int.parse(_payType))
-                  .toList()[0]
-                  .transName!;
-            });
-            _otpSent.value = false;
-          },
         ),
+
+        // DropdownButtonFormField(
+        //   decoration: const InputDecoration(
+        //       enabledBorder: InputBorder.none, enabled: false),
+        //   style: const TextStyle(
+        //     fontSize: 14,
+        //     color: Colors.black,
+        //   ),
+        //   icon: const Padding(
+        //     padding: EdgeInsets.only(right: 8.0),
+        //     child: Icon(Icons.keyboard_arrow_down),
+        //   ),
+        //   hint: const Text(AppStrings.selectPAYType),
+        //   value: _payType.isEmpty ? null : _payType,
+        //   items: paymentTypeList.map((value) {
+        //     return DropdownMenuItem(
+        //       value: value.transType.toString(),
+        //       child: Text(value.transName!),
+        //     );
+        //   }).toList(),
+        //   onChanged: (value) {
+        //     setState(() {
+        //       _payType = value!;
+        //       _mobileController.clear();
+        //       transType = paymentTypeList
+        //           .where((e) => e.transType == int.parse(_payType))
+        //           .toList()[0]
+        //           .transName!;
+        //     });
+        //     _otpSent.value = false;
+        //   },
+        // ),
       ),
     );
   }
@@ -349,23 +369,23 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }
 
   Future<void> _submitPayment(TransactionsProvider transProvider) async {
-    _payType == "505"
+    widget.transTypeId == "505"
         ? await submitOTPFastTag(transProvider)
         : await submitOTPSale(transProvider);
   }
 
   Future<void> sendOTP(TransactionsProvider transProvider) async {
-    _payType == "505"
+    widget.transTypeId == "505"
         ? await sendOTPforFastTag(transProvider)
         : await sendOTPforSale(transProvider);
   }
 
   Future<void> sendOTPforSale(TransactionsProvider transProvider) async {
-    if (validateMobile() && _payType.isNotEmpty) {
+    if (validateMobile()) {
       await transProvider.generateOTPSale(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
-          transType: int.parse(_payType));
+          transType: int.parse(widget.transTypeId!));
       if (transProvider.otpResponseSale!.internelStatusCode == 1000) {
         log('===========> OTP ${transProvider.otpResponseSale!.data![0].oTP!}');
         showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
@@ -380,7 +400,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }
 
   Future<void> sendOTPforFastTag(TransactionsProvider saleReloadViewM) async {
-    if (validateMobile() && _payType.isNotEmpty) {
+    if (validateMobile()) {
       await saleReloadViewM.generateOtpFastTAG(context,
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
@@ -404,7 +424,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         invoiceAmount: double.parse(widget.amount!),
         mobileNo: _mobileController.text,
         otp: otp,
-        transType: int.parse(_payType),
+        transType: int.parse(widget.transTypeId!),
         productId: widget.productId!);
     _otpSent.value = false;
     if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
@@ -416,7 +436,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
             builder: (context) => SaleReceipt(
                   saleResponse: transPro.saleByTeminalResponse!,
                   mobileNo: _mobileController.text,
-                  transType: transType,
+                  transType: widget.transtype!,
                   productName: widget.product!,
                 )),
       );

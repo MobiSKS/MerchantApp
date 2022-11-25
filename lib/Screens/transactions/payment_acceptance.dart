@@ -1,6 +1,7 @@
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
@@ -57,14 +58,14 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: screenHeight(context) * 0.05),
-                        boldText(AppStrings.selectProduct,
-                            color: Colors.grey.shade600),
+                        semiBoldText(AppStrings.selectProduct,
+                            color: Colors.grey.shade700, fontSize: 18),
                         _selectProduct(context),
                         SizedBox(height: screenHeight(context) * 0.05),
-                        boldText(AppStrings.selectPaymentType,
+                        semiBoldText(AppStrings.selectPaymentType,
                             color: Colors.grey.shade600),
                         _selectPaymentType(context),
-                         SizedBox(height: screenHeight(context) * 0.03),
+                        SizedBox(height: screenHeight(context) * 0.03),
                         // boldText(AppStrings.enterAmount,
                         //     color: Colors.grey.shade600),
                         _enterAmount(context),
@@ -80,6 +81,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
     );
   }
 
+  var payTypeName;
   Widget _selectPaymentType(BuildContext context) {
     var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
     return Container(
@@ -110,6 +112,11 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           onChanged: (value) {
             setState(() {
               _payType = value!;
+              payTypeName = paymentTypeList
+                  .where((e) => e.transType.toString() == _payType)
+                  .toList()
+                  .first
+                  .transName!;
             });
           },
         ),
@@ -209,6 +216,8 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                 amount: _amountController.text,
                 productId: int.parse(_selectedProduct),
                 product: _productName,
+                transTypeId: _payType,
+                transtype: payTypeName,
               )),
     );
   }
@@ -220,12 +229,15 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           amount: double.parse(_amountController.text),
           transTypeId: int.parse(_payType),
           productId: _selectedProduct);
-      if (saleViewM.generateQrResponse!.internelStatusCode == 1000) {
+      if (saleViewM.generateQrResponse != null &&
+          saleViewM.generateQrResponse!.internelStatusCode == 1000) {
         // ignore: use_build_context_synchronously
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => ScanQRCode(
+                    transType: _payType,
+                    qrResp: saleViewM.generateQrResponse,
                     qrString: saleViewM.generateQrResponse!.data![0].qRString,
                     amount: saleViewM.generateQrResponse!.data![0].amount,
                     outletName:
@@ -269,13 +281,14 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                   .toList()[0]
                   .productName;
             });
-        },
+          },
         ),
       ),
     );
   }
-FocusNode myFocusNode = FocusNode();
- void _requestFocus(FocusNode focus) {
+
+  FocusNode myFocusNode = FocusNode();
+  void _requestFocus(FocusNode focus) {
     setState(() {
       FocusScope.of(context).requestFocus(focus);
     });
@@ -286,28 +299,27 @@ FocusNode myFocusNode = FocusNode();
       width: screenWidth(context),
       child: Form(
         key: _formKey,
-        
         child: TextFormField(
           focusNode: myFocusNode,
           controller: _amountController,
-          onTap: (){
-          _requestFocus(myFocusNode);
+          onTap: () {
+            _requestFocus(myFocusNode);
           },
-         style: const TextStyle(
-            fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
-        validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-            labelText: 'Enter Amount',
-            labelStyle: TextStyle(
-                fontFamily: FontFamilyHelper.sourceSansSemiBold,
-                fontSize:
-                    myFocusNode.hasFocus || _amountController.text.isNotEmpty
-                        ? 23
-                        : 18,
-                color: myFocusNode.hasFocus
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade700)),
+          style: const TextStyle(
+              fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
+          validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
+          keyboardType: TextInputType.number,
+          decoration: InputDecoration(
+              labelText: 'Enter Amount',
+              labelStyle: TextStyle(
+                  fontFamily: FontFamilyHelper.sourceSansSemiBold,
+                  fontSize:
+                      myFocusNode.hasFocus || _amountController.text.isNotEmpty
+                          ? 23
+                          : 18,
+                  color: myFocusNode.hasFocus
+                      ? Colors.grey.shade700
+                      : Colors.grey.shade700)),
         ),
       ),
     );

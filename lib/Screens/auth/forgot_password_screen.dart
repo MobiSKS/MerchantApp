@@ -126,43 +126,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       ],
     );
   }
-
-  // Future<void> changePassword(AuthViewModel authViewM) async {
-  //   if (validateAndSave() && (_newPassword.text == _confirmPassword.text)) {
-  //     await authViewM.changePasswordApi(context,
-  //         confirmNewPass: _confirmPassword.text,
-  //         newPass: _newPassword.text,
-  //         oldPass: _oldPassword.text);
-
-  //     if (authViewM.changePasswordModel!.internelStatusCode == 1000) {
-  //       //  await authViewM.logout(context);
-  //       alertPopUp(context, 'Password has been Changed Successfully',
-  //           doLogout: true);
-  //     }
-  //   } else if (validateAndSave() &&
-  //       (_newPassword.text != _confirmPassword.text)) {
-  //     alertPopUp(context, 'New Password and Confirm Password are different.');
-  //   }
-  // }
-
-  // Widget _chagePasswordForm(BuildContext context) {
-  //   return Column(
-  //     crossAxisAlignment: CrossAxisAlignment.start,
-  //     children: [
-  //       semiBoldText('Change Password', fontSize: 24.0, color: Colors.white),
-  //       SizedBox(height: screenHeight(context) * 0.05),
-  //       customTextField(context, _oldPassword, 'Old Password',
-  //           prefixIcon: false, valMessage: 'Please enter Old Password'),
-  //       SizedBox(height: screenHeight(context) * 0.03),
-  //       customTextField(context, _newPassword, AppStrings.newPassword,
-  //           prefixIcon: false, valMessage: AppStrings.newPasswordError),
-  //       SizedBox(height: screenHeight(context) * 0.03),
-  //       customTextField(context, _confirmPassword, AppStrings.confirmPaasword,
-  //           prefixIcon: false, valMessage: AppStrings.confirmPassError),
-  //     ],
-  //   );
-  // }
-
   Widget _fogetPassword() {
     return Column(
       children: [
@@ -180,7 +143,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     if (validateAndSave()) {
       await authViewM.forgetPasswordOTP(context,
           emailId: _emailController.text, userName: _userNameController.text);
-
       if (authViewM.forgetPasswordOTPModel!.internelStatusCode == 1000) {
         showToast('${authViewM.forgetPasswordOTPModel!.data![0].oTP}', false);
         alertPopUp(
