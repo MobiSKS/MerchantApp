@@ -20,17 +20,19 @@ class TransactionSummarydetail extends StatefulWidget {
 
 class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
   final ScreenshotController screenshotController = ScreenshotController();
-
+  
   final GlobalKey _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      appBar: normalAppBar(context, title: 'Receipt'),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
+            header(context),
+               SizedBox(height: screenHeight(context) * 0.02),
+            receiptTitle(context, _key),
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
           ],
@@ -49,6 +51,7 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
           title: 'Transaction Type', value: widget.data.transactionType),
       ReceiptDetail(title: 'Amount', value: '₹ ${widget.data.amount}'),
       ReceiptDetail(title: 'Product', value: widget.data.product),
+       ReceiptDetail(title: 'volume', value: widget.data.volume),
       ReceiptDetail(title: 'Price', value: '₹ ${widget.data.price}'),
     ];
 
@@ -67,10 +70,11 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
                   SizedBox(height: screenHeight(context) * 0.02),
                   Image.asset(ImageResources.hpLogoReceipt, height: 100),
                   SizedBox(height: screenHeight(context) * 0.015),
-                  boldText('Transaction  Detail',
+                  semiBoldText('Transaction  Detail',
                       color: Colors.black, fontSize: 24.0),
                   SizedBox(height: screenHeight(context) * 0.07),
                   receiptDetail(context, transDetail, itemSapce: 17.0),
+                       SizedBox(height: screenHeight(context) * 0.07),
                 ],
               )),
         ),

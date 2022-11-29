@@ -41,6 +41,7 @@ class AuthViewModel extends ChangeNotifier {
   ChangePasswordOTp? get changePasswordOTp => _changePasswordOTp;
 
   Future<void> loginApi(context, String userId, String password) async {
+    await _sharedPref.preferenceClear();
     _dio.options.headers['API_Key'] = UrlConstant.apiKey;
     _dio.options.headers['Secret_key'] = UrlConstant.secretKey;
     showLoader(context);
@@ -79,7 +80,7 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> verifyChangePasswordOtp(context, {String? otp}) async {
+  Future<void> verifyChangePasswordOtp(context, {String? otp,String?oldPass,String? newPass,String?confirmNewPass}) async {
     showLoader(context);
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
@@ -91,14 +92,18 @@ class AuthViewModel extends ChangeNotifier {
     header.addAll(commonHeader);
 
     Map body = {
+        "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Useragent": Utils.checkOs(),
-      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Userip": ip,
       "UserName": user.data!.objGetMerchantDetail![0].merchantId,
+      "MobileNo": user.data!.objGetMerchantDetail![0].mobileNo,
+      "OldPassword": oldPass,
+      "NewPassword": newPass,
+      "ConfirmNewPassword": confirmNewPass,
       "OTPType": 21,
       "PageIdentifier": 2,
       "PageType": 2,
-      "OTP": otp
+      "OTP" :otp
     };
 
     try {
@@ -144,15 +149,18 @@ class AuthViewModel extends ChangeNotifier {
       "PageIdentifier": 2,
       "PageType": 2,
     };
+    log(body.toString());
     try {
       var response = await apiServices.post(UrlConstant.changePasswordOTP,
           body: body, requestHeader: header);
+              log(response.toString());
       if (response['Success']) {
         dismissLoader(context);
         _changePasswordOTp = ChangePasswordOTp.fromJson(response);
       } else {
         dismissLoader(context);
-        alertPopUp(context, response["Message"],
+             _changePasswordOTp = ChangePasswordOTp.fromJson(response);
+        alertPopUp(context, response["Data"][0]["Reason"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

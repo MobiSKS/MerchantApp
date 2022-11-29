@@ -2,6 +2,8 @@ import 'package:dtplusmerchant/Screens/auth/auth_view_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
+import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
@@ -415,7 +417,8 @@ showLoader(context) {
           ));
 }
 
-normalAppBar(BuildContext context, {String title = '', bool showTitle = true,bool freezeScreen=false}) {
+normalAppBar(BuildContext context,
+    {String title = '', bool showTitle = true, bool freezeScreen = false}) {
   return PreferredSize(
     preferredSize: showTitle
         ? Size.fromHeight(screenHeight(context) * 0.157)
@@ -431,7 +434,7 @@ normalAppBar(BuildContext context, {String title = '', bool showTitle = true,boo
               children: [
                 const SizedBox(height: 13),
                 GestureDetector(
-                    onTap: () =>freezeScreen?(){}: Navigator.pop(context),
+                    onTap: () => freezeScreen ? () {} : Navigator.pop(context),
                     child: const Icon(
                       Icons.arrow_back_ios_new,
                       color: Colors.black,
@@ -661,6 +664,24 @@ Widget downloadButton(BuildContext context, GlobalKey key) {
   );
 }
 
+Widget countTimer(CountdownTimerController controller) {
+  return CountdownTimer(
+    controller: controller,
+    widgetBuilder: (context, time) {
+      if (time == null) {
+        return semiBoldText('00:00',fontSize: 20);
+      }
+      return time.sec! > 9
+          ? semiBoldText('0${time.min ?? 0} : ${time.sec ?? 0}', fontSize: 20)
+          : semiBoldText('0${time.min ?? 0} : 0${time.sec ?? 0}', fontSize: 20);
+    },
+    textStyle: TextStyle(
+        fontSize: 21,
+        color: Colors.grey.shade900,
+        fontFamily: FontFamilyHelper.sourceSansSemiBold),
+  );
+}
+
 Widget searchWidget(BuildContext context, TextEditingController? controller,
     {Function? onTap, String? hintText, Function? onChanged}) {
   return Row(
@@ -707,4 +728,20 @@ Widget searchWidget(BuildContext context, TextEditingController? controller,
       )
     ],
   );
+}
+
+showGif(context) {
+  showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => Container(
+            color: Colors.white,
+            height: screenHeight(context) * 35,
+            child: Center(
+                child: Theme(
+                    data: Theme.of(context).copyWith(
+                        colorScheme: ColorScheme.fromSwatch()
+                            .copyWith(primary: Colors.transparent)),
+                    child: Image.asset(ImageResources.tickImage))),
+          ));
 }

@@ -7,6 +7,7 @@ import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../const/image_resources.dart';
@@ -32,13 +33,16 @@ class ScanQRCode extends StatefulWidget {
 }
 
 class _ScanQRCodeState extends State<ScanQRCode> {
-  int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 180;
-
+  //int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 180;
+  var timerController;
   Timer? timer;
-  // final _timerController = CountdownController();
+
   @override
   void initState() {
     super.initState();
+    timerController = CountdownTimerController(
+        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 180,
+        onEnd: navigateBack);
     timer = Timer.periodic(
         const Duration(seconds: 4), (Timer t) => checkQRstatus());
   }
@@ -46,6 +50,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
   @override
   void dispose() {
     timer?.cancel();
+    timerController.dispose();
     super.dispose();
   }
 
@@ -57,16 +62,20 @@ class _ScanQRCodeState extends State<ScanQRCode> {
         transactionType: widget.transType);
     if (transPro.qrStatusModel != null &&
         transPro.qrStatusModel!.internelStatusCode == 1000) {
-      timer?.cancel();
+      showGif(context);
       Utils.textToSpeech(transPro.qrStatusModel!.data!.first.amount.toString());
-      Navigator.pushReplacement<void, void>(
-        context,
-        MaterialPageRoute<void>(
-          builder: (BuildContext context) => QRReceipt(
-            qrStatusResp: transPro.qrStatusModel,
+      timer?.cancel();
+      Future.delayed(const Duration(seconds: 3), () {
+        dismissLoader(context);
+        Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => QRReceipt(
+              qrStatusResp: transPro.qrStatusModel,
+            ),
           ),
-        ),
-      );
+        );
+      });
     }
   }
 
@@ -128,7 +137,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
                       semiBoldText('Valid Till ', fontSize: 23),
                       const SizedBox(width: 10),
                       CountdownTimer(
-                        endTime: endTime,
+                        controller: timerController,
                         widgetBuilder: (context, time) {
                           if (time == null) {
                             return boldText('QR Expired');
@@ -146,9 +155,6 @@ class _ScanQRCodeState extends State<ScanQRCode> {
                             fontSize: 21,
                             color: Colors.grey.shade900,
                             fontFamily: FontFamilyHelper.sourceSansSemiBold),
-                        onEnd: () {
-                          Navigator.pop(context);
-                        },
                       ),
                     ],
                   ),
@@ -157,5 +163,9 @@ class _ScanQRCodeState extends State<ScanQRCode> {
             )),
       ),
     );
+  }
+
+  navigateBack() {
+    Navigator.pop(context);
   }
 }

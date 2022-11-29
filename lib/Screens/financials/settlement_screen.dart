@@ -28,9 +28,9 @@ class _SettlementScreenState extends State<SettlementScreen> {
   final PageController pageController = PageController();
   int pageIndex = 0;
   final _fromDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
   final _toDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
   final _terminalIdController = TextEditingController();
   double columnPadding = 20;
   final settlementdata1 = ValueNotifier<List<Data>>([]);

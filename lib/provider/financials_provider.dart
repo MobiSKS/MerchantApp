@@ -138,11 +138,11 @@ class FinancialsProvider extends ChangeNotifier {
       "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "MerchantId": user.data?.objGetMerchantDetail?.first. merchantId,
+      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "TerminalId": terminalId,
       "TransactionType": transType,
-      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
-      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
+      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
+      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
     };
 
     log('=====>Transtype $transType}');
@@ -175,13 +175,13 @@ class FinancialsProvider extends ChangeNotifier {
         as UserModel;
     var ip = await Utils.getIp();
     Map param = {
-      "UserId": user.data?.objGetMerchantDetail?.first.merchantId ?? "" ,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId ?? "",
       "Useragent": Utils.checkOs(),
       "Userip": ip,
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "TerminalId": terminalId,
-      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
-      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
+      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
+      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
     };
     Map<String, String> header = {
       "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
@@ -235,8 +235,8 @@ class FinancialsProvider extends ChangeNotifier {
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "TerminalId": terminalId,
       "TransactionType": transType,
-      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
-      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(DateTime.now()),
+      "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
+      "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
     };
 
     try {

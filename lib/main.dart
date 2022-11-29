@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _checkLogin() async {
      var user = await sharedPref.getPrefrenceData(key: SharedPref.userDetails) as UserModel;
-     if(user.data!.objGetMerchantDetail![0].token!=null){
+     if(user !=null && user.data!.objGetMerchantDetail![0].token!=null){
       setState(() {
         _isLoggedIn = true;
       });

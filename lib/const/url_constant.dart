@@ -1,7 +1,7 @@
 class UrlConstant {
   static const String baseUrl =
-     "http://dtpapi.mloyalcapture.com/api/dtplus/"; // UAT url
-    //  "https://dtpapi.mloyalretail.com/api/dtplus/";  //Dev url
+    "http://dtpapi.mloyalcapture.com/api/dtplus/"; // UAT url
+    // "https://dtpapi.mloyalretail.com/api/dtplus/";  //Dev url
   static const String hpPayLink = "https://www.hppay.in";
   static const String loginApi =
       "merchant/get_merchant_registration_parameters";
@@ -32,7 +32,6 @@ class UrlConstant {
   static const String forgetPassOTPVerify = "settings/forgot_password";
   static const String getQRStatus ="Mobile/get_QR_code_payment_status";
 //==============================api_key && secret_key=================================
-
   static const String apiKey = "3C25F265-F86D-419D-9A04-EA74A503C197";
   static const String secretKey = "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5";
 }

@@ -14,7 +14,7 @@ class RetailOutletAddress extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        boldText(AppStrings.retailOutletAddress, color: Colors.black,fontSize: 22.0),
+        semiBoldText(AppStrings.retailOutletAddress, color: Colors.black,fontSize: 22.0),
         const SizedBox(height: 30),
         _listView(context),
       ],
@@ -25,24 +25,24 @@ class RetailOutletAddress extends StatelessWidget {
     var data = _sharedPref.user!.data;
     final List<MerchantDetail> detail = [
       MerchantDetail(
-          question: 'Addrtess 1',
-          ans: data!.objOutletDetails![0].retailOutletAddress1 ?? ""),
+          key: 'Address 1',
+          value: data!.objOutletDetails![0].retailOutletAddress1 ?? ""),
       MerchantDetail(
-          question: 'Addrtess 2',
-          ans: data.objOutletDetails![0].retailOutletAddress2 ?? ""),
+          key: 'Address 2',
+          value: data.objOutletDetails![0].retailOutletAddress2 ?? ""),
       MerchantDetail(
-          question: 'Addrtess 3',
-          ans: data.objOutletDetails![0].retailOutletAddress3 ?? ''),
+          key: 'Address 3',
+          value: data.objOutletDetails![0].retailOutletAddress3 ?? ''),
       MerchantDetail(
-          question: 'City', ans: data.objOutletDetails![0].retailOutletCity),
-      MerchantDetail(question: 'District', ans: 'Mumbai'),
-      MerchantDetail(question: 'State', ans: 'Maharashta'),
+          key: 'City', value: data.objOutletDetails![0].retailOutletCity),
+      MerchantDetail(key: 'District', value: 'Mumbai'),
+      MerchantDetail(key: 'State', value: 'Maharashta'),
       MerchantDetail(
-          question: 'Pin Code',
-          ans: data.objOutletDetails![0].retailOutletPinNumber),
+          key: 'Pin Code',
+          value: data.objOutletDetails![0].retailOutletPinNumber),
       MerchantDetail(
-          question: 'Office Phone',
-          ans: data.objOutletDetails![0].retailOutletPhoneNumber),
+          key: 'Office Phone',
+          value: data.objOutletDetails![0].retailOutletPhoneNumber),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,
@@ -54,8 +54,8 @@ class RetailOutletAddress extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(detail[index].question!, fontSize: 20.0),
-                  semiBoldText(detail[index].ans!, fontSize: 18.0)
+                  semiBoldText(detail[index].key!, fontSize: 20.0),
+                  semiBoldText(detail[index].value!, fontSize: 18.0,color:Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),

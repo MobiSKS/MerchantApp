@@ -14,7 +14,7 @@ class OtherDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        boldText(AppStrings.contactPersonDetail,
+        semiBoldText(AppStrings.contactPersonDetail,
             color: Colors.black,fontSize: 22.0),
         const SizedBox(height: 30),
         _listView(context),
@@ -26,11 +26,11 @@ class OtherDetail extends StatelessWidget {
     var data = _sharedPref.user!.data;
     final List<MerchantDetail> detail = [
       MerchantDetail(
-          question: 'Name', ans: data!.objGetMerchantDetail![0].merchantName),
+          key: 'Name', value: data!.objGetMerchantDetail![0].merchantName),
       MerchantDetail(
-          question: 'Mobile No.', ans: data.objGetMerchantDetail![0].mobileNo),
+          key: 'Mobile No.', value: data.objGetMerchantDetail![0].mobileNo),
       MerchantDetail(
-          question: 'Email Id', ans: data.objGetMerchantDetail![0].emailId),
+          key: 'Email Id', value: data.objGetMerchantDetail![0].emailId),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,
@@ -42,8 +42,8 @@ class OtherDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(detail[index].question!, fontSize: 20.0),
-                  semiBoldText(detail[index].ans!, fontSize: 18.0)
+                  semiBoldText(detail[index].key!, fontSize: 20.0),
+                  semiBoldText(detail[index].value!, fontSize: 18.0,color:Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),

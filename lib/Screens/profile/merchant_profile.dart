@@ -1,7 +1,6 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 
@@ -14,7 +13,7 @@ class Merchantprofile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        boldText(AppStrings.merchantprofile,
+        semiBoldText(AppStrings.merchantprofile,
        color: Colors.black, fontSize: 22.0,),
         const SizedBox(height: 30),
         _listView(context),
@@ -28,23 +27,23 @@ class Merchantprofile extends StatelessWidget {
     var data = _sharedPref.user!.data!;
     final List<MerchantDetail> detail = [
       MerchantDetail(
-          question: 'Merchant Type',
-          ans: data.objOutletDetails![0].merchantTypeName!),
+          key: 'Merchant Type',
+          value: data.objOutletDetails!.first.merchantTypeName!),
       MerchantDetail(
-          question: 'Outlet Category',
-          ans: data.objOutletDetails![0].outletCategoryName!),
+          key: 'Outlet Category',
+          value: data.objOutletDetails!.first.outletCategoryName!),
       MerchantDetail(
-          question: 'Merchant Id',
-          ans: data.objGetMerchantDetail![0].merchantId),
+          key: 'Merchant Id',
+          value: data.objGetMerchantDetail!.first.merchantId),
       MerchantDetail(
-          question: 'Retail Outlet Name',
-          ans: data.objOutletDetails![0].retailOutletName),
+          key: 'Retail Outlet Name',
+          value: data.objOutletDetails!.first.retailOutletName),
       MerchantDetail(
-          question: 'Merchant Name',
-          ans: data.objGetMerchantDetail![0].merchantName!),
+          key: 'Merchant Name',
+          value: data.objGetMerchantDetail!.first.merchantName!),
       MerchantDetail(
-          question: 'GST no.',
-          ans: data.objOutletDetails![0].gSTNumber ?? "NA"),
+          key: 'GST no.',
+          value: data.objOutletDetails!.first.gSTNumber ?? "NA"),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,
@@ -56,9 +55,9 @@ class Merchantprofile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(detail[index].question!,
+                  semiBoldText(detail[index].key!,
                       fontSize: 20.0,),
-                  semiBoldText(detail[index].ans!, fontSize:18.0)
+                  semiBoldText(detail[index].value!, fontSize:18.0,color: Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),
@@ -72,8 +71,8 @@ class Merchantprofile extends StatelessWidget {
 }
 
 class MerchantDetail {
-  String? question;
-  String? ans;
+  String? key;
+  String? value;
 
-  MerchantDetail({this.question, this.ans});
+  MerchantDetail({this.key, this.value});
 }

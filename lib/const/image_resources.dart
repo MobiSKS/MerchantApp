@@ -15,9 +15,10 @@ class ImageResources {
   static const String transactionImage = "assets/images/transactions.png";
   static const String backgroundImage = "assets/images/bg.png";
   static const String hpLogoReceipt = "assets/images/hp_logo.jpg";
-    static const String merchantIdBg = "assets/images/merchantId_bg.png";
-   static const String notificationIconM = "assets/images/noti_m.png";
-  
+  static const String merchantIdBg = "assets/images/merchantId_bg.png";
+  static const String notificationIconM = "assets/images/noti_m.png";
+  static const String tickImage = "assets/images/hp-tick.gif";
+
 //==============================App Icon Name=========================================
 
   static const String callIcon = "assets/icons/call-on.png";

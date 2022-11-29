@@ -21,11 +21,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _oldPassword = TextEditingController();
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
-    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-    OtpFieldController _otpController = OtpFieldController();
-  String otp="";
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  OtpFieldController _otpController = OtpFieldController();
+  String otp = "";
   bool _otpSent = false;
-   bool validateAndSave() {
+  bool validateAndSave() {
     final FormState? form = _formKey.currentState;
     if (form!.validate()) {
       return true;
@@ -106,7 +106,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-   Widget _otpTextField(
+  Widget _otpTextField(
     BuildContext context,
     OtpFieldController controller, {
     Color color = Colors.white,
@@ -114,8 +114,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        semiBoldText('Enter OTP',color:Colors.white),
-      const  SizedBox(height:13),
+        semiBoldText('Enter OTP', color: Colors.white),
+        const SizedBox(height: 13),
         OTPTextField(
           controller: controller,
           length: 6,
@@ -130,7 +130,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               ),
           onCompleted: (pin) {
             setState(() {
-            otp = pin;
+              otp = pin;
             });
           },
           onChanged: (pin) {
@@ -143,20 +143,20 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     );
   }
 
-   Future<void> generateOTP(AuthViewModel authViewM) async {
+  Future<void> generateOTP(AuthViewModel authViewM) async {
     if (validateAndSave()) {
       await authViewM.changePasswordOTP(context,
-      confirmNewPass: _confirmPassword.text,
-      newPass: _newPassword.text,
-      oldPass: _oldPassword.text
-       );
+          confirmNewPass: _confirmPassword.text,
+          newPass: _newPassword.text,
+          oldPass: _oldPassword.text);
 
-      if (authViewM.changePasswordOTp!.internelStatusCode == 1000) {
+      if (authViewM.changePasswordOTp != null &&
+          authViewM.changePasswordOTp!.internelStatusCode == 1000) {
         showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
-        alertPopUp(
-          context,
-          '${authViewM.changePasswordOTp!.data![0].reason}',
-        );
+        // alertPopUp(
+        //   context,
+        //   '${authViewM.changePasswordOTp!.data![0].reason}',
+        //  );
         if (authViewM.changePasswordOTp!.data![0].oTP != null) {
           setState(() {
             _otpSent = true;
@@ -168,12 +168,13 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Future<void> verifyOTP(AuthViewModel authViewM) async {
     if (validateAndSave() && otp.length == 6) {
-      await authViewM.verifyChangePasswordOtp(
-        context,
-      otp: otp
-      );
-
-      if (authViewM.changePasswordModel!.internelStatusCode == 1000) {
+      await authViewM.verifyChangePasswordOtp(context,
+          otp: otp,
+          confirmNewPass: _confirmPassword.text,
+          newPass: _newPassword.text,
+          oldPass: _oldPassword.text);
+      if (authViewM.changePasswordModel != null &&
+          authViewM.changePasswordModel!.internelStatusCode == 1000) {
         alertPopUp(context, '${authViewM.changePasswordModel!.data![0].reason}',
             doLogout: true);
       } else {
@@ -183,5 +184,4 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       }
     }
   }
-
 }

@@ -19,8 +19,6 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
-  final ScrollController _scrollController = ScrollController();
-
   final transdata1 = ValueNotifier<List<Data>>([]);
   List<Data> transdata = [];
   List<String> dropdownValues = ["Today", "Yesterday", "Last 7 Days"];
@@ -28,9 +26,9 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController _paymentSearchController =
       TextEditingController();
   final TextEditingController _fromDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
   final TextEditingController _toDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
   final TextEditingController _terminalIdController = TextEditingController();
   @override
   Widget build(BuildContext context) {

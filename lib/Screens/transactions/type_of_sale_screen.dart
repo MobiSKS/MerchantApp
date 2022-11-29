@@ -5,6 +5,7 @@ import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
@@ -37,8 +38,7 @@ class TypeOfSale extends StatefulWidget {
 class _TypeOfSaleState extends State<TypeOfSale> {
   final _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // late String _payType;
-  // late String transType;
+  bool _resendOTP = false;
   late String _selectedbank;
   String otp = "";
   late int _otplength;
@@ -46,17 +46,26 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   final _mobileController = TextEditingController();
   final _vehicleNoController = TextEditingController();
   final paymentOtpController = OtpFieldController();
-  final _timerController = CountdownController();
   bool enabledButton = false;
   final ValueNotifier<bool> _otpSent = ValueNotifier<bool>(false);
   TextEditingController _paymentTypeController = TextEditingController();
-
+  var timerController;
   @override
   void initState() {
     super.initState();
-    // _payType = "";
+    timerController = CountdownTimerController(
+        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 60,
+        onEnd: onEnd);
     _paymentTypeController.text = widget.transtype!;
     _selectedbank = "";
+  }
+
+ 
+
+  void onEnd() {
+    setState(() {
+      _resendOTP = true;
+    });
   }
 
   bool validateMobile() {
@@ -71,6 +80,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   @override
   void dispose() {
     _otpSent.dispose();
+     timerController.dispose();
     super.dispose();
   }
 
@@ -110,7 +120,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                             color: Colors.grey.shade700,
                           ),
                           _enterMobileNo(context),
-                          _otpSent.value ? enterOTP(context) : Container(),
+                          _otpSent.value ? enterOTP(context,saleReloadViewM) : Container(),
                           SizedBox(height: screenHeight(context) * 0.10),
                           submitButton(context, saleReloadViewM)
                         ],
@@ -146,24 +156,35 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     );
   }
 
-  Widget enterOTP(BuildContext context) {
+  Widget enterOTP(BuildContext context, TransactionsProvider saleReloadViewM) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: screenHeight(context) * 0.07),
-        boldText(AppStrings.enterOTP, color: Colors.grey.shade600),
+        SizedBox(height: screenHeight(context) * 0.05),
+        semiBoldText(AppStrings.enterOTP, color: Colors.grey.shade600),
         _otpTextField(context, paymentOtpController,
             color: Colors.grey.shade600),
-        const SizedBox(height: 10),
+        const SizedBox(height: 13),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            underlinedText(AppStrings.resendOTP, color: Colors.grey.shade500),
+            GestureDetector(
+                onTap: () {
+                  if(_resendOTP){
+                    sendOTP(saleReloadViewM);
+                  }
+                },
+                child: underlinedText(AppStrings.resendOTP,
+                    color: _resendOTP
+                        ? Colors.grey.shade900
+                        : Colors.grey.shade500,
+                    fontSize: 18)),
             Row(
               children: [
-                normalText(AppStrings.resendOTPIn, color: Colors.grey.shade500),
+                semiBoldText(AppStrings.resendOTPIn,
+                    color: Colors.grey.shade500),
                 const SizedBox(width: 10),
-                countDownTimer(context, 30, _timerController, color: Colors.red)
+                countTimer(timerController)
               ],
             )
           ],
@@ -288,38 +309,6 @@ class _TypeOfSaleState extends State<TypeOfSale> {
             contentPadding: EdgeInsets.only(bottom: 8),
           ),
         ),
-
-        // DropdownButtonFormField(
-        //   decoration: const InputDecoration(
-        //       enabledBorder: InputBorder.none, enabled: false),
-        //   style: const TextStyle(
-        //     fontSize: 14,
-        //     color: Colors.black,
-        //   ),
-        //   icon: const Padding(
-        //     padding: EdgeInsets.only(right: 8.0),
-        //     child: Icon(Icons.keyboard_arrow_down),
-        //   ),
-        //   hint: const Text(AppStrings.selectPAYType),
-        //   value: _payType.isEmpty ? null : _payType,
-        //   items: paymentTypeList.map((value) {
-        //     return DropdownMenuItem(
-        //       value: value.transType.toString(),
-        //       child: Text(value.transName!),
-        //     );
-        //   }).toList(),
-        //   onChanged: (value) {
-        //     setState(() {
-        //       _payType = value!;
-        //       _mobileController.clear();
-        //       transType = paymentTypeList
-        //           .where((e) => e.transType == int.parse(_payType))
-        //           .toList()[0]
-        //           .transName!;
-        //     });
-        //     _otpSent.value = false;
-        //   },
-        // ),
       ),
     );
   }
@@ -369,6 +358,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }
 
   Future<void> _submitPayment(TransactionsProvider transProvider) async {
+    FocusScope.of(context).unfocus();
     widget.transTypeId == "505"
         ? await submitOTPFastTag(transProvider)
         : await submitOTPSale(transProvider);

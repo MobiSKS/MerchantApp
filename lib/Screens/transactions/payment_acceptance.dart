@@ -3,6 +3,7 @@ import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
@@ -301,14 +302,18 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
         key: _formKey,
         child: TextFormField(
           focusNode: myFocusNode,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           controller: _amountController,
           onTap: () {
             _requestFocus(myFocusNode);
           },
           style: const TextStyle(
               fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
-          validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
+          validator: (val) => val!.isEmpty ? 'Please enter amount' : double.parse(val)>100001.0?'Max amount allowed exceeds 1lac.':null,
           keyboardType: TextInputType.number,
+           inputFormatters: [
+        LengthLimitingTextInputFormatter(6),
+      ],
           decoration: InputDecoration(
               labelText: 'Enter Amount',
               labelStyle: TextStyle(

@@ -25,8 +25,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   String _selectedType = "";
 
   final TextEditingController _terminalIdController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
-  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _fromDateController = TextEditingController(
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -45,8 +47,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       child: Column(
         children: [
           searchWidget(context, _tDSearchController,
-              hintText: 'Search Transaction', onTap: showSearchFilter,onChanged: onChanged),
-             const SizedBox(height:15),
+              hintText: 'Search Transaction',
+              onTap: showSearchFilter,
+              onChanged: onChanged),
+          const SizedBox(height: 15),
           Expanded(
             child: BaseView<FinancialsProvider>(onModelReady: (model) async {
               await model.getTransactionType(context);
@@ -115,8 +119,6 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                             const SizedBox(height: 10),
                             Divider(
                               color: Colors.grey.shade700,
-                              // endIndent: 20,
-                              // indent: 20,
                             )
                           ],
                         );
@@ -127,11 +129,12 @@ class _TransactionDetailsState extends State<TransactionDetails> {
 
   Widget _listItem(BuildContext context, Data data) {
     return GestureDetector(
-      onTap: (){
-         Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) =>   TransactionSummarydetail(data: data)),
-  );
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TransactionSummarydetail(data: data)),
+        );
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -168,6 +171,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     ),
                   ],
                 ),
+                   semiBoldText('Card no: ${data.cardNo!}',
+                    color: Colors.grey.shade500, fontSize: 18.0),
               ]),
             ],
           ),
@@ -228,15 +233,19 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.023),
-          semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18,),
+          semiBoldText(
+            'From Date',
+            color: Colors.grey.shade700,
+            fontSize: 18,
+          ),
           GestureDetector(
             onTap: () => Utils.selectDatePopup(
                 context, selectedDate, _fromDateController),
-            child: dateTextField(context, _fromDateController, 'From Date',showLabel: false,
-                showIcon: true, enabled: false),
+            child: dateTextField(context, _fromDateController, 'From Date',
+                showLabel: false, showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.02),
-          semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
+          semiBoldText('To Date', color: Colors.grey.shade700, fontSize: 18),
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),
@@ -256,15 +265,16 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       ),
     );
   }
-   Future<void> getTransFilterData() async {
+
+  Future<void> getTransFilterData() async {
     FinancialsProvider fPro =
         Provider.of<FinancialsProvider>(context, listen: false);
     if (_fromDateController.text.isNotEmpty &&
         _toDateController.text.isNotEmpty) {
       showLoader(context);
       await fPro.getTransactionDetail(context,
-          fromDate: _fromDateController.text,
-          toDate: _toDateController.text,
+          fromDate: Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
+          toDate:  Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
           transType: _selectedType,
           terminalId: _terminalIdController.text);
       dismissLoader(context);
@@ -273,11 +283,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           fPro.transactionDetailModel!.internelStatusCode == 1000) {
         _tDSearchController.clear();
         Navigator.pop(context);
-      }else{
-         Navigator.pop(context);
+      } else {
+        Navigator.pop(context);
       }
     } else {
-      transDdata1.value =[];
+      transDdata1.value = [];
       alertPopUp(context, 'Please enter from and to date');
     }
   }

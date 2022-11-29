@@ -26,8 +26,18 @@ class Utils {
 
 //=======date format ===== exp: 2022-09-16================
 
-  static String convertDateFormatInYYMMDD(DateTime date) {
-    return DateFormat('yyyy-MM-dd').format(date);
+  static String convertDateFormatInYYMMDD({DateTime? dateT, String? dateS}) {
+    DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+    if (dateS != null) {
+      var dateTime = dateFormat.parse(dateS);
+      return DateFormat('yyyy-MM-dd').format(dateTime);
+    } else {
+      return DateFormat('yyyy-MM-dd').format(dateT!);
+    }
+  }
+
+  static String convertDateFormatInDDMMYY(DateTime date) {
+    return DateFormat('dd-MM-yyyy').format(date);
   }
 
 //===========date format ======== exp: 2022-09-17 18:08:23============
@@ -59,7 +69,7 @@ class Utils {
 
     if (picked != null) {
       initialDate = picked;
-      var formatedDate = convertDateFormatInYYMMDD(initialDate);
+      var formatedDate = convertDateFormatInDDMMYY(initialDate);
       controller.text = formatedDate;
     }
   }
@@ -113,12 +123,14 @@ class Utils {
       text.substring(idx + 1).trim()
     ];
     if (parts[1][0] == "0") {
-      await ftts.speak("Treansaction of amount  Rupees ${parts[0]} is successful. ");
+      await ftts
+          .speak("Treansaction of amount  Rupees ${parts[0]} is successful. ");
     } else {
       await ftts.speak(
           "Treansaction of amount  Rupees ${parts[0]} and  ${int.parse(parts[1])} Paise is successful");
     }
   }
+
   static String checkNullValue(String? val) {
     if (val != null && val.isNotEmpty && val != "null") {
       return val;

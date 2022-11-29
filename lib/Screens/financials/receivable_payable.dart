@@ -8,7 +8,6 @@ import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
-import '../../util/font_family_helper.dart';
 import '../../util/utils.dart';
 
 class ReceivablePayable extends StatefulWidget {
@@ -24,8 +23,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   List<Data> rcvPayList = [];
   final TextEditingController _rcvPaySearchController = TextEditingController();
   final TextEditingController _terminalController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
-  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(DateTime.now()));
+  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +108,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                           children: [
                             GestureDetector(
                                 onTap: () {},
-                                child: _settlementList(context, data)),
+                                child: _recPayList(context, data)),
                             const SizedBox(height: 10),
                             Divider(
                               color: Colors.grey.shade700,
@@ -121,7 +120,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
               ));
   }
 
-  Widget _settlementList(BuildContext context, Data data) {
+  Widget _recPayList(BuildContext context, Data data) {
      return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
