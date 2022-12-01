@@ -46,7 +46,7 @@ class AuthViewModel extends ChangeNotifier {
     _dio.options.headers['Secret_key'] = UrlConstant.secretKey;
     showLoader(context);
     var ip = await Utils.getIp();
-      Position position = await  Geolocator.getCurrentPosition();
+    Position position = await Geolocator.getCurrentPosition();
     Map param = {
       "UserId": userId,
       "Useragent": Utils.checkOs(),
@@ -65,12 +65,12 @@ class AuthViewModel extends ChangeNotifier {
         _userModel = UserModel.fromJson(response.data);
         log('===>token ${_userModel!.data!.objGetMerchantDetail![0].token}');
         await _sharedPref.saveBool(SharedPref.isLogin, true);
-        await _sharedPref.save(SharedPref.lat,position.latitude);
-        await _sharedPref.save(SharedPref.long,position.longitude);
+        await _sharedPref.save(SharedPref.lat, position.latitude);
+        await _sharedPref.save(SharedPref.long, position.longitude);
         await _sharedPref.save(SharedPref.userDetails, response.data);
         notifyListeners();
       } else {
-        _userModel= null;
+        _userModel = null;
         notifyListeners();
         alertPopUp(context, response.data["Message"]);
       }
@@ -80,7 +80,11 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> verifyChangePasswordOtp(context, {String? otp,String?oldPass,String? newPass,String?confirmNewPass}) async {
+  Future<void> verifyChangePasswordOtp(context,
+      {String? otp,
+      String? oldPass,
+      String? newPass,
+      String? confirmNewPass}) async {
     showLoader(context);
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
@@ -92,7 +96,7 @@ class AuthViewModel extends ChangeNotifier {
     header.addAll(commonHeader);
 
     Map body = {
-        "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
       "UserName": user.data!.objGetMerchantDetail![0].merchantId,
@@ -103,7 +107,7 @@ class AuthViewModel extends ChangeNotifier {
       "OTPType": 21,
       "PageIdentifier": 2,
       "PageType": 2,
-      "OTP" :otp
+      "OTP": otp
     };
 
     try {
@@ -153,14 +157,14 @@ class AuthViewModel extends ChangeNotifier {
     try {
       var response = await apiServices.post(UrlConstant.changePasswordOTP,
           body: body, requestHeader: header);
-              log(response.toString());
+      log(response.toString());
       if (response['Success']) {
         dismissLoader(context);
         _changePasswordOTp = ChangePasswordOTp.fromJson(response);
       } else {
         dismissLoader(context);
-             _changePasswordOTp = ChangePasswordOTp.fromJson(response);
-        alertPopUp(context, response["Data"][0]["Reason"],
+        _changePasswordOTp = null;
+        alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();

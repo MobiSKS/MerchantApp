@@ -1,10 +1,14 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import '../../common/decimal_input_formatter.dart';
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
@@ -27,6 +31,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   final _amountController = TextEditingController();
   List<String> payMode = [AppStrings.generateQR, AppStrings.saleWithOtp];
   late String selectedMode;
+  var payTypeName;
 
   @override
   void initState() {
@@ -82,7 +87,6 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
     );
   }
 
-  var payTypeName;
   Widget _selectPaymentType(BuildContext context) {
     var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
     return Container(
@@ -210,17 +214,31 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   }
 
   void sale() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-          builder: (context) => TypeOfSale(
+  Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => TypeOfSale(
                 amount: _amountController.text,
                 productId: int.parse(_selectedProduct),
                 product: _productName,
                 transTypeId: _payType,
                 transtype: payTypeName,
-              )),
-    );
+              )
+          ),
+        );
+
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(
+    //       builder: (context) => TypeOfSale(
+    //             amount: _amountController.text,
+    //             productId: int.parse(_selectedProduct),
+    //             product: _productName,
+    //             transTypeId: _payType,
+    //             transtype: payTypeName,
+    //           )
+    //           ),
+  //  );
   }
 
   void generateQR() async {
@@ -309,11 +327,29 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
           },
           style: const TextStyle(
               fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
-          validator: (val) => val!.isEmpty ? 'Please enter amount' : double.parse(val)>100001.0?'Max amount allowed exceeds 1lac.':null,
+          validator: (val) => val!.isEmpty
+              ? 'Please enter amount'
+              : double.parse(val) > 100001.0
+                  ? 'Amount can not be greater than 1 lac.'
+                  : null,
           keyboardType: TextInputType.number,
-           inputFormatters: [
-        LengthLimitingTextInputFormatter(6),
-      ],
+          inputFormatters: [
+          DecimalTextInputFormatter(decimalRange: 2),
+            LengthLimitingTextInputFormatter(6),
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            FilteringTextInputFormatter.deny(
+              RegExp(r'^0+'),
+            ),
+           
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              try {
+                final text = newValue.text;
+                if (text.isNotEmpty) double.parse(text);
+                return newValue;
+              } catch (e) {}
+              return oldValue;
+            }),
+          ],
           decoration: InputDecoration(
               labelText: 'Enter Amount',
               labelStyle: TextStyle(

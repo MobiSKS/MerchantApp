@@ -73,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
         builder: (BuildContext context) {
           return AlertBox(
             dialogText:
-                "Location Permission Required.\n Go to Sitting to grant access",
+                "Location Permission Required.\n Go to Settings to grant access",
             FirstButtonText: "CANCEL",
             FirstButtonFunction: () => {exit(0)},
             SecondButtonText: 'OPEN SETTINGS',

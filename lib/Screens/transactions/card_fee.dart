@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:dtplusmerchant/model/card_fee_response_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
@@ -10,7 +9,6 @@ import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
-import 'card_fee_receipt.dart';
 
 class CardFee extends StatefulWidget {
   const CardFee({super.key});

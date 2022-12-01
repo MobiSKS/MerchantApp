@@ -64,6 +64,8 @@ class TransactionsProvider extends ChangeNotifier {
       int transType = 522,
       String ccn = '',
       int otpType = 1}) async {
+        _cardEnquiryResponseModel = null;
+        notifyListeners();
     showLoader(context);
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
@@ -94,6 +96,7 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Success']) {
         _otpResponseSale = OtpResponseSale.fromJson(response);
       } else {
+        _otpResponseSale = null;
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
@@ -486,11 +489,13 @@ class TransactionsProvider extends ChangeNotifier {
       dismissLoader(context);
       if (response['Success']) {
         _cardEnquiryResponseModel = CardEnquiryModel.fromJson(response);
+        callBack!();
         if (_cardEnquiryResponseModel!.internelStatusCode != 1000) {
+           _cardEnquiryResponseModel = CardEnquiryModel.fromJson(response);
           alertPopUp(context, _cardEnquiryResponseModel!.data![0].reason!);
         }
       } else {
-        callBack!();
+          _cardEnquiryResponseModel = null;
         alertPopUp(context, response["Data"][0]["Reason"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }

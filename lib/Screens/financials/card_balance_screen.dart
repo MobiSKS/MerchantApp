@@ -31,8 +31,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
   String? otp;
   FocusNode myFocusNode = FocusNode();
 
- 
-   void _requestFocus() {
+  void _requestFocus() {
     setState(() {
       FocusScope.of(context).requestFocus(myFocusNode);
     });
@@ -61,7 +60,6 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               SizedBox(height: screenHeight(context) * 0.03),
-//semiBoldText('Mobile Number', color: Colors.grey.shade600),
               _enterMobileNo(context),
               _otpReceived ? enterOTP(context) : Container(),
               SizedBox(height: screenHeight(context) * 0.06),
@@ -95,7 +93,9 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
                 )
               : Container(),
           SizedBox(height: screenHeight(context) * 0.02),
-          transactionPro.cardEnquiryResponseModel != null
+          (transactionPro.cardEnquiryResponseModel != null &&
+                  transactionPro.cardEnquiryResponseModel!.internelStatusCode ==
+                      1000)
               ? _cardBalanceDetail(
                   context, transactionPro.cardEnquiryResponseModel!.data![0])
               : Container(),
@@ -108,7 +108,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: screenHeight(context) * 0.07),
+        SizedBox(height: screenHeight(context) * 0.04),
         semiBoldText(
           AppStrings.enterOTP,
           color: Colors.grey.shade600,
@@ -153,9 +153,9 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     return SizedBox(
       width: screenWidth(context),
       child: TextFormField(
-        focusNode:myFocusNode ,
-        autovalidateMode: AutovalidateMode.disabled,
-        onTap: (){
+        focusNode: myFocusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        onTap: () {
           _requestFocus();
         },
         inputFormatters: [
@@ -171,7 +171,6 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             return null;
           }
         },
-       
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
             labelText: 'Enter mobile Number',
@@ -193,15 +192,24 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     Data data,
   ) {
     List<CommonList> cardBalanceEntity = [
-      CommonList(key: 'Date', value: ''),
-      CommonList(key: 'Time', value: ''),
-      CommonList(key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}'),
-      CommonList(key: 'Monthly Spent', value: '$rupeeSign ${data.monthlySpent}'),
+      CommonList(key: 'Date/Time', value: ''),
+      CommonList(key: 'Card No.', value: data.cardNoOutput),
+       CommonList(key: 'Card Balance', value: '$rupeeSign ${data.cardBalance}'),
       CommonList(
-          key: 'Monthly Limit Balance', value: '$rupeeSign ${data.monthlyLimitBal}'),
+          key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}'),
+      CommonList(
+          key: 'Monthly Spends', value: '$rupeeSign ${data.monthlySpent}'),
+      CommonList(
+          key: 'Monthly Limit Balance',
+          value: '$rupeeSign ${data.monthlyLimitBal}'),
       CommonList(key: 'Daily Limit', value: '$rupeeSign ${data.dailyLimit}'),
-      CommonList(key: 'Daily Spent', value: '$rupeeSign ${data.dailySpent}'),
-      CommonList(key: 'Daily Limit Balance', value: '$rupeeSign ${data.dailyLimitBal}'),
+      CommonList(key: 'CCMS Limit', value:data.cCMSLimit == 'Unlimited' || data.cCMSLimit=='-'?'${data.cCMSLimit}' :'$rupeeSign ${data.cCMSLimit}'),
+      CommonList(
+          key: 'CCMS Limit Balance', value:data.cCMSLimitBal == 'Unlimited' || data.cCMSLimitBal=='-'?'${data.cCMSLimitBal}' :'$rupeeSign ${data.cCMSLimitBal}'),
+      CommonList(key: 'Daily Spends', value: '$rupeeSign ${data.dailySpent}'),
+      CommonList(
+          key: 'Daily Limit Balance',
+          value: '$rupeeSign ${data.dailyLimitBal}'),
     ];
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),

@@ -82,7 +82,7 @@ class AppStrings {
   static const String forPetrolDieselCS = "1800-1039-811";
   static const String forHPgasORLPGQCS = "1800-2333-555";
   static const String website = "Website";
-  static const String selectPAYType = "'Select Payment Type";
+  static const String selectPAYType = "Select Payment Type";
   static const String batchNum = "BATCH NO.";
   static const String rocNum = "ROC NO.";
   static const String mobileNo = "MOBILE";

@@ -156,7 +156,7 @@ class _ProfileState extends State<Profile> {
                       : ImageResources.officialDetailsBlue,
                   height: 21)),
           const SizedBox(height: 10),
-          normalText(AppStrings.keyOfficialDetail,
+          normalText('Business Detail',
               textAlign: TextAlign.center, fontSize: 16.0)
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:dtplusmerchant/Screens/financials/transaction_details.dart';
 import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
+import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
@@ -74,15 +75,15 @@ class _HomeState extends State<Home> {
             Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [            
+              children: [
                 _merchantId(context),
-                 SizedBox(height: screenHeight(context)*0.005),
+                SizedBox(height: screenHeight(context) * 0.005),
                 _financialgridView(context),
-               SizedBox(height: screenHeight(context)*0.005),
+                SizedBox(height: screenHeight(context) * 0.005),
                 _transactiongridView(context),
-              SizedBox(height: screenHeight(context)*0.005),
+                SizedBox(height: screenHeight(context) * 0.005),
                 _banner(context),
-            //    const SizedBox(height: 10),
+                //    const SizedBox(height: 10),
               ],
             ),
           ],
@@ -108,7 +109,7 @@ class _HomeState extends State<Home> {
           ),
           Row(
             children: [
-              SizedBox(width:screenWidth(context)*0.25),
+              SizedBox(width: screenWidth(context) * 0.25),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -237,7 +238,12 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () {
         if (_transactionsOptions[index].optionName! == AppStrings.sale) {
-          Navigator.pushNamed(context, "/paymentAcceptance");
+          // Navigator.pushReplacement<void, void>(
+          //   context,
+          //   MaterialPageRoute<void>(
+          //       builder: (BuildContext context) => const PaymentAcceptance()),
+          // );
+            Navigator.pushNamed(context, "/paymentAcceptance");
         } else if (_transactionsOptions[index].optionName! ==
             AppStrings.cardFee) {
           Navigator.push(

@@ -14,7 +14,7 @@ class BusinessDetail extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        semiBoldText('Key Official Detail',
+        semiBoldText('Business Detail',
            color: Colors.black,fontSize: 22.0),
         const SizedBox(height: 30),
         _listView(context),

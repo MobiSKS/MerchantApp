@@ -144,7 +144,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> generateOTP(AuthViewModel authViewM) async {
-    if (validateAndSave()) {
+
+    if (validateAndSave()  ) {
+      if(_newPassword.text == _confirmPassword.text){
       await authViewM.changePasswordOTP(context,
           confirmNewPass: _confirmPassword.text,
           newPass: _newPassword.text,
@@ -161,7 +163,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           setState(() {
             _otpSent = true;
           });
-        }
+        }}
+      } else{
+        alertPopUp(context, 'New password and confirm password is different');
       }
     }
   }

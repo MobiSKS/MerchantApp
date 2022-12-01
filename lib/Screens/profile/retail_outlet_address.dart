@@ -35,8 +35,8 @@ class RetailOutletAddress extends StatelessWidget {
           value: data.objOutletDetails![0].retailOutletAddress3 ?? ''),
       MerchantDetail(
           key: 'City', value: data.objOutletDetails![0].retailOutletCity),
-      MerchantDetail(key: 'District', value: 'Mumbai'),
-      MerchantDetail(key: 'State', value: 'Maharashta'),
+      MerchantDetail(key: 'District', value: ''),
+      MerchantDetail(key: 'State', value: ''),
       MerchantDetail(
           key: 'Pin Code',
           value: data.objOutletDetails![0].retailOutletPinNumber),

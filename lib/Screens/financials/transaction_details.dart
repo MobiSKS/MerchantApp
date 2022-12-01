@@ -52,7 +52,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               onChanged: onChanged),
           const SizedBox(height: 15),
           Expanded(
-            child: BaseView<FinancialsProvider>(onModelReady: (model) async {
+            child: BaseView<FinancialsProvider>(
+              onModelReady: (model) async {
               await model.getTransactionType(context);
               await model.getTransactionDetail(context);
             }, builder: (context, financeViewM, child) {
@@ -144,17 +145,19 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              CircleAvatar(
-                backgroundColor: Utils.getRamdomColor(),
-                child: Center(
-                    child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
-                        color: Colors.white, fontSize: 20)),
-              ),
+              // CircleAvatar(
+              //   backgroundColor: Utils.getRamdomColor(),
+              //   child: Center(
+              //       child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
+              //           color: Colors.white, fontSize: 20)),
+              // ),
               SizedBox(width: screenWidth(context) * 0.03),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                semiBoldText(data.nameOnCard!,
-                    color: Colors.grey.shade800, fontSize: 18.0),
-                const SizedBox(height: 5),
+                 semiBoldText('Card no: ${data.cardNo!}',
+                    color: Colors.black, fontSize: 18.0),
+                // semiBoldText(data.nameOnCard!,
+                //     color: Colors.grey.shade800, fontSize: 18.0),
+                 const SizedBox(height: 5),
                 semiBoldText('TID : ${data.terminalId!}',
                     color: Colors.grey.shade500, fontSize: 18.0),
                 const SizedBox(height: 5),
@@ -171,8 +174,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     ),
                   ],
                 ),
-                   semiBoldText('Card no: ${data.cardNo!}',
-                    color: Colors.grey.shade500, fontSize: 18.0),
+                  
               ]),
             ],
           ),

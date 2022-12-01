@@ -2,6 +2,7 @@ import 'package:dtplusmerchant/Screens/auth/forgot_password_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/dashboard.dart';
 import 'package:dtplusmerchant/Screens/erp_detail.dart';
+import 'package:dtplusmerchant/Screens/home.dart';
 import 'package:dtplusmerchant/Screens/transactions/payment_acceptance.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/Screens/financials/receivable_payable.dart';
@@ -77,6 +78,7 @@ class _MyAppState extends State<MyApp> {
         home: _isLoggedIn ? const Dashboard() : const LoginPage(),
         routes: {
           "/login": (context) => const LoginPage(),
+            "/home": (context) => const Home(),
           "/dashboard": (context) => const Dashboard(),
           "/typeofSale": (context) => const TypeOfSale(),
           "/editProfile": (context) => const Profile(),

@@ -23,8 +23,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   List<Data> rcvPayList = [];
   final TextEditingController _rcvPaySearchController = TextEditingController();
   final TextEditingController _terminalController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
-  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
+  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInDDMMYY(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInDDMMYY(DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                       financeViewM.receivablePayableResponseModel == null
                   ? []
                   : financeViewM.receivablePayableResponseModel!.data!;
-              rcvPayList1.value = rcvPayList;
+              rcvPayList1.value = rcvPayList.reversed.toList();
+        
               return financeViewM.isLoading
                   ? Column(
                       children: [
@@ -74,6 +75,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
       ),
     );
   }
+ 
 
    void onChanged() {
     if (_rcvPaySearchController.text.isNotEmpty) {
@@ -149,7 +151,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           children: [
             semiBoldText('Payable Amount : ',
                 color: Colors.grey.shade900, fontSize: 18.0),
-            semiBoldText('₹ ${data.receivable}',
+            semiBoldText('₹ ${data.payable}',
                 color: Colors.grey.shade600, fontSize: 18.0),
           ],
         ),
@@ -254,8 +256,8 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
         _toDateController.text.isNotEmpty) {
       showLoader(context);
       await fPro.receivablePayableDetails(context,
-          fromDate: _fromDateController.text,
-          toDate: _toDateController.text,
+          fromDate: Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
+          toDate:  Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
           terminalId: _terminalController.text
           );
       dismissLoader(context);

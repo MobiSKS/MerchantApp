@@ -1,8 +1,12 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
 import '../../const/injection.dart';
@@ -30,43 +34,56 @@ class _SaleReceiptState extends State<SaleReceipt> {
 
   final ScreenshotController screenshotController = ScreenshotController();
 
- final GlobalKey _key = GlobalKey();
+  final GlobalKey _key = GlobalKey();
   String _copyType = AppStrings.customerCopy;
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            header(context),
-            SizedBox(height: screenHeight(context) * 0.02),
-            receiptTitle(context, _key),
-            _body(context),
-            SizedBox(height: screenHeight(context) * 0.02),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: customButton(context, 'Download Merchant Copy', onTap: () {
-                _downLoadMerchantCopy();
-              }),
-            )
-          ],
+    return WillPopScope(
+      onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/dashboard', (Route<dynamic> route) => false);
+        return false;
+      },
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              header(context),
+              SizedBox(height: screenHeight(context) * 0.02),
+              receiptTitle(context, _key),
+              _body(context),
+              SizedBox(height: screenHeight(context) * 0.02),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 30),
+                child:
+                    customButton(context, 'Download Merchant Copy', onTap: () {
+                  _downLoadMerchantCopy();
+                }),
+              )
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
     var rocName = _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity;
+    var date = Utils.dateTimeFormat().split(' ')[0];
+    var time  =   Utils.dateTimeFormat().split(' ')[1];
+    var dateF= Utils.convertDateFormatInDDMMYY( DateFormat("yyyy-MM-dd").parse(date));
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
+      ReceiptDetail(title: AppStrings.dateTime, value: "$dateF $time"),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: widget.saleResponse.data!.first.rOCNo),
+      ReceiptDetail(
+          title: AppStrings.rocNum,
+          value: widget.saleResponse.data!.first.rOCNo),
       ReceiptDetail(title: AppStrings.mobileNo, value: widget.mobileNo),
     ];
     List<ReceiptDetail> receptDetail2 = [
@@ -97,17 +114,18 @@ class _SaleReceiptState extends State<SaleReceipt> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  receiptHeader(context,
-                      copyType: _copyType,
-                      custDetail: custDetail,
-                      roc: rocName!,
-                      outletName:
-                          widget.saleResponse.data![0].retailOutletName),
+                  receiptHeader(
+                    context,
+                    copyType: _copyType,
+                    custDetail: custDetail,
+                    roc: rocName!,
+                    outletName: _sharedPref
+                        .user!.data!.objOutletDetails!.first.retailOutletName,
+                  ),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.02),
-                  boldText(widget.transType,
-                      color: Colors.black,
-                      fontSize: 20.0),
+                  semiBoldText(widget.transType,
+                      color: Colors.black, fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.02),
                   receiptDetail(context, receptDetail2),
                   receiptFooter(context, custDetail: custDetail),

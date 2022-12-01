@@ -3,6 +3,7 @@ import 'package:dtplusmerchant/model/fastag_otp_cofirm_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../common/download_widget.dart';
 import '../../const/injection.dart';
@@ -36,28 +37,35 @@ class _FasTagReceiptState extends State<FasTagReceipt> {
   String _copyType = "CUSTOMER COPY";
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            header(context),
-            SizedBox(height: screenHeight(context) * 0.02),
-            receiptTitle(context, _key),
-            SizedBox(height: screenHeight(context) * 0.02),
-            _body(context),
-            SizedBox(height: screenHeight(context) * 0.02),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal:30),
-              child: customButton(context, 'Download Merchant Copy', onTap: () {
-                _downLoadMerchantCopy();
-              }),
-            )
-          ],
+    return WillPopScope(
+        onWillPop: () async {
+        Navigator.pushNamedAndRemoveUntil(
+            context, '/dashboard', (Route<dynamic> route) => false);
+        return false;
+      },
+      child: SafeArea(
+          child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              header(context),
+              SizedBox(height: screenHeight(context) * 0.02),
+              receiptTitle(context, _key),
+              SizedBox(height: screenHeight(context) * 0.02),
+              _body(context),
+              SizedBox(height: screenHeight(context) * 0.02),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal:30),
+                child: customButton(context, 'Download Merchant Copy', onTap: () {
+                  _downLoadMerchantCopy();
+                }),
+              )
+            ],
+          ),
         ),
-      ),
-    ));
+      )),
+    );
   }
 
   
@@ -66,8 +74,11 @@ class _FasTagReceiptState extends State<FasTagReceipt> {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
     var outletDetail = _sharedPref.user!.data!.objOutletDetails![0];
     var receiptEntity = _sharedPref.fastTagData!;
+      var date = Utils.dateTimeFormat().split(' ')[0];
+    var time  =   Utils.dateTimeFormat().split(' ')[1];
+    var dateF= Utils.convertDateFormatInDDMMYY( DateFormat("yyyy-MM-dd").parse(date));
     List<ReceiptDetail> receptDetail1 = [
-      ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
+      ReceiptDetail(title: AppStrings.dateTime, value: "$dateF $time"),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
@@ -103,6 +114,7 @@ class _FasTagReceiptState extends State<FasTagReceipt> {
                   receiptHeader(context,
                       copyType: _copyType,
                       custDetail: custDetail,
+                      roc: _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity! ,
                       outletName: outletDetail.retailOutletName),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.020),

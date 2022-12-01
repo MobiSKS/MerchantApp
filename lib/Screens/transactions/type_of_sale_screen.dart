@@ -53,9 +53,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   @override
   void initState() {
     super.initState();
-    timerController = CountdownTimerController(
-        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 60,
-        onEnd: onEnd);
+   
     _paymentTypeController.text = widget.transtype!;
     _selectedbank = "";
   }
@@ -376,13 +374,16 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           transType: int.parse(widget.transTypeId!));
-      if (transProvider.otpResponseSale!.internelStatusCode == 1000) {
+      if (transProvider.otpResponseSale !=null && transProvider.otpResponseSale!.internelStatusCode == 1000) {
         log('===========> OTP ${transProvider.otpResponseSale!.data![0].oTP!}');
         showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
         setState(() {
           _otplength = transProvider.otpResponseSale!.data![0].oTP!.length;
         });
         _otpSent.value = true;
+         timerController = CountdownTimerController(
+        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 31,
+        onEnd: onEnd);
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
       }
@@ -419,17 +420,29 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     _otpSent.value = false;
     if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
       showToast('Payment Successfull', false);
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => SaleReceipt(
+       Navigator.pushReplacement<void, void>(
+          context,
+          MaterialPageRoute<void>(
+            builder: (BuildContext context) => SaleReceipt(
                   saleResponse: transPro.saleByTeminalResponse!,
                   mobileNo: _mobileController.text,
                   transType: widget.transtype!,
                   productName: widget.product!,
-                )),
-      );
+                )
+          ),
+        );
+
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => SaleReceipt(
+      //             saleResponse: transPro.saleByTeminalResponse!,
+      //             mobileNo: _mobileController.text,
+      //             transType: widget.transtype!,
+      //             productName: widget.product!,
+      //           )
+      //           ),
+      // );
     } else {
       _otpSent.value = false;
     }

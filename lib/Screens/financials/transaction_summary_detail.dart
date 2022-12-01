@@ -3,8 +3,11 @@ import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
+import '../../const/common_param.dart';
 import '../../const/image_resources.dart';
+import '../../const/injection.dart';
 import '../../model/receipt_detal.dart';
+import '../../preferences/shared_preference.dart';
 
 class TransactionSummarydetail extends StatefulWidget {
   final Data data;
@@ -20,7 +23,7 @@ class TransactionSummarydetail extends StatefulWidget {
 
 class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
   final ScreenshotController screenshotController = ScreenshotController();
-  
+  final _sharedPref = Injection.injector.get<SharedPref>();
   final GlobalKey _key = GlobalKey();
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,7 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
         child: Column(
           children: [
             header(context),
-               SizedBox(height: screenHeight(context) * 0.02),
+            SizedBox(height: screenHeight(context) * 0.02),
             receiptTitle(context, _key),
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
@@ -42,17 +45,22 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
   }
 
   Widget _body(BuildContext context) {
+    var merchant = _sharedPref.user!.data!.objGetMerchantDetail!.first;
+
     List<ReceiptDetail> transDetail = [
-      ReceiptDetail(title: 'Account Number', value: widget.data.cardNo),
-      ReceiptDetail(title: 'Terminal Id', value: widget.data.terminalId),
-      ReceiptDetail(
-          title: 'Transaction Date/Time', value: widget.data.transactionDate),
+      ReceiptDetail(title: 'Date', value: widget.data.transactionDate),
+      ReceiptDetail(title: 'Batch No.', value: widget.data.batchId.toString()),
+      ReceiptDetail(title: 'ROC No.', value: ''),
+      ReceiptDetail(title: 'Mobile No.', value: widget.data.mobileNo),
+      ReceiptDetail(title: 'Card No.', value: widget.data.cardNo),
       ReceiptDetail(
           title: 'Transaction Type', value: widget.data.transactionType),
-      ReceiptDetail(title: 'Amount', value: '₹ ${widget.data.amount}'),
-      ReceiptDetail(title: 'Product', value: widget.data.product),
-       ReceiptDetail(title: 'volume', value: widget.data.volume),
-      ReceiptDetail(title: 'Price', value: '₹ ${widget.data.price}'),
+      ReceiptDetail(title: 'Product', value: '${widget.data.product}'),
+      ReceiptDetail(title: 'Amount', value: '$rupeeSign ${widget.data.amount}'),
+      ReceiptDetail(title: 'RSP', value: ''),
+      ReceiptDetail(title: 'Volume', value: '${widget.data.volume}'),
+      ReceiptDetail(title: 'Balance', value: ''),
+      ReceiptDetail(title: 'Txn ID', value: ''),
     ];
 
     return Screenshot(
@@ -70,11 +78,14 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
                   SizedBox(height: screenHeight(context) * 0.02),
                   Image.asset(ImageResources.hpLogoReceipt, height: 100),
                   SizedBox(height: screenHeight(context) * 0.015),
-                  semiBoldText('Transaction  Detail',
-                      color: Colors.black, fontSize: 24.0),
+                  boldText(merchant.header2!,
+                      color: Colors.black, fontSize: 22.0),
+                  boldText(merchant.merchantName!,
+                      color: Colors.black, fontSize: 22.0),
                   SizedBox(height: screenHeight(context) * 0.07),
                   receiptDetail(context, transDetail, itemSapce: 17.0),
-                       SizedBox(height: screenHeight(context) * 0.07),
+                  SizedBox(height: screenHeight(context) * 0.02),
+                  receiptFooter(context, custDetail: merchant),
                 ],
               )),
         ),

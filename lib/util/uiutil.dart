@@ -175,6 +175,7 @@ Widget header(BuildContext context) {
             IconButton(
                 onPressed: () {
                   Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 icon: const Icon(Icons.arrow_back_ios_new,
                     color: Colors.black, size: 28)),
@@ -669,7 +670,7 @@ Widget countTimer(CountdownTimerController controller) {
     controller: controller,
     widgetBuilder: (context, time) {
       if (time == null) {
-        return semiBoldText('00:00',fontSize: 20);
+        return semiBoldText('00:00', fontSize: 20);
       }
       return time.sec! > 9
           ? semiBoldText('0${time.min ?? 0} : ${time.sec ?? 0}', fontSize: 20)
