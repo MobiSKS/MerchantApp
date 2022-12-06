@@ -141,6 +141,7 @@ class ObjGetMerchantDetail {
   String? header2;
   String? footer1;
   String? footer2;
+  String ?pancard;
   double? batchSaleLimit;
   double? batchReloadLimit;
   int? batchSize;
@@ -150,6 +151,7 @@ class ObjGetMerchantDetail {
   String? batchNo;
   String? cardFeeAmount;
   int? statusId;
+  String ?contactPersonName;
   String? statusName;
   String? emailId;
   String? mobileNo;
@@ -166,7 +168,9 @@ class ObjGetMerchantDetail {
       this.header2,
       this.footer1,
       this.footer2,
+      this.pancard,
       this.batchSaleLimit,
+      this.contactPersonName,
       this.batchReloadLimit,
       this.batchSize,
       this.settlementTime,
@@ -182,29 +186,31 @@ class ObjGetMerchantDetail {
       this.reason});
 
   ObjGetMerchantDetail.fromJson(Map<String, dynamic> json) {
-    token = json['Token'];
-    merchantId = json['MerchantId'];
-    terminalId = json['TerminalId'];
-    merchantName = json['MerchantName'];
-    merchantLocation = json['MerchantLocation'];
-    header1 = json['Header1'];
-    header2 = json['Header2'];
-    footer1 = json['Footer1'];
-    footer2 = json['Footer2'];
-    batchSaleLimit = json['BatchSaleLimit'];
-    batchReloadLimit = json['BatchReloadLimit'];
-    batchSize = json['BatchSize'];
-    settlementTime = json['SettlementTime'];
-    remoteDownload = json['RemoteDownload'];
-    uRL = json['URL'];
-    batchNo = json['BatchNo'];
-    cardFeeAmount = json['CardFeeAmount'];
-    statusId = json['StatusId'];
-    statusName = json['StatusName'];
-    emailId = json['EmailId'];
-    mobileNo = json['MobileNo'];
-    status = json['Status'];
-    reason = json['Reason'];
+    token = json['Token'] ?? '';
+    merchantId = json['MerchantId'] ?? '';
+    terminalId = json['TerminalId'] ?? '';
+    merchantName = json['MerchantName'] ?? '';
+    pancard = json["PancardNumber"]??"";
+    merchantLocation = json['MerchantLocation'] ?? '';
+    header1 = json['Header1'] ?? '';
+    header2 = json['Header2'] ?? '';
+    footer1 = json['Footer1'] ?? '';
+    footer2 = json['Footer2'] ?? '';
+    contactPersonName = json["ContactPersonName"];
+    batchSaleLimit = json['BatchSaleLimit'] ?? '';
+    batchReloadLimit = json['BatchReloadLimit'] ?? '';
+    batchSize = json['BatchSize'] ?? '';
+    settlementTime = json['SettlementTime'] ?? '';
+    remoteDownload = json['RemoteDownload'] ?? '';
+    uRL = json['URL'] ?? '';
+    batchNo = json['BatchNo'] ?? '';
+    cardFeeAmount = json['CardFeeAmount'] ?? '';
+    statusId = json['StatusId'] ?? '';
+    statusName = json['StatusName'] ?? '';
+    emailId = json['EmailId'] ?? '';
+    mobileNo = json['MobileNo'] ?? '';
+    status = json['Status'] ?? '';
+    reason = json['Reason'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -218,12 +224,14 @@ class ObjGetMerchantDetail {
     data['Header2'] = header2;
     data['Footer1'] = footer1;
     data['Footer2'] = footer2;
+    data["PancardNumber"] = pancard;
     data['BatchSaleLimit'] = batchSaleLimit;
     data['BatchReloadLimit'] = batchReloadLimit;
     data['BatchSize'] = batchSize;
     data['SettlementTime'] = settlementTime;
     data['RemoteDownload'] = remoteDownload;
     data['URL'] = uRL;
+    data["ContactPersonName"] = contactPersonName;
     data['BatchNo'] = batchNo;
     data['CardFeeAmount'] = cardFeeAmount;
     data['StatusId'] = statusId;
@@ -263,17 +271,17 @@ class ObjGetTransTypeDetail {
       this.parentId});
 
   ObjGetTransTypeDetail.fromJson(Map<String, dynamic> json) {
-    serialNo = json['SerialNo'];
-    type = json['Type'];
-    transType = json['TransType'];
-    transName = json['TransName'];
-    maxVal = json['MaxVal'];
-    minVal = json['MinVal'];
-    serviceStatus = json['ServiceStatus'];
-    carded = json['Carded'];
-    cardless = json['Cardless'];
-    nonCarded = json['NonCarded'];
-    parentId = json['ParentId'];
+    serialNo = json['SerialNo'] ?? '';
+    type = json['Type'] ?? '';
+    transType = json['TransType'] ?? '';
+    transName = json['TransName'] ?? '';
+    maxVal = json['MaxVal'] ?? '';
+    minVal = json['MinVal'] ?? '';
+    serviceStatus = json['ServiceStatus'] ?? '';
+    carded = json['Carded'] ?? '';
+    cardless = json['Cardless'] ?? '';
+    nonCarded = json['NonCarded'] ?? '';
+    parentId = json['ParentId'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -420,6 +428,8 @@ class ObjOutletDetails {
   String? retailOutletAddress3;
   String? retailOutletPhoneNumber;
   String? gSTNumber;
+  String? stateName;
+  String ?districtNAme;
   String? retailOutletCity;
   String? retailOutletDistrictId;
   String? retailOutletPinNumber;
@@ -444,28 +454,32 @@ class ObjOutletDetails {
       this.retailOutletPinNumber,
       this.retailOutletName,
       this.zonalOfficeName,
+      this.districtNAme,
+      this.stateName,
       this.regionalOfficeName,
       this.erpCode,
       this.salesArea});
 
   ObjOutletDetails.fromJson(Map<String, dynamic> json) {
-    outletCategoryName = json['OutletCategoryName'];
-    merchantTypeName = json['MerchantTypeName'];
-    emailId = json['EmailId'];
-    mobileNo = json['MobileNo'];
-    retailOutletAddress1 = json['RetailOutletAddress1'];
-    retailOutletAddress2 = json['RetailOutletAddress2'];
-    retailOutletAddress3 = json['RetailOutletAddress3'];
-    retailOutletPhoneNumber = json['RetailOutletPhoneNumber'];
-    gSTNumber = json['GSTNumber'];
-    retailOutletCity = json['RetailOutletCity'];
-    retailOutletDistrictId = json['RetailOutletDistrictId'];
-    retailOutletPinNumber = json['RetailOutletPinNumber'];
-    retailOutletName = json['RetailOutletName'];
-    zonalOfficeName = json['ZonalOfficeName'];
-    regionalOfficeName = json['RegionalOfficeName'];
-    erpCode = json['ErpCode'];
-    salesArea = json['SalesArea'];
+    outletCategoryName = json['OutletCategoryName'] ?? '';
+    merchantTypeName = json['MerchantTypeName'] ?? '';
+    emailId = json['EmailId'] ?? '';
+    mobileNo = json['MobileNo'] ?? '';
+    retailOutletAddress1 = json['RetailOutletAddress1'] ?? '';
+    retailOutletAddress2 = json['RetailOutletAddress2'] ?? '';
+    retailOutletAddress3 = json['RetailOutletAddress3'] ?? '';
+    retailOutletPhoneNumber = json['RetailOutletPhoneNumber'] ?? '';
+    gSTNumber = json['GSTNumber'] ?? '';
+    stateName = json['StateName'] ?? "";
+   districtNAme = json["DistrictName"];
+    retailOutletCity = json['RetailOutletCity'] ?? '';
+    retailOutletDistrictId = json['RetailOutletDistrictId'] ?? '';
+    retailOutletPinNumber = json['RetailOutletPinNumber'] ?? '';
+    retailOutletName = json['RetailOutletName'] ?? '';
+    zonalOfficeName = json['ZonalOfficeName'] ?? '';
+    regionalOfficeName = json['RegionalOfficeName'] ?? '';
+    erpCode = json['ErpCode'] ?? '';
+    salesArea = json['SalesArea'] ?? '';
   }
 
   Map<String, dynamic> toJson() {
@@ -473,6 +487,8 @@ class ObjOutletDetails {
     data['OutletCategoryName'] = outletCategoryName;
     data['MerchantTypeName'] = merchantTypeName;
     data['EmailId'] = emailId;
+    data["DistrictName"] =districtNAme;
+    data['StateName'] = stateName;
     data['MobileNo'] = mobileNo;
     data['RetailOutletAddress1'] = retailOutletAddress1;
     data['RetailOutletAddress2'] = retailOutletAddress2;

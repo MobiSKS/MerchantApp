@@ -14,6 +14,7 @@ import '../const/image_resources.dart';
 import '../const/injection.dart';
 import '../preferences/shared_preference.dart';
 import '../util/uiutil.dart';
+import '../util/utils.dart';
 import 'financials/settlement_screen.dart';
 
 class Home extends StatefulWidget {
@@ -120,13 +121,13 @@ class _HomeState extends State<Home> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        semiBoldText(
-                            'Hi ! ${_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!}',
+                        semiBoldText(            
+                           'Hi ! ${Utils.checkNullValue(_sharedPref.user!.data!.objOutletDetails![0].retailOutletName!)}',
                             fontSize: 20,
                             color: Colors.white),
                         const SizedBox(height: 2),
                         semiBoldText(
-                            '${AppStrings.merchantId}  ${_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId}',
+                           '${AppStrings.merchantId}  ${Utils.checkNullValue(_sharedPref.user!.data!.objGetMerchantDetail![0].merchantId)}',
                             fontSize: 18,
                             color: Colors.white,
                             fontFamily: FontFamilyHelper.sourceSansRegular),

@@ -50,9 +50,9 @@ class AuthViewModel extends ChangeNotifier {
     Map param = {
       "UserId": userId,
       "Useragent": Utils.checkOs(),
-      "Userip": ip,
-      "Latitude": position.latitude,
-      "Longitude": position.longitude,
+      "Userip": ip ,
+      "Latitude": position.latitude ,
+      "Longitude": position.longitude ,
       "MerchantId": userId,
       "HWSerialNo": "1490147844",
       "Password": password
@@ -72,7 +72,7 @@ class AuthViewModel extends ChangeNotifier {
       } else {
         _userModel = null;
         notifyListeners();
-        alertPopUp(context, response.data["Message"]);
+        alertPopUp(context, response.data["Data"]["ObjGetMerchantDetail"][0]["Reason"]);
       }
     } on DioError catch (e) {
       dismissLoader(context);

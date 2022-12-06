@@ -77,7 +77,11 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                         _enterAmount(context),
                         SizedBox(height: screenHeight(context) * 0.10),
                         customButton(context, AppStrings.next, onTap: () {
-                          showBottomModalSheet();
+                          if (_payType == "505") {
+                            sale();
+                          } else {
+                            showBottomModalSheet();
+                          }
                         }),
                       ],
                     ))
@@ -214,18 +218,17 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   }
 
   void sale() {
-  Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
-            builder: (BuildContext context) => TypeOfSale(
+    Navigator.pushReplacement<void, void>(
+      context,
+      MaterialPageRoute<void>(
+          builder: (BuildContext context) => TypeOfSale(
                 amount: _amountController.text,
                 productId: int.parse(_selectedProduct),
                 product: _productName,
                 transTypeId: _payType,
                 transtype: payTypeName,
-              )
-          ),
-        );
+              )),
+    );
 
     // Navigator.pushReplacement(
     //   context,
@@ -238,7 +241,7 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
     //             transtype: payTypeName,
     //           )
     //           ),
-  //  );
+    //  );
   }
 
   void generateQR() async {
@@ -334,13 +337,12 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
                   : null,
           keyboardType: TextInputType.number,
           inputFormatters: [
-          DecimalTextInputFormatter(decimalRange: 2),
+            DecimalTextInputFormatter(decimalRange: 2),
             LengthLimitingTextInputFormatter(6),
             FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
             FilteringTextInputFormatter.deny(
               RegExp(r'^0+'),
             ),
-           
             TextInputFormatter.withFunction((oldValue, newValue) {
               try {
                 final text = newValue.text;

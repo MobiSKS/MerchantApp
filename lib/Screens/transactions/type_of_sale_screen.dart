@@ -53,12 +53,10 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   @override
   void initState() {
     super.initState();
-   
+
     _paymentTypeController.text = widget.transtype!;
     _selectedbank = "";
   }
-
- 
 
   void onEnd() {
     setState(() {
@@ -78,7 +76,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   @override
   void dispose() {
     _otpSent.dispose();
-     timerController.dispose();
+    timerController.dispose();
     super.dispose();
   }
 
@@ -118,7 +116,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
                             color: Colors.grey.shade700,
                           ),
                           _enterMobileNo(context),
-                          _otpSent.value ? enterOTP(context,saleReloadViewM) : Container(),
+                          _otpSent.value
+                              ? enterOTP(context, saleReloadViewM)
+                              : Container(),
                           SizedBox(height: screenHeight(context) * 0.10),
                           submitButton(context, saleReloadViewM)
                         ],
@@ -168,7 +168,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           children: [
             GestureDetector(
                 onTap: () {
-                  if(_resendOTP){
+                  if (_resendOTP) {
                     sendOTP(saleReloadViewM);
                   }
                 },
@@ -374,16 +374,19 @@ class _TypeOfSaleState extends State<TypeOfSale> {
           mobileNo: _mobileController.text,
           invoiceAmount: double.parse(widget.amount!),
           transType: int.parse(widget.transTypeId!));
-      if (transProvider.otpResponseSale !=null && transProvider.otpResponseSale!.internelStatusCode == 1000) {
+      if (transProvider.otpResponseSale != null &&
+          transProvider.otpResponseSale!.internelStatusCode == 1000) {
+        FocusScope.of(context).unfocus();
+
         log('===========> OTP ${transProvider.otpResponseSale!.data![0].oTP!}');
         showToast(transProvider.otpResponseSale!.data![0].oTP!, false);
         setState(() {
           _otplength = transProvider.otpResponseSale!.data![0].oTP!.length;
         });
         _otpSent.value = true;
-         timerController = CountdownTimerController(
-        endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 31,
-        onEnd: onEnd);
+        timerController = CountdownTimerController(
+            endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 31,
+            onEnd: onEnd);
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
       }
@@ -420,17 +423,16 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     _otpSent.value = false;
     if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
       showToast('Payment Successfull', false);
-       Navigator.pushReplacement<void, void>(
-          context,
-          MaterialPageRoute<void>(
+      Navigator.pushReplacement<void, void>(
+        context,
+        MaterialPageRoute<void>(
             builder: (BuildContext context) => SaleReceipt(
                   saleResponse: transPro.saleByTeminalResponse!,
                   mobileNo: _mobileController.text,
                   transType: widget.transtype!,
                   productName: widget.product!,
-                )
-          ),
-        );
+                )),
+      );
 
       // Navigator.pushReplacement(
       //   context,

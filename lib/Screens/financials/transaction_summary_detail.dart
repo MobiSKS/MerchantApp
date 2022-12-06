@@ -1,6 +1,7 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
 import '../../const/common_param.dart';
@@ -48,13 +49,13 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
     var merchant = _sharedPref.user!.data!.objGetMerchantDetail!.first;
 
     List<ReceiptDetail> transDetail = [
-      ReceiptDetail(title: 'Date', value: widget.data.transactionDate),
-      ReceiptDetail(title: 'Batch No.', value: widget.data.batchId.toString()),
+      ReceiptDetail(title: 'Date', value:Utils.checkNullValue(widget.data.transactionDate) ),
+      ReceiptDetail(title: 'Batch No.', value:  Utils.checkNullValue( widget.data.batchId.toString())),
       ReceiptDetail(title: 'ROC No.', value: ''),
-      ReceiptDetail(title: 'Mobile No.', value: widget.data.mobileNo),
+      ReceiptDetail(title: 'Mobile No.', value: Utils.checkNullValue(widget.data.mobileNo)),
       ReceiptDetail(title: 'Card No.', value: widget.data.cardNo),
       ReceiptDetail(
-          title: 'Transaction Type', value: widget.data.transactionType),
+          title: 'Transaction Type', value: Utils.checkNullValue(widget.data.transactionType)),
       ReceiptDetail(title: 'Product', value: '${widget.data.product}'),
       ReceiptDetail(title: 'Amount', value: '$rupeeSign ${widget.data.amount}'),
       ReceiptDetail(title: 'RSP', value: ''),

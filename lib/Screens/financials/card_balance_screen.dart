@@ -173,7 +173,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
         },
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
-            labelText: 'Enter mobile Number',
+            labelText: 'Enter Mobile Number',
             labelStyle: TextStyle(
                 fontFamily: FontFamilyHelper.sourceSansSemiBold,
                 fontSize:

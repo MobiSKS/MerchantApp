@@ -74,6 +74,7 @@ class FinancialsProvider extends ChangeNotifier {
       if (response['Success']) {
         _creditOutstandingModel = CreditOutstandingModel.fromJson(response);
       } else {
+         _creditOutstandingModel = null;
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
@@ -144,7 +145,7 @@ class FinancialsProvider extends ChangeNotifier {
       "FromDate": fromDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
       "ToDate": toDate ?? Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()),
     };
-
+    log(body.toString());
     log('=====>Transtype $transType}');
     try {
       var response = await apiServices.post(UrlConstant.transactionDetail,

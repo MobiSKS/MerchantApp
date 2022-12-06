@@ -1,5 +1,4 @@
 // ignore_for_file: use_build_context_synchronously
-
 import 'package:dtplusmerchant/Screens/financials/payment_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
@@ -17,7 +16,6 @@ import '../../util/uiutil.dart';
 class SettlementScreen extends StatefulWidget {
   final bool navbar;
   const SettlementScreen({super.key, this.navbar = false});
-
   @override
   State<SettlementScreen> createState() => _SettlementScreenState();
 }
@@ -35,6 +33,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
   double columnPadding = 20;
   final settlementdata1 = ValueNotifier<List<Data>>([]);
   List<Data> settlementdata = [];
+
   @override
   void initState() {
     super.initState();

@@ -35,8 +35,8 @@ class RetailOutletAddress extends StatelessWidget {
           value: data.objOutletDetails![0].retailOutletAddress3 ?? ''),
       MerchantDetail(
           key: 'City', value: data.objOutletDetails![0].retailOutletCity),
-      MerchantDetail(key: 'District', value: ''),
-      MerchantDetail(key: 'State', value: ''),
+      MerchantDetail(key: 'District', value: data.objOutletDetails!.first.districtNAme),
+      MerchantDetail(key: 'State', value: data.objOutletDetails!.first.stateName),
       MerchantDetail(
           key: 'Pin Code',
           value: data.objOutletDetails![0].retailOutletPinNumber),
@@ -54,8 +54,8 @@ class RetailOutletAddress extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  semiBoldText(detail[index].key!, fontSize: 20.0),
-                  semiBoldText(detail[index].value!, fontSize: 18.0,color:Colors.grey.shade800)
+                  normalText(detail[index].key!, fontSize: 18.0),
+                  normalText(detail[index].value!, fontSize: 17.0,color:Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),

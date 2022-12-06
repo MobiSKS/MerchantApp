@@ -47,8 +47,8 @@ class BusinessDetail extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  semiBoldText(detail[index].key!, fontSize: 20.0),
-                  semiBoldText(detail[index].value!, fontSize: 18.0,color:Colors.grey.shade800)
+                  normalText(detail[index].key!, fontSize: 18.0),
+                  normalText(detail[index].value!, fontSize: 17.0,color:Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),

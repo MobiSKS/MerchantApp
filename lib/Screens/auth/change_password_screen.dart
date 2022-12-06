@@ -39,14 +39,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
+        appBar: normalAppBar(context, title: 'Change Password'),
         body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              backgroundImage(context),
-              _body(context),
-            ],
-          ),
+          child: _body(context),
         ),
       ),
     );
@@ -58,11 +54,6 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         key: _formKey,
         child: Column(
           children: [
-            SizedBox(height: screenHeight(context) * 0.07),
-            hpLogo(context),
-            SizedBox(height: screenHeight(context) * 0.04),
-            driverTruckTextImage(context),
-            SizedBox(height: screenHeight(context) * 0.07),
             Padding(
               padding: const EdgeInsets.only(left: 40, right: 40),
               child: Column(
@@ -92,16 +83,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        semiBoldText('Change Password', fontSize: 24.0, color: Colors.white),
         SizedBox(height: screenHeight(context) * 0.05),
-        customTextField(context, _oldPassword, 'Old Password',
-            prefixIcon: false, valMessage: 'Please enter Old Password'),
+        simpleTextField(context, _oldPassword, 'Old Password',valMsg: 'Old password cant be empty',),
         SizedBox(height: screenHeight(context) * 0.03),
-        customTextField(context, _newPassword, AppStrings.newPassword,
-            prefixIcon: false, valMessage: AppStrings.newPasswordError),
+        simpleTextField(context, _newPassword, AppStrings.newPassword,valMsg: "New Password can't be empty"),
         SizedBox(height: screenHeight(context) * 0.03),
-        customTextField(context, _confirmPassword, AppStrings.confirmPaasword,
-            prefixIcon: false, valMessage: AppStrings.confirmPassError),
+        simpleTextField(context, _confirmPassword, AppStrings.confirmPaasword,valMsg: "Confirm passwor can't be empty"),
       ],
     );
   }
@@ -144,27 +131,27 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> generateOTP(AuthViewModel authViewM) async {
+    if (validateAndSave()) {
+      if (_newPassword.text == _confirmPassword.text) {
+        await authViewM.changePasswordOTP(context,
+            confirmNewPass: _confirmPassword.text,
+            newPass: _newPassword.text,
+            oldPass: _oldPassword.text);
 
-    if (validateAndSave()  ) {
-      if(_newPassword.text == _confirmPassword.text){
-      await authViewM.changePasswordOTP(context,
-          confirmNewPass: _confirmPassword.text,
-          newPass: _newPassword.text,
-          oldPass: _oldPassword.text);
-
-      if (authViewM.changePasswordOTp != null &&
-          authViewM.changePasswordOTp!.internelStatusCode == 1000) {
-        showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
-        // alertPopUp(
-        //   context,
-        //   '${authViewM.changePasswordOTp!.data![0].reason}',
-        //  );
-        if (authViewM.changePasswordOTp!.data![0].oTP != null) {
-          setState(() {
-            _otpSent = true;
-          });
-        }}
-      } else{
+        if (authViewM.changePasswordOTp != null &&
+            authViewM.changePasswordOTp!.internelStatusCode == 1000) {
+          showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
+          // alertPopUp(
+          //   context,
+          //   '${authViewM.changePasswordOTp!.data![0].reason}',
+          //  );
+          if (authViewM.changePasswordOTp!.data![0].oTP != null) {
+            setState(() {
+              _otpSent = true;
+            });
+          }
+        }
+      } else {
         alertPopUp(context, 'New password and confirm password is different');
       }
     }

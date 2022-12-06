@@ -93,7 +93,7 @@ class Utils {
   }
 
   static Future<String> getIp() async {
-    return await Ipify.ipv4();
+    return await Ipify.ipv4().timeout(const Duration(seconds: 4));
   }
 
   static String getNameInitials(String? name) {

@@ -16,53 +16,89 @@ class Contacts extends StatelessWidget {
     );
   }
 
-
   Widget _body(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.06),
-          normalText(AppStrings.forPetrolDieselQueries,
-              color: Colors.black),
+
+          customContainer(context, url: AppStrings.forPetrolDieselCS,title: AppStrings.forPetrolDieselQueries),
           SizedBox(height: screenHeight(context) * 0.02),
-          _contactNumber(AppStrings.forPetrolDieselCS),
+          // const Divider(color: Colors.blueGrey),
+          //  semiBoldText(AppStrings.forHpGasQueries, color: Colors.black),
+          customContainer(context, url: AppStrings.forHPgasORLPGQCS,title: AppStrings.forHpGasQueries),
           SizedBox(height: screenHeight(context) * 0.02),
-          const Divider(color: Colors.blueGrey),
-          SizedBox(height: screenHeight(context) * 0.02),
-          normalText(AppStrings.forHpGasQueries, color: Colors.black),
-          SizedBox(height: screenHeight(context) * 0.02),
-          _contactNumber(AppStrings.forHPgasORLPGQCS),
-          SizedBox(height: screenHeight(context) * 0.02),
-          const Divider(color: Colors.blueGrey),
-          SizedBox(height: screenHeight(context) * 0.02),
-          normalText(AppStrings.website, color: Colors.black),
-          SizedBox(height: screenHeight(context) * 0.02),
-          _contactNumber(UrlConstant.hpPayLink, isURl: true),
+          // const Divider(color: Colors.blueGrey),
+          // semiBoldText(AppStrings.website, color: Colors.black),
+          customContainer(context, url: UrlConstant.hpPayLink, isUrl: true),
           SizedBox(height: screenHeight(context) * 0.02),
         ],
       ),
     );
   }
 
-  Widget _contactNumber(String url, {bool isURl = false}) {
+  // Widget _contactNumber(String url, {bool isURl = false}) {
+  //   return GestureDetector(
+  //     onTap: () {
+  //       isURl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
+  //     },
+  //     child: Row(children: [
+  //       Image.asset(
+  //         isURl ? ImageResources.webIcon : ImageResources.callIcon,
+  //         height: 20,
+  //         color: Colors.black,
+  //       ),
+  //       const SizedBox(width: 10),
+  //       boldText(
+  //         url,
+  //         color: Colors.black,
+  //       )
+  //     ]),
+  //   );
+  // }
+
+  Widget customContainer(BuildContext context,
+      {bool isUrl = false, String url = '',String title=""}) {
     return GestureDetector(
       onTap: () {
-        isURl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
+        isUrl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
       },
-      child: Row(children: [
-        Image.asset(
-          isURl ? ImageResources.webIcon : ImageResources.callIcon,
-          height: 20,
-          color: Colors.black,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        height: screenHeight(context) * 0.075,
+        width: screenWidth(context),
+        decoration: BoxDecoration(
+          color: Colors.indigo.shade50,
+          borderRadius: BorderRadius.circular(10),
         ),
-        const SizedBox(width: 10),
-        boldText(
-          url,
-          color: Colors.black,
-        )
-      ]),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    isUrl ? ImageResources.webIcon : ImageResources.callIcon,
+                    height: 20,
+                    color: Colors.black,
+                  ),
+                  const SizedBox(width: 10),
+                  semiBoldText(
+                    url,
+                    color: Colors.indigo,
+                  )
+                ]),
+                SizedBox(
+                  width:screenWidth(context)*0.30,
+                  child: semiBoldText(title,color:Colors.indigo,textAlign: TextAlign.center,fontSize: 14),
+                )
+          ],
+        ),
+      ),
     );
   }
 }

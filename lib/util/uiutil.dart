@@ -331,6 +331,7 @@ Widget simpleTextField(
     Function? onTap,
     bool enabled = true,
     bool showLabel = true,
+    String? valMsg,
     FocusNode? focusNode,
     Function? onClick}) {
   return SizedBox(
@@ -343,10 +344,19 @@ Widget simpleTextField(
           onClick!();
         }
       },
+      validator: (val) {
+        if (valMsg != null) {
+          if (val!.isEmpty) {
+            return valMsg;
+          } else {
+            return '';
+          }
+        }
+      },
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-          contentPadding: EdgeInsets.only(bottom: 10),
+          contentPadding: const EdgeInsets.only(bottom: 10),
           suffixIcon: showIcon
               ? GestureDetector(
                   onTap: () {
@@ -745,4 +755,54 @@ showGif(context) {
                             .copyWith(primary: Colors.transparent)),
                     child: Image.asset(ImageResources.tickImage))),
           ));
+}
+
+logOutPopUp(BuildContext context) {
+  var prov = Provider.of<AuthViewModel>(context, listen: false);
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            content: SizedBox(
+                width: screenWidth(context),
+                height: screenHeight(context) * 0.19,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(height: screenHeight(context) * 0.06),
+                    semiBoldText('Do you want to logout?',
+                        fontSize: 18,
+                        color: Colors.black,
+                        textAlign: TextAlign.center),
+                    SizedBox(height: screenHeight(context) * 0.05),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: customButton(context, 'No', onTap: () {
+                            Navigator.pop(context);
+                          }),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: customButton(context, 'Yes', onTap: () async {
+                            await prov.logout(context);
+                          }),
+                        ),
+                      ],
+                    )
+                  ],
+                )),
+          ),
+          Positioned(top: screenHeight(context) * 0.33, child: hpLogo(context)),
+        ],
+      );
+    },
+  );
 }

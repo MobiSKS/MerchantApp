@@ -30,13 +30,13 @@ class _NavDrawerState extends State<NavDrawer> {
 
   getNameId() async {
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
-        as UserModel;
+    as UserModel;
     String firstName = user.data!.objGetMerchantDetail![0].merchantName!;
     String lastName = "";
     String userId = user.data!.objGetMerchantDetail![0].merchantId!;
     setState(() {
       name = "$firstName $lastName";
-      id = userId;
+      id = userId; 
     });
   }
 
@@ -129,8 +129,7 @@ class _NavDrawerState extends State<NavDrawer> {
             title: semiBoldText(AppStrings.logout,
                 color: Colors.black, fontSize: 18.0),
             onTap: () async {
-              var authPro = Provider.of<AuthViewModel>(context, listen: false);
-              await authPro.logout(context);
+           logOutPopUp(context);            
             },
           ),
         ],

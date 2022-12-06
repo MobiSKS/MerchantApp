@@ -21,7 +21,7 @@ class ImageResources {
 
 //==============================App Icon Name=========================================
 
-  static const String callIcon = "assets/icons/call-on.png";
+  static const String callIcon = "assets/icons/call_blue.png";
   static const String homeIcon = "assets/icons/home.png";
   static const String messageIcon = "assets/icons/msg.png";
   static const String changePasswortdIcon = "assets/icons/change_password.png";
@@ -39,7 +39,7 @@ class ImageResources {
 
   static const String otherDetailsBlue = "assets/icons/otherDetailsBlue.png";
   static const String otherDetailsWhite = "assets/icons/otherDetailsWhite.png";
-  static const String webIcon = "assets/icons/web.png";
+  static const String webIcon = "assets/icons/website_blue.png";
   static const String cardBalance = "assets/icons/card_balance.png";
   static const String cardFee = "assets/icons/card_fee.png";
   static const String creditSettle = "assets/icons/credit_sale_comp.png";
@@ -51,4 +51,5 @@ class ImageResources {
   static const String settlementIcon = "assets/icons/settlements.png";
   static const String transactionDetail = "assets/icons/transaction_detail.png";
   static const String filterIcon = "assets/icons/filter_icon.png";
+  static const String notifBell = "assets/icons/notif_bell.png";
 }

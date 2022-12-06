@@ -44,6 +44,9 @@ class Merchantprofile extends StatelessWidget {
       MerchantDetail(
           key: 'GST no.',
           value: data.objOutletDetails!.first.gSTNumber ?? "NA"),
+             MerchantDetail(
+          key: 'PAN No.',
+          value: data.objGetMerchantDetail!.first.pancard ?? "NA"),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,
@@ -55,9 +58,9 @@ class Merchantprofile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  semiBoldText(detail[index].key!,
-                      fontSize: 20.0,),
-                  semiBoldText(detail[index].value!, fontSize:18.0,color: Colors.grey.shade800)
+                  normalText(detail[index].key!,
+                      fontSize: 18.0,),
+                  normalText(detail[index].value!, fontSize:17.0,color: Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),
