@@ -1,3 +1,4 @@
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import '../../const/app_strings.dart';
 import '../../const/injection.dart';
@@ -26,11 +27,11 @@ class OtherDetail extends StatelessWidget {
     var data = _sharedPref.user!.data;
     final List<MerchantDetail> detail = [
       MerchantDetail(
-          key: 'Name', value: data!.objGetMerchantDetail![0].contactPersonName),
+          key: 'Name', value: Utils.checkNullValue(data!.objGetMerchantDetail![0].contactPersonName) ),
       MerchantDetail(
-          key: 'Mobile No.', value: data.objGetMerchantDetail![0].mobileNo),
+          key: 'Mobile No.', value: Utils.checkNullValue(data.objGetMerchantDetail![0].mobileNo)),
       MerchantDetail(
-          key: 'Email Id', value: data.objGetMerchantDetail![0].emailId),
+          key: 'Email Id', value: Utils.checkNullValue(data.objGetMerchantDetail![0].emailId)),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,

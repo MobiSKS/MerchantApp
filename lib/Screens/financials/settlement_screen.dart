@@ -50,10 +50,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: widget.navbar
-          ? SingleChildScrollView(
-              physics:
-                  const ScrollPhysics(parent: NeverScrollableScrollPhysics()),
-              child: _body(context))
+          ? _body(context)
           : Scaffold(
               appBar: normalAppBar(context,
                   title: AppStrings.paymentNsettlement, showTitle: false),
@@ -85,7 +82,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
   Widget _pageViewWidget(BuildContext context) {
     return SizedBox(
       height: widget.navbar
-          ? screenHeight(context) * 0.71
+          ? screenHeight(context) * 0.68
           : screenHeight(context) * 0.72,
       child: PageView(
         physics: const BouncingScrollPhysics(
@@ -94,7 +91,8 @@ class _SettlementScreenState extends State<SettlementScreen> {
         onPageChanged: (int index) {
           setState(() {
             pageIndex = index;
-          });
+          }
+          );
         },
         children: [_paymentWidget(context), _settlementWidget(context)],
       ),
@@ -347,7 +345,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
           toDate: _toDateController.text,
           terminalId: _terminalIdController.text);
       dismissLoader(context);
-
       if (fPro.transactionDetailModel != null &&
           fPro.transactionDetailModel!.internelStatusCode == 1000) {
         _settlementSearchController.clear();

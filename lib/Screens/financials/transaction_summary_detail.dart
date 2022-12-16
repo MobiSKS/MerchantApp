@@ -1,4 +1,3 @@
-import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/transaction_detail_model.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:dtplusmerchant/util/utils.dart';

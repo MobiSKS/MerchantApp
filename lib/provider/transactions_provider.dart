@@ -55,7 +55,7 @@ class TransactionsProvider extends ChangeNotifier {
   GiftVoucherModel? _giftVoucherModel;
   GiftVoucherModel? get giftVoucherModel => _giftVoucherModel;
 
-   QRStatusModel? _qrStatusModel;
+  QRStatusModel? _qrStatusModel;
   QRStatusModel? get qrStatusModel => _qrStatusModel;
 
   Future<void> generateOTPSale(context,

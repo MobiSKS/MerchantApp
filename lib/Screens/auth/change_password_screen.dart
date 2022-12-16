@@ -22,10 +22,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  OtpFieldController _otpController = OtpFieldController();
+  final OtpFieldController _otpController = OtpFieldController();
   String otp = "";
   bool _otpSent = false;
-  bool validateAndSave() {
+  bool _validateAndSave() {
     final FormState? form = _formKey.currentState;
     if (form!.validate()) {
       return true;
@@ -84,11 +84,18 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: screenHeight(context) * 0.05),
-        simpleTextField(context, _oldPassword, 'Old Password',valMsg: 'Old password cant be empty',),
+        simpleTextField(
+          context,
+          _oldPassword,
+          'Old Password',
+          valMsg: 'Old password cant be empty',
+        ),
         SizedBox(height: screenHeight(context) * 0.03),
-        simpleTextField(context, _newPassword, AppStrings.newPassword,valMsg: "New Password can't be empty"),
+        simpleTextField(context, _newPassword, AppStrings.newPassword,
+            valMsg: "New Password can't be empty"),
         SizedBox(height: screenHeight(context) * 0.03),
-        simpleTextField(context, _confirmPassword, AppStrings.confirmPaasword,valMsg: "Confirm passwor can't be empty"),
+        simpleTextField(context, _confirmPassword, AppStrings.confirmPaasword,
+            valMsg: "Confirm passwor can't be empty"),
       ],
     );
   }
@@ -131,34 +138,32 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> generateOTP(AuthViewModel authViewM) async {
-    if (validateAndSave()) {
-      if (_newPassword.text == _confirmPassword.text) {
-        await authViewM.changePasswordOTP(context,
-            confirmNewPass: _confirmPassword.text,
-            newPass: _newPassword.text,
-            oldPass: _oldPassword.text);
+    if (_newPassword.text == _confirmPassword.text) {
+      await authViewM.changePasswordOTP(context,
+          confirmNewPass: _confirmPassword.text,
+          newPass: _newPassword.text,
+          oldPass: _oldPassword.text);
 
-        if (authViewM.changePasswordOTp != null &&
-            authViewM.changePasswordOTp!.internelStatusCode == 1000) {
-          showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
-          // alertPopUp(
-          //   context,
-          //   '${authViewM.changePasswordOTp!.data![0].reason}',
-          //  );
-          if (authViewM.changePasswordOTp!.data![0].oTP != null) {
-            setState(() {
-              _otpSent = true;
-            });
-          }
+      if (authViewM.changePasswordOTp != null &&
+          authViewM.changePasswordOTp!.internelStatusCode == 1000) {
+        showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
+        // alertPopUp(
+        //   context,
+        //   '${authViewM.changePasswordOTp!.data![0].reason}',
+        //  );
+        if (authViewM.changePasswordOTp!.data![0].oTP != null) {
+          setState(() {
+            _otpSent = true;
+          });
         }
-      } else {
-        alertPopUp(context, 'New password and confirm password is different');
       }
+    } else {
+      alertPopUp(context, 'New password and confirm password is different');
     }
   }
 
   Future<void> verifyOTP(AuthViewModel authViewM) async {
-    if (validateAndSave() && otp.length == 6) {
+    if (_validateAndSave() && otp.length == 6) {
       await authViewM.verifyChangePasswordOtp(context,
           otp: otp,
           confirmNewPass: _confirmPassword.text,

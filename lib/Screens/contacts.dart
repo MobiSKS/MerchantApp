@@ -23,15 +23,14 @@ class Contacts extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.06),
-
-          customContainer(context, url: AppStrings.forPetrolDieselCS,title: AppStrings.forPetrolDieselQueries),
+          customContainer(context,
+              url: AppStrings.forPetrolDieselCS,
+              title: AppStrings.forPetrolDieselQueries),
           SizedBox(height: screenHeight(context) * 0.02),
-          // const Divider(color: Colors.blueGrey),
-          //  semiBoldText(AppStrings.forHpGasQueries, color: Colors.black),
-          customContainer(context, url: AppStrings.forHPgasORLPGQCS,title: AppStrings.forHpGasQueries),
+          customContainer(context,
+              url: AppStrings.forHPgasORLPGQCS,
+              title: AppStrings.forHpGasQueries),
           SizedBox(height: screenHeight(context) * 0.02),
-          // const Divider(color: Colors.blueGrey),
-          // semiBoldText(AppStrings.website, color: Colors.black),
           customContainer(context, url: UrlConstant.hpPayLink, isUrl: true),
           SizedBox(height: screenHeight(context) * 0.02),
         ],
@@ -39,28 +38,8 @@ class Contacts extends StatelessWidget {
     );
   }
 
-  // Widget _contactNumber(String url, {bool isURl = false}) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       isURl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
-  //     },
-  //     child: Row(children: [
-  //       Image.asset(
-  //         isURl ? ImageResources.webIcon : ImageResources.callIcon,
-  //         height: 20,
-  //         color: Colors.black,
-  //       ),
-  //       const SizedBox(width: 10),
-  //       boldText(
-  //         url,
-  //         color: Colors.black,
-  //       )
-  //     ]),
-  //   );
-  // }
-
   Widget customContainer(BuildContext context,
-      {bool isUrl = false, String url = '',String title=""}) {
+      {bool isUrl = false, String url = '', String title = ""}) {
     return GestureDetector(
       onTap: () {
         isUrl ? urlLauncher.launch(url) : urlLauncher.launch('tel://$url');
@@ -92,10 +71,13 @@ class Contacts extends StatelessWidget {
                     color: Colors.indigo,
                   )
                 ]),
-                SizedBox(
-                  width:screenWidth(context)*0.30,
-                  child: semiBoldText(title,color:Colors.indigo,textAlign: TextAlign.center,fontSize: 14),
-                )
+            SizedBox(
+              width: screenWidth(context) * 0.30,
+              child: semiBoldText(title,
+                  color: Colors.indigo,
+                  textAlign: TextAlign.center,
+                  fontSize: 14),
+            )
           ],
         ),
       ),

@@ -55,7 +55,7 @@ class _SaleReceiptState extends State<SaleReceipt> {
               SizedBox(height: screenHeight(context) * 0.02),
               receiptTitle(context, _key),
               _body(context),
-              SizedBox(height: screenHeight(context) * 0.02),
+              SizedBox(height: screenHeight(context) * 0.01),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child:
@@ -74,8 +74,9 @@ class _SaleReceiptState extends State<SaleReceipt> {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
     var rocName = _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity;
     var date = Utils.dateTimeFormat().split(' ')[0];
-    var time  =   Utils.dateTimeFormat().split(' ')[1];
-    var dateF= Utils.convertDateFormatInDDMMYY( DateFormat("yyyy-MM-dd").parse(date));
+    var time = Utils.dateTimeFormat().split(' ')[1];
+    var dateF =
+        Utils.convertDateFormatInDDMMYY(DateFormat("yyyy-MM-dd").parse(date));
     List<ReceiptDetail> receptDetail1 = [
       ReceiptDetail(title: AppStrings.dateTime, value: "$dateF $time"),
       ReceiptDetail(
@@ -107,30 +108,36 @@ class _SaleReceiptState extends State<SaleReceipt> {
       controller: screenshotController,
       child: RepaintBoundary(
         key: _key,
-        child: Container(
-          color: Colors.white,
-          child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  receiptHeader(
-                    context,
-                    copyType: _copyType,
-                    custDetail: custDetail,
-                    roc: rocName!,
-                    outletName: _sharedPref
-                        .user!.data!.objOutletDetails!.first.retailOutletName,
-                  ),
-                  receiptDetail(context, receptDetail1),
-                  SizedBox(height: screenHeight(context) * 0.02),
-                  semiBoldText(widget.transType,
-                      color: Colors.black, fontSize: 20.0),
-                  SizedBox(height: screenHeight(context) * 0.02),
-                  receiptDetail(context, receptDetail2),
-                  receiptFooter(context, custDetail: custDetail),
-                ],
-              )),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15,right: 15, top: 10,bottom: 10),
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(13),
+                color: Colors.white,
+                border: Border.all(color: Colors.grey.shade400)),
+            child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    receiptHeader(
+                      context,
+                      copyType: _copyType,
+                      custDetail: custDetail,
+                      roc: rocName!,
+                      outletName: _sharedPref
+                          .user!.data!.objOutletDetails!.first.retailOutletName,
+                    ),
+                    receiptDetail(context, receptDetail1),
+                    SizedBox(height: screenHeight(context) * 0.01),
+                    semiBoldText(widget.transType,
+                        color: Colors.black, fontSize: 18.0),
+                    SizedBox(height: screenHeight(context) * 0.01),
+                    receiptDetail(context, receptDetail2),
+                    receiptFooter(context, custDetail: custDetail),
+                  ],
+                )),
+          ),
         ),
       ),
     );

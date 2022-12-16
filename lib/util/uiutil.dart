@@ -159,7 +159,7 @@ Widget title(context, String text) {
     width: screenWidth(context),
     height: screenHeight(context) * 0.08,
     color: Colors.blue.shade100,
-    child: Center(child: boldText(text, color: Colors.black, fontSize: 22)),
+    child: Center(child: semiBoldText(text, color: Colors.black, fontSize: 22)),
   );
 }
 
@@ -503,17 +503,17 @@ Widget receiptHeader(BuildContext context,
   return Column(
     children: [
       SizedBox(height: screenHeight(context) * 0.02),
-      Image.asset(ImageResources.hpLogoReceipt, height: 100),
-      SizedBox(height: screenHeight(context) * 0.015),
-      boldText(copyType!, color: Colors.black, fontSize: 20.0),
-      SizedBox(height: screenHeight(context) * 0.004),
-      boldText(custDetail!.header1!, color: Colors.black, fontSize: 20.0),
-      SizedBox(height: screenHeight(context) * 0.004),
-      boldText(custDetail.header2!, color: Colors.black, fontSize: 20.0),
-      SizedBox(height: screenHeight(context) * 0.004),
-      boldText(outletName!, color: Colors.black, fontSize: 20.0),
-      SizedBox(height: screenHeight(context) * 0.004),
-      boldText(roc, color: Colors.black, fontSize: 20.0),
+      Image.asset(ImageResources.hpLogoReceipt, height: 80),
+      SizedBox(height: screenHeight(context) * 0.010),
+      semiBoldText(copyType!, color: Colors.black, fontSize: 18.0),
+      SizedBox(height: screenHeight(context) * 0.003),
+      semiBoldText(custDetail!.header1!, color: Colors.black, fontSize: 18.0),
+      SizedBox(height: screenHeight(context) * 0.003),
+      semiBoldText(custDetail.header2!, color: Colors.black, fontSize: 18.0),
+      SizedBox(height: screenHeight(context) * 0.003),
+      semiBoldText(outletName!, color: Colors.black, fontSize: 18.0),
+      SizedBox(height: screenHeight(context) * 0.003),
+      semiBoldText(roc, color: Colors.black, fontSize: 18.0),
       SizedBox(height: screenHeight(context) * 0.02),
     ],
   );
@@ -526,11 +526,11 @@ Widget receiptFooter(context, {ObjGetMerchantDetail? custDetail}) {
       const Separator(
         color: Colors.blueGrey,
       ),
-      SizedBox(height: screenHeight(context) * 0.020),
-      normalText(custDetail!.footer1!, color: Colors.black, fontSize: 20.0),
+      SizedBox(height: screenHeight(context) * 0.018),
+      normalText(custDetail!.footer1!, color: Colors.black, fontSize: 17.0),
       SizedBox(height: screenHeight(context) * 0.01),
-      normalText(custDetail.footer2!, color: Colors.black, fontSize: 20.0),
-      SizedBox(height: screenHeight(context) * 0.020),
+      normalText(custDetail.footer2!, color: Colors.black, fontSize: 17.0),
+      SizedBox(height: screenHeight(context) * 0.018),
       const Separator(
         color: Colors.blueGrey,
       ),
@@ -547,7 +547,7 @@ Widget receiptTitle(context, GlobalKey key) {
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        boldText('Receipt', color: Colors.black, fontSize: 22),
+        semiBoldText('Receipt', color: Colors.black, fontSize: 22),
         SizedBox(width: screenWidth(context) * 0.20),
         InkWell(
           child: CircleAvatar(
@@ -599,8 +599,8 @@ Widget receiptDetail(BuildContext context, List<ReceiptDetail> receptDetail1,
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            semiBoldText(data.title!, fontSize: 18.0),
-            semiBoldText(data.value!, fontSize: 18.0, color: Colors.blueGrey),
+            normalText(data.title!, fontSize: 16.0),
+            normalText(data.value!, fontSize: 16.0, color: Colors.blueGrey),
           ],
         );
       });
