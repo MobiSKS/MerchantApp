@@ -3,6 +3,7 @@ import 'package:dtplusmerchant/Screens/financials/payment_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
+import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/model/settlement_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/utils.dart';
@@ -26,13 +27,13 @@ class _SettlementScreenState extends State<SettlementScreen> {
   final PageController pageController = PageController();
   int pageIndex = 0;
   final _fromDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
   final _toDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT:DateTime.now()));
+      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
   final _terminalIdController = TextEditingController();
   double columnPadding = 20;
-  final settlementdata1 = ValueNotifier<List<Data>>([]);
-  List<Data> settlementdata = [];
+  final settlementdata1 = ValueNotifier<List<SettleTransactionDetails>>([]);
+  List<SettleTransactionDetails> settlementdata = [];
 
   @override
   void initState() {
@@ -52,13 +53,11 @@ class _SettlementScreenState extends State<SettlementScreen> {
       child: widget.navbar
           ? _body(context)
           : Scaffold(
+              resizeToAvoidBottomInset: false,
               appBar: normalAppBar(context,
                   title: AppStrings.paymentNsettlement, showTitle: false),
               backgroundColor: Colors.white,
-              body: SingleChildScrollView(
-                  physics: const ScrollPhysics(
-                      parent: NeverScrollableScrollPhysics()),
-                  child: _body(context)),
+              body: _body(context),
             ),
     );
   }
@@ -91,8 +90,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
         onPageChanged: (int index) {
           setState(() {
             pageIndex = index;
-          }
-          );
+          });
         },
         children: [_paymentWidget(context), _settlementWidget(context)],
       ),
@@ -119,10 +117,11 @@ class _SettlementScreenState extends State<SettlementScreen> {
               await model.getSettlementDetail(context);
             },
             builder: (context, financialpro, child) {
-              settlementdata = financialpro.isLoading ||
-                      financialpro.settlementModel == null
-                  ? []
-                  : financialpro.settlementModel!.data!;
+              settlementdata =
+                  financialpro.isLoading || financialpro.settlementModel == null
+                      ? []
+                      : financialpro
+                          .settlementModel!.data!.settleTransactionDetails!;
               settlementdata1.value = settlementdata;
               return financialpro.isLoading
                   ? Column(
@@ -132,7 +131,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                       ],
                     )
                   : financialpro.settlementModel != null
-                      ? _settlementData()
+                      ? Expanded(child: _settlementData(list:financialpro.settlementModel!.data!.settleMentDetails!))
                       : Column(
                           children: [
                             SizedBox(height: screenHeight(context) * 0.30),
@@ -158,7 +157,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
     }
   }
 
-  Widget _settlementData() {
+  Widget _settlementData({List<SettleMentDetails> ?list}) {
     return ValueListenableBuilder(
         valueListenable: settlementdata1,
         builder: (_, value, __) => settlementdata1.value.isEmpty
@@ -169,37 +168,44 @@ class _SettlementScreenState extends State<SettlementScreen> {
                 ],
               )
             : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: screenHeight(context) * 0.03),
-                  CustomList(
-                      list: value,
-                      itemSpace: 10,
-                      child: (data, index) {
-                        return Column(
-                          children: [
-                            GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => SettlementDetail(
-                                              settlementData: data,
-                                            )),
-                                  );
-                                },
-                                child: _settlementList(context, data)),
-                            const SizedBox(height: 10),
-                            Divider(
-                              color: Colors.grey.shade700,
-                            )
-                          ],
-                        );
-                      })
+                  SizedBox(height: screenHeight(context) * 0.01),
+                     semiBoldText('Total Amount: $rupeeSign ${list!.first.totalAmout}'),
+                    const SizedBox(height:5),
+                  semiBoldText('No. of settlements: ${list.first.noOfSettlement}'),
+                 SizedBox(height: screenHeight(context) * 0.03),
+                  Expanded(
+                    child: CustomList(
+                        list: value,
+                        itemSpace: 10,
+                        child: (data, index) {
+                          return Column(
+                            children: [
+                              GestureDetector(
+                                  onTap: () {
+                                    // Navigator.push(
+                                    //   context,
+                                    //   MaterialPageRoute(
+                                    //       builder: (context) => SettlementDetail(
+                                    //             settlementData: data,
+                                    //           )),
+                                    // );
+                                  },
+                                  child: _settlementList(context, data,)),
+                              const SizedBox(height: 10),
+                              Divider(
+                                color: Colors.grey.shade700,
+                              )
+                            ],
+                          );
+                        }),
+                  )
                 ],
               ));
   }
 
-  Widget _settlementList(BuildContext context, Data data) {
+  Widget _settlementList(BuildContext context, SettleTransactionDetails data) {
     return SizedBox(
       width: screenWidth(context),
       child: Row(
@@ -208,58 +214,61 @@ class _SettlementScreenState extends State<SettlementScreen> {
         children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             semiBoldText('Batch Id:  ${data.batchId}',
-                color: Colors.grey.shade900, fontSize: 18.0),
+                color: Colors.grey.shade900, fontSize: 17.0),
+            const SizedBox(height: 5),
+            semiBoldText('Amount: $rupeeSign ${data.amount}',
+                color: Colors.grey.shade600, fontSize: 16.0),
             const SizedBox(height: 5),
             Text.rich(
               TextSpan(
                 children: [
                   TextSpan(
-                      text: 'Status: ',
+                      text: 'Terminal Id: ',
                       style: TextStyle(
                           color: Colors.grey.shade600,
-                          fontSize: 18,
+                          fontSize: 16,
                           fontFamily: FontFamilyHelper.sourceSansSemiBold)),
                   TextSpan(
-                    text: '${data.status} ',
-                    style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 18,
+                    text: data.terminalId,
+                    style: TextStyle(
+                        color: Colors.grey.shade700,
+                        fontSize: 16,
                         fontFamily: FontFamilyHelper.sourceSansSemiBold),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 5),
-            semiBoldText('Terminal Id:  ${data.terminalId}',
-                color: Colors.grey.shade600, fontSize: 18.0),
+            semiBoldText('Merchant Id:  ${data.merchantId}',
+                color: Colors.grey.shade600, fontSize: 16.0),
             const SizedBox(height: 5),
-            semiBoldText('No. Of Transaction:   ${data.noofTransactions}',
-                color: Colors.grey.shade600, fontSize: 18.0),
+            semiBoldText('Transaction date:   ${data.transactionDate}',
+                color: Colors.grey.shade600, fontSize: 16.0),
             const SizedBox(height: 5),
-            semiBoldText('Sttlement Date:  ${data.settlementDate}',
-                color: Colors.grey.shade600, fontSize: 18.0),
+            semiBoldText('Transaction Type:  ${data.transactionType}',
+                color: Colors.grey.shade600, fontSize: 16.0),
             const SizedBox(height: 5),
           ]),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettlementDetail(
-                                settlementData: data,
-                              )),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.black,
-                    size: 30,
-                  ))
-            ],
-          )
+          // Row(
+          //   crossAxisAlignment: CrossAxisAlignment.center,
+          //   children: [
+          //     GestureDetector(
+          //         onTap: () {
+          //           Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //                 builder: (context) => SettlementDetail(
+          //                       settlementData: data,
+          //                     )),
+          //           );
+          //         },
+          //         child: const Icon(
+          //           Icons.arrow_forward_ios,
+          //           color: Colors.black,
+          //           size: 30,
+          //         ))
+          //   ],
+          // )
         ],
       ),
     );
@@ -275,7 +284,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              height: screenHeight(context) * 0.65,
+              height: screenHeight(context) * 0.45,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -294,7 +303,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        semiBoldText('From Date',
+                        semiBoldText(' Select Date',
                             color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
@@ -302,22 +311,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
                           child: dateTextField(
                               context, _fromDateController, 'From Date',
                               showIcon: true, enabled: false),
-                        ),
-                        const SizedBox(height: 15),
-                        semiBoldText('To Date',
-                            color: Colors.grey.shade700, fontSize: 18),
-                        GestureDetector(
-                          onTap: () => Utils.selectDatePopup(
-                              context, DateTime.now(), _toDateController),
-                          child: dateTextField(
-                              context, _toDateController, 'To Date',
-                              showIcon: true, enabled: false),
-                        ),
-                        const SizedBox(height: 15),
-                        simpleTextField(
-                          context,
-                          _terminalIdController,
-                          'Terminal Id (Optional)',
                         ),
                         SizedBox(height: screenHeight(context) * 0.07),
                         customButton(context, AppStrings.submit, onTap: () {
@@ -337,13 +330,12 @@ class _SettlementScreenState extends State<SettlementScreen> {
   Future<void> getSettlementFilterData() async {
     FinancialsProvider fPro =
         Provider.of<FinancialsProvider>(context, listen: false);
-    if (_fromDateController.text.isNotEmpty &&
-        _toDateController.text.isNotEmpty) {
+    if (_fromDateController.text.isNotEmpty) {
       showLoader(context);
-      await fPro.getSettlementDetail(context,
-          fromDate: _fromDateController.text,
-          toDate: _toDateController.text,
-          terminalId: _terminalIdController.text);
+      await fPro.getSettlementDetail(
+        context,
+        date: _fromDateController.text,
+      );
       dismissLoader(context);
       if (fPro.transactionDetailModel != null &&
           fPro.transactionDetailModel!.internelStatusCode == 1000) {
@@ -353,7 +345,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
         Navigator.pop(context);
       }
     } else {
-      alertPopUp(context, 'Please enter from and to date');
+      alertPopUp(context, 'Please enter date');
     }
   }
 }

@@ -9,10 +9,12 @@ import 'package:dtplusmerchant/model/forget_password_otp_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../../const/common_param.dart';
 import '../../const/injection.dart';
 import '../../const/url_constant.dart';
 import '../../preferences/shared_preference.dart';
+import '../../provider/location_provider.dart';
 import '../../util/uiutil.dart';
 import '../../util/utils.dart';
 
@@ -41,12 +43,14 @@ class AuthViewModel extends ChangeNotifier {
   ChangePasswordOTp? get changePasswordOTp => _changePasswordOTp;
 
   Future<void> loginApi(context, String userId, String password) async {
+    var locProv = Provider.of<LocationProvider>(context,listen:false);
     await _sharedPref.preferenceClear();
     _dio.options.headers['API_Key'] = UrlConstant.apiKey;
     _dio.options.headers['Secret_key'] = UrlConstant.secretKey;
     showLoader(context);
     var ip = await Utils.getIp();
     Position position = await Geolocator.getCurrentPosition();
+    await locProv.setValues(position: position,ip: ip);
     Map param = {
       "UserId": userId,
       "Useragent": Utils.checkOs(),

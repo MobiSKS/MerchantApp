@@ -1,4 +1,4 @@
-class SettlementModel {
+class PaymentModel {
   bool? success;
   int? statusCode;
   int? internelStatusCode;
@@ -7,7 +7,7 @@ class SettlementModel {
   Data? data;
   Null? modelState;
 
-  SettlementModel(
+  PaymentModel(
       {this.success,
       this.statusCode,
       this.internelStatusCode,
@@ -16,7 +16,7 @@ class SettlementModel {
       this.data,
       this.modelState});
 
-  SettlementModel.fromJson(Map<String, dynamic> json) {
+  PaymentModel.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
     statusCode = json['Status_Code'];
     internelStatusCode = json['Internel_Status_Code'];
@@ -42,70 +42,67 @@ class SettlementModel {
 }
 
 class Data {
-  List<SettleMentDetails>? settleMentDetails;
-  List<SettleTransactionDetails>? settleTransactionDetails;
-  SuccessDetails? successDetails;
+  List<PaymentDetails>? paymentDetails;
+  List<TransactionDetails>? transactionDetails;
+  SuccessDetail? successDetail;
 
-  Data(
-      {this.settleMentDetails,
-      this.settleTransactionDetails,
-      this.successDetails});
+  Data({this.paymentDetails, this.transactionDetails, this.successDetail});
 
   Data.fromJson(Map<String, dynamic> json) {
-    if (json['SettleMentDetails'] != null) {
-      settleMentDetails = <SettleMentDetails>[];
-      json['SettleMentDetails'].forEach((v) {
-        settleMentDetails!.add(new SettleMentDetails.fromJson(v));
+    if (json['PaymentDetails'] != null) {
+      paymentDetails = <PaymentDetails>[];
+      json['PaymentDetails'].forEach((v) {
+        paymentDetails!.add(new PaymentDetails.fromJson(v));
       });
     }
-    if (json['SettleTransactionDetails'] != null) {
-      settleTransactionDetails = <SettleTransactionDetails>[];
-      json['SettleTransactionDetails'].forEach((v) {
-        settleTransactionDetails!.add(new SettleTransactionDetails.fromJson(v));
+    if (json['TransactionDetails'] != null) {
+      transactionDetails = <TransactionDetails>[];
+      json['TransactionDetails'].forEach((v) {
+        transactionDetails!.add(new TransactionDetails.fromJson(v));
       });
     }
-    successDetails = json['SuccessDetails'] != null
-        ? new SuccessDetails.fromJson(json['SuccessDetails'])
+    successDetail = json['SuccessDetail'] != null
+        ? new SuccessDetail.fromJson(json['SuccessDetail'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.settleMentDetails != null) {
-      data['SettleMentDetails'] =
-          this.settleMentDetails!.map((v) => v.toJson()).toList();
+    if (this.paymentDetails != null) {
+      data['PaymentDetails'] =
+          this.paymentDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.settleTransactionDetails != null) {
-      data['SettleTransactionDetails'] =
-          this.settleTransactionDetails!.map((v) => v.toJson()).toList();
+    if (this.transactionDetails != null) {
+      data['TransactionDetails'] =
+          this.transactionDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.successDetails != null) {
-      data['SuccessDetails'] = this.successDetails!.toJson();
+    if (this.successDetail != null) {
+      data['SuccessDetail'] = this.successDetail!.toJson();
     }
     return data;
   }
 }
 
-class SettleMentDetails {
-  int? noOfSettlement;
+class PaymentDetails {
+  int? noOfPayments;
   double? totalAmout;
 
-  SettleMentDetails({this.noOfSettlement, this.totalAmout});
+  PaymentDetails({this.noOfPayments, this.totalAmout});
 
-  SettleMentDetails.fromJson(Map<String, dynamic> json) {
-    noOfSettlement = json['NoOfSettlement'];
+  PaymentDetails.fromJson(Map<String, dynamic> json) {
+    noOfPayments = json['NoOfPayments'];
     totalAmout = json['TotalAmout'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NoOfSettlement'] = this.noOfSettlement;
+    data['NoOfPayments'] = this.noOfPayments;
     data['TotalAmout'] = this.totalAmout;
     return data;
   }
 }
 
-class SettleTransactionDetails {
+class TransactionDetails {
   String? merchantId;
   int? batchId;
   int? invoiceNo;
@@ -114,7 +111,7 @@ class SettleTransactionDetails {
   String? transactionType;
   double? amount;
 
-  SettleTransactionDetails(
+  TransactionDetails(
       {this.merchantId,
       this.batchId,
       this.invoiceNo,
@@ -123,7 +120,7 @@ class SettleTransactionDetails {
       this.transactionType,
       this.amount});
 
-  SettleTransactionDetails.fromJson(Map<String, dynamic> json) {
+  TransactionDetails.fromJson(Map<String, dynamic> json) {
     merchantId = json['MerchantId'];
     batchId = json['BatchId'];
     invoiceNo = json['InvoiceNo'];
@@ -146,13 +143,13 @@ class SettleTransactionDetails {
   }
 }
 
-class SuccessDetails {
+class SuccessDetail {
   int? status;
   String? reason;
 
-  SuccessDetails({this.status, this.reason});
+  SuccessDetail({this.status, this.reason});
 
-  SuccessDetails.fromJson(Map<String, dynamic> json) {
+  SuccessDetail.fromJson(Map<String, dynamic> json) {
     status = json['Status'];
     reason = json['Reason'];
   }

@@ -10,6 +10,7 @@ import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
+import 'package:dtplusmerchant/provider/location_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => AuthViewModel()),
         ChangeNotifierProvider(create: (context) => TransactionsProvider()),
         ChangeNotifierProvider(create: (context) => FinancialsProvider()),
+        ChangeNotifierProvider(create: (context) => LocationProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

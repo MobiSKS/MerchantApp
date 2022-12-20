@@ -1,19 +1,20 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 
-class LocationProvider with ChangeNotifier{
+class LocationProvider extends ChangeNotifier {
+  String? _lat;
+  String? get lat => _lat;
 
+  String? _long;
+  String? get long => _long;
 
-  Map<String, dynamic>? deviceInfo;
-  var deviceLat;
-  var deviceLong;
+  String? _ip;
+  String? get ip => _ip;
 
-  
-
-  getLocation(lat, long){
-    deviceLat = lat;
-    deviceLong = long;
+  setValues({Position? position, String? ip}) async {
+    _lat = position!.latitude.toString();
+    _long = position.longitude.toString();
+    _ip = ip;
     notifyListeners();
   }
-
 }

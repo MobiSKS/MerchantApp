@@ -24,13 +24,15 @@ class UrlConstant {
       "merchant/merchant_receivable_payable_detail";
   static const String changePasswordVerifyOTP = "settings/change_password";
   static const String changePasswordOTP = "settings/change_password_otp_sent";
-  static const String settlementApi =
-      "merchant/merchant_erp_reload_sale_earning_detail";
-  static const String settlementlistApi = "merchant/merchant_settlement_detail";
+  // static const String settlementApi =
+  //     "merchant/merchant_erp_reload_sale_earning_detail";
+  static const String settlementlistApi = "merchant/get_merchant_settlement_details";
+    static const String paymentListApi = "merchant/get_merchnat_payment_details";
   static const String batchDetailApi = "merchant/merchant_batch_detail";
   static const String forgetPassOTP = "settings/forgot_password_sent_otp";
   static const String forgetPassOTPVerify = "settings/forgot_password";
   static const String getQRStatus ="Mobile/get_QR_code_payment_status";
+
 //==============================api_key && secret_key=================================
   static const String apiKey = "3C25F265-F86D-419D-9A04-EA74A503C197";
   static const String secretKey = "PVmMSclp834KBIUa9O-XxpBsDJhsi1dsds74CiGaoo5";
