@@ -68,8 +68,8 @@ class FinancialsProvider extends ChangeNotifier {
     Map param = {
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
-      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
-      "Userip": ip,
+      "UserId": userId,
+      "Userip": user.data?.objGetMerchantDetail?.first.merchantId,
     };
 
     try {

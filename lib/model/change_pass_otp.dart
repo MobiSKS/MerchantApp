@@ -61,7 +61,7 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['OTP'] = this.oTP;
+    data['OTP'] = oTP;
     data['Status'] = this.status;
     data['Reason'] = this.reason;
     return data;

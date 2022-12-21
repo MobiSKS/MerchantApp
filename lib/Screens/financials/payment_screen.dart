@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'dart:developer';
-import 'package:dtplusmerchant/Screens/financials/transaction_summary_detail.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import '../../base/base_view.dart';
 import '../../common/custom_list.dart';
 import '../../const/app_strings.dart';
 import '../../model/payment_model.dart';
-import '../../model/transaction_detail_model.dart';
 import '../../util/uiutil.dart';
 import '../../util/utils.dart';
 
@@ -22,15 +20,14 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   final transdata1 = ValueNotifier<List<TransactionDetails>>([]);
-  List<TransactionDetails> transdata = [];
+  List<TransactionDetails> transdata = [
+    
+  ];
   late int diffPayment;
   final TextEditingController _paymentSearchController =
       TextEditingController();
   final TextEditingController _fromDateController = TextEditingController(
       text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
-  final TextEditingController _toDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
-  final TextEditingController _terminalIdController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -63,10 +60,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   )
                 : financeViewM.paymentModel != null
                     ? Expanded(
-                      child: _paymentData(
-                          paymentDetail: financeViewM
-                              .paymentModel!.data!.paymentDetails),
-                    )
+                        child: _paymentData(
+                            paymentDetail: financeViewM
+                                .paymentModel!.data!.paymentDetails),
+                      )
                     : Column(
                         children: [
                           SizedBox(height: screenHeight(context) * 0.30),

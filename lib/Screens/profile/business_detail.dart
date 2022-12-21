@@ -1,4 +1,3 @@
-import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
 import '../../const/injection.dart';

@@ -2,6 +2,7 @@
 
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/model/receivable_payable_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
@@ -23,8 +24,10 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   List<Data> rcvPayList = [];
   final TextEditingController _rcvPaySearchController = TextEditingController();
   final TextEditingController _terminalController = TextEditingController();
-  final TextEditingController _fromDateController = TextEditingController(text:Utils.convertDateFormatInDDMMYY(DateTime.now()));
-  final TextEditingController _toDateController = TextEditingController(text:Utils.convertDateFormatInDDMMYY(DateTime.now()));
+  final TextEditingController _fromDateController = TextEditingController(
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
+  final TextEditingController _toDateController = TextEditingController(
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +45,9 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
       child: Column(
         children: [
           searchWidget(context, _rcvPaySearchController,
-              hintText: 'Search Transaction', onTap: showSearchFilter, onChanged: () {}),
+              hintText: 'Search Transaction',
+              onTap: showSearchFilter,
+              onChanged: () {}),
           const SizedBox(height: 15),
           Expanded(
             child: BaseView<FinancialsProvider>(onModelReady: (model) async {
@@ -53,7 +58,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                   ? []
                   : financeViewM.receivablePayableResponseModel!.data!;
               rcvPayList1.value = rcvPayList.reversed.toList();
-        
+
               return financeViewM.isLoading
                   ? Column(
                       children: [
@@ -75,17 +80,15 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
       ),
     );
   }
- 
 
-   void onChanged() {
+  void onChanged() {
     if (_rcvPaySearchController.text.isNotEmpty) {
       rcvPayList1.value = rcvPayList
-          .where(
-              (e) => e.batchId.toString() == _rcvPaySearchController.text)
+          .where((e) => e.batchId.toString() == _rcvPaySearchController.text)
           .toList();
       _rcvPayableData();
     } else {
-      rcvPayList1.value = rcvPayList ;
+      rcvPayList1.value = rcvPayList;
     }
   }
 
@@ -123,7 +126,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
   }
 
   Widget _recPayList(BuildContext context, Data data) {
-     return Padding(
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
@@ -151,7 +154,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           children: [
             semiBoldText('Payable Amount : ',
                 color: Colors.grey.shade900, fontSize: 18.0),
-            semiBoldText('₹ ${data.payable}',
+            semiBoldText('$rupeeSign ${data.payable}',
                 color: Colors.grey.shade600, fontSize: 18.0),
           ],
         ),
@@ -189,7 +192,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-               height: screenHeight(context) * 0.50,
+              height: screenHeight(context) * 0.50,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -212,7 +215,6 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           }));
         });
   }
-  
 
   Widget _searchFilter() {
     var financialPro = Provider.of<FinancialsProvider>(context, listen: false);
@@ -222,7 +224,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: screenHeight(context) * 0.02),
-             semiBoldText('From Date',color: Colors.grey.shade700,fontSize: 18),
+          semiBoldText('From Date', color: Colors.grey.shade700, fontSize: 18),
           GestureDetector(
             onTap: () {
               Utils.selectDatePopup(context, selectedDate, _fromDateController);
@@ -231,7 +233,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
-             semiBoldText('To Date',color: Colors.grey.shade700,fontSize: 18),
+          semiBoldText('To Date', color: Colors.grey.shade700, fontSize: 18),
           GestureDetector(
             onTap: () =>
                 Utils.selectDatePopup(context, selectedDate, _toDateController),
@@ -242,24 +244,24 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           simpleTextField(
               context, _terminalController, "Terminal ID (optional)"),
           SizedBox(height: screenHeight(context) * 0.04),
-          customButton(context, AppStrings.search, onTap: ()  {
+          customButton(context, AppStrings.search, onTap: () {
             getFilterData(financialPro);
-      
           })
         ],
       ),
     );
   }
 
-  void getFilterData(FinancialsProvider fPro)async{
-        if (_fromDateController.text.isNotEmpty &&
+  void getFilterData(FinancialsProvider fPro) async {
+    if (_fromDateController.text.isNotEmpty &&
         _toDateController.text.isNotEmpty) {
       showLoader(context);
       await fPro.receivablePayableDetails(context,
-          fromDate: Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
-          toDate:  Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
-          terminalId: _terminalController.text
-          );
+          fromDate:
+              Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
+          toDate:
+              Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
+          terminalId: _terminalController.text);
       dismissLoader(context);
 
       if (fPro.transactionDetailModel != null &&

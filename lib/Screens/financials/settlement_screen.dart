@@ -1,6 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
 import 'package:dtplusmerchant/Screens/financials/payment_screen.dart';
-import 'package:dtplusmerchant/Screens/financials/settlement_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
@@ -28,9 +27,6 @@ class _SettlementScreenState extends State<SettlementScreen> {
   int pageIndex = 0;
   final _fromDateController = TextEditingController(
       text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
-  final _toDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
-  final _terminalIdController = TextEditingController();
   double columnPadding = 20;
   final settlementdata1 = ValueNotifier<List<SettleTransactionDetails>>([]);
   List<SettleTransactionDetails> settlementdata = [];

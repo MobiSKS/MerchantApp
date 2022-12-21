@@ -21,14 +21,6 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
   String? otp;
   bool _dataReceived = false;
   FocusNode focusNode = FocusNode();
-  bool _validate() {
-    final FormState? form = _formKey.currentState;
-    if (form!.validate()) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

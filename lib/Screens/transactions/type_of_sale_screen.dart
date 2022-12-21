@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 import 'dart:developer';
 import 'package:dtplusmerchant/Screens/transactions/sale_receipt.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
@@ -9,7 +9,6 @@ import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
-import 'package:timer_count_down/timer_controller.dart';
 import '../../base/base_view.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
@@ -48,7 +47,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   final paymentOtpController = OtpFieldController();
   bool enabledButton = false;
   final ValueNotifier<bool> _otpSent = ValueNotifier<bool>(false);
-  TextEditingController _paymentTypeController = TextEditingController();
+  final TextEditingController _paymentTypeController = TextEditingController();
   var timerController;
   @override
   void initState() {

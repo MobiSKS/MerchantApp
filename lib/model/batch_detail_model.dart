@@ -32,7 +32,7 @@ class BatchDetailModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Success'] = this.success;
     data['Status_Code'] = this.statusCode;
     data['Internel_Status_Code'] = this.internelStatusCode;

@@ -1,12 +1,9 @@
-
 import 'package:dtplusmerchant/model/card_fee_response_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../const/app_strings.dart';
-import '../../const/injection.dart';
-import '../../preferences/shared_preference.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
 
@@ -17,7 +14,6 @@ class CardFee extends StatefulWidget {
 }
 
 class _CardFeeState extends State<CardFee> {
-  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   DateTime selectedDate = DateTime.now();
   FocusNode focus1 = FocusNode();
   final TextEditingController _formNoController = TextEditingController();
@@ -61,7 +57,9 @@ class _CardFeeState extends State<CardFee> {
               submit();
             }),
             SizedBox(height: screenHeight(context) * 0.04),
-          showdata?  _cardFeeWidget(transPro.cardFeeResponseModel):Container(),
+            showdata
+                ? _cardFeeWidget(transPro.cardFeeResponseModel)
+                : Container(),
           ],
         ),
       );
@@ -78,10 +76,10 @@ class _CardFeeState extends State<CardFee> {
       );
       if (cardFeeProvider.cardFeeResponseModel != null &&
           cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
-            setState(() {
-              showdata= true;
-            });
-          }
+        setState(() {
+          showdata = true;
+        });
+      }
     } else {
       alertPopUp(context, 'Please enter form number');
     }
@@ -96,15 +94,12 @@ class _CardFeeState extends State<CardFee> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             
-          
               const SizedBox(height: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Column(
-                    
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -123,8 +118,10 @@ class _CardFeeState extends State<CardFee> {
                         children: [
                           semiBoldText(AppStrings.numberOfCards,
                               color: Colors.black, textAlign: TextAlign.start),
-                                semiBoldText(cardFee!.data!.first.noofCards!.toString(),
-                              color: Colors.black, textAlign: TextAlign.start),
+                          semiBoldText(
+                              cardFee!.data!.first.noofCards!.toString(),
+                              color: Colors.black,
+                              textAlign: TextAlign.start),
                         ],
                       ),
                     ],
@@ -149,19 +146,8 @@ class _CardFeeState extends State<CardFee> {
             ],
           ),
         ),
-
       ],
     );
   }
 
-  Widget _footerWidget() {
-    return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
-      decoration: BoxDecoration(
-          color: Colors.indigo.shade300,
-          borderRadius: const BorderRadius.only(
-              bottomRight: Radius.circular(20),
-              bottomLeft: Radius.circular(20))),
-    );
-  }
 }

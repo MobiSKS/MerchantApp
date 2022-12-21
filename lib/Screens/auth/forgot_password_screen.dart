@@ -24,7 +24,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   final _userNameController = TextEditingController();
   bool _otpSent = false;
   final _emailController = TextEditingController();
-  OtpFieldController _otpController = OtpFieldController();
+  final OtpFieldController _otpController = OtpFieldController();
   String otp = "";
 
   @override

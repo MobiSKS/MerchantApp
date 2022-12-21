@@ -7,10 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../common/custom_lert_box.dart';
-import '../../provider/location_provider.dart';
 import 'auth_view_model.dart';
 
 class LoginPage extends StatefulWidget {
@@ -62,9 +60,6 @@ class _LoginPageState extends State<LoginPage> {
 
     locationPermission = await Geolocator.checkPermission();
 
-    var phonePermissionIsDenied = await Permission.phone.isDenied;
-    var phonePermissionIsPermanentlyDenied =
-        await Permission.phone.isPermanentlyDenied;
     if (locationPermission == LocationPermission.denied) {
       // _determinePosition();
       showDialog(
@@ -151,9 +146,9 @@ class _LoginPageState extends State<LoginPage> {
     //       );
     //     },
     //   );
-    // }
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
+    // // }
+    // Position position = await Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.high);
     // await deviceInfoProvider.getLocation(position.latitude, position.longitude);
     return await Geolocator.getCurrentPosition();
   }

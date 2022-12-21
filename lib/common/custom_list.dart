@@ -30,7 +30,6 @@ class CustomList<T> extends StatelessWidget {
       physics: physics,
       scrollDirection: axis,
       shrinkWrap: true,
-
       separatorBuilder: (context, index) =>
           seprator ??
           SizedBox(

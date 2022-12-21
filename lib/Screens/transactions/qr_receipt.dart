@@ -1,11 +1,9 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/qr_status_model.dart';
-import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:screenshot/screenshot.dart';
-import '../../common/download_widget.dart';
 import '../../const/injection.dart';
 import '../../model/receipt_detal.dart';
 import '../../preferences/shared_preference.dart';
@@ -24,7 +22,7 @@ class _QRReceiptState extends State<QRReceipt> {
   final ScreenshotController screenshotController = ScreenshotController();
 
   final GlobalKey _key = GlobalKey();
-  String _copyType = "Merchant Copy";
+  final String _copyType = "Merchant Copy";
 
   @override
   Widget build(BuildContext context) {
@@ -39,12 +37,6 @@ class _QRReceiptState extends State<QRReceipt> {
             receiptTitle(context, _key),
             _body(context),
             SizedBox(height: screenHeight(context) * 0.02),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 30),
-            //   child: customButton(context, 'Download Merchant Copy', onTap: () {
-            //     _downLoadMerchantCopy();
-            //   }),
-            // )
           ],
         ),
       ),

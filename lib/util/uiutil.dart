@@ -131,7 +131,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
 }
 
 Widget countDownTimer(BuildContext context, int seconds, controller,
-    {Color color = Colors.white}) {
+    {Color color = Colors.white}) {   
   return Countdown(
     seconds: seconds,
     controller: controller,
@@ -349,7 +349,7 @@ Widget simpleTextField(
           if (val!.isEmpty) {
             return valMsg;
           } else {
-            return '';
+            return null;
           }
         }
       },

@@ -43,11 +43,13 @@ class _NavDrawerState extends State<NavDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      
       child: ListView(
         padding: EdgeInsets.zero,
         children: <Widget>[
           SizedBox(
             child: DrawerHeader(
+              
               decoration: BoxDecoration(
                 color: Colors.indigo.shade900,
               ),

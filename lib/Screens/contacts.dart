@@ -38,7 +38,7 @@ class Contacts extends StatelessWidget {
     );
   }
 
-  Widget customContainer(BuildContext context,
+  Widget customContainer(BuildContext context,  
       {bool isUrl = false, String url = '', String title = ""}) {
     return GestureDetector(
       onTap: () {

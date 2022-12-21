@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/model/sale_by_terminal_response.dart';

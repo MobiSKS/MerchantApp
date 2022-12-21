@@ -50,77 +50,75 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _body(BuildContext context) {
     return BaseView<AuthViewModel>(builder: (context, auth, child) {
-      return Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 40, right: 40),
-              child: Column(
-                children: [
-                  _chagePasswordForm(context),
-                  const SizedBox(height: 10),
-                  _otpSent
-                      ? _otpTextField(context, _otpController)
-                      : Container()
-                ],
-              ),
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 40, right: 40),
+            child: Column(
+              children: [
+                _chagePasswordForm(context),
+                const SizedBox(height: 15),
+                _otpSent ? _otpTextField(context, _otpController) : Container()
+              ],
             ),
-            SizedBox(height: screenHeight(context) * 0.07),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: customButton(context, AppStrings.submit, onTap: () {
-                _otpSent ? verifyOTP(auth) : generateOTP(auth);
-              }),
-            ),
-          ],
-        ),
+          ),
+          SizedBox(height: screenHeight(context) * 0.07),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: customButton(context, AppStrings.submit, onTap: () {
+              _otpSent ? verifyOTP(auth) : generateOTP(auth);
+            }),
+          ),
+        ],
       );
     });
   }
 
   Widget _chagePasswordForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: screenHeight(context) * 0.05),
-        simpleTextField(
-          context,
-          _oldPassword,
-          'Old Password',
-          valMsg: 'Old password cant be empty',
-        ),
-        SizedBox(height: screenHeight(context) * 0.03),
-        simpleTextField(context, _newPassword, AppStrings.newPassword,
-            valMsg: "New Password can't be empty"),
-        SizedBox(height: screenHeight(context) * 0.03),
-        simpleTextField(context, _confirmPassword, AppStrings.confirmPaasword,
-            valMsg: "Confirm passwor can't be empty"),
-      ],
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenHeight(context) * 0.05),
+          simpleTextField(
+            context,
+            _oldPassword,
+            'Old Password',
+            valMsg: 'Old password cant be empty',
+          ),
+          SizedBox(height: screenHeight(context) * 0.03),
+          simpleTextField(context, _newPassword, AppStrings.newPassword,
+              valMsg: "New Password can't be empty"),
+          SizedBox(height: screenHeight(context) * 0.03),
+          simpleTextField(context, _confirmPassword, AppStrings.confirmPaasword,
+              valMsg: "Confirm password can't be empty"),
+        ],
+      ),
     );
   }
 
   Widget _otpTextField(
     BuildContext context,
-    OtpFieldController controller, {
-    Color color = Colors.white,
-  }) {
+    OtpFieldController controller,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        semiBoldText('Enter OTP', color: Colors.white),
-        const SizedBox(height: 13),
+        semiBoldText('Enter OTP', color: Colors.grey.shade700),
+        const SizedBox(height: 5),
         OTPTextField(
           controller: controller,
           length: 6,
           width: screenWidth(context),
           fieldWidth: 50,
-          style: TextStyle(fontSize: 18, color: color),
+          style: TextStyle(fontSize: 18, color: Colors.grey.shade700),
           textFieldAlignment: MainAxisAlignment.spaceBetween,
           fieldStyle: FieldStyle.underline,
           keyboardType: TextInputType.number,
           otpFieldStyle: OtpFieldStyle(
-              enabledBorderColor: color, disabledBorderColor: color //(here)
+              enabledBorderColor: Colors.grey.shade700,
+              disabledBorderColor: Colors.grey.shade700 //(here)
               ),
           onCompleted: (pin) {
             setState(() {
@@ -138,28 +136,29 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   }
 
   Future<void> generateOTP(AuthViewModel authViewM) async {
-    if (_newPassword.text == _confirmPassword.text) {
-      await authViewM.changePasswordOTP(context,
-          confirmNewPass: _confirmPassword.text,
-          newPass: _newPassword.text,
-          oldPass: _oldPassword.text);
-
-      if (authViewM.changePasswordOTp != null &&
-          authViewM.changePasswordOTp!.internelStatusCode == 1000) {
-        showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
-        // alertPopUp(
-        //   context,
-        //   '${authViewM.changePasswordOTp!.data![0].reason}',
-        //  );
-        if (authViewM.changePasswordOTp!.data![0].oTP != null) {
-          setState(() {
-            _otpSent = true;
-          });
+    if (_validateAndSave()) {
+      if (_newPassword.text == _confirmPassword.text) {
+        await authViewM.changePasswordOTP(context,
+            confirmNewPass: _confirmPassword.text,
+            newPass: _newPassword.text,
+            oldPass: _oldPassword.text);
+        if (authViewM.changePasswordOTp != null &&
+            authViewM.changePasswordOTp!.internelStatusCode == 1000) {
+          showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
+          // alertPopUp(
+          //   context,
+          //   '${authViewM.changePasswordOTp!.data![0].reason}',
+          //  );
+          if (authViewM.changePasswordOTp!.data![0].oTP != null) {
+            setState(() {
+              _otpSent = true;
+            });
+          }
         }
-      }
-    } else {
+      }else {
       alertPopUp(context, 'New password and confirm password is different');
     }
+    } 
   }
 
   Future<void> verifyOTP(AuthViewModel authViewM) async {

@@ -3,10 +3,8 @@
 import 'package:dtplusmerchant/Screens/transactions/scan_qr.dart';
 import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
-import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../common/decimal_input_formatter.dart';
 import '../../const/app_strings.dart';
@@ -340,14 +338,13 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
             DecimalTextInputFormatter(decimalRange: 2),
             LengthLimitingTextInputFormatter(6),
             FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
-            FilteringTextInputFormatter.deny(
-              RegExp(r'^0+'),
-            ),
+            FilteringTextInputFormatter.deny(RegExp(r'^0+')),
             TextInputFormatter.withFunction((oldValue, newValue) {
               try {
                 final text = newValue.text;
                 if (text.isNotEmpty) double.parse(text);
                 return newValue;
+                // ignore: empty_catches
               } catch (e) {}
               return oldValue;
             }),

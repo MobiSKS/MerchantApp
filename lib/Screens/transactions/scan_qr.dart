@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, prefer_typing_uninitialized_variables
 
 import 'dart:async';
 import 'package:dtplusmerchant/Screens/transactions/qr_receipt.dart';
@@ -33,7 +33,6 @@ class ScanQRCode extends StatefulWidget {
 }
 
 class _ScanQRCodeState extends State<ScanQRCode> {
-  //int endTime = DateTime.now().millisecondsSinceEpoch + 1000 * 180;
   var timerController;
   Timer? timer;
 
