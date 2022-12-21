@@ -21,12 +21,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   final _oldPassword = TextEditingController();
   final _newPassword = TextEditingController();
   final _confirmPassword = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final OtpFieldController _otpController = OtpFieldController();
   String otp = "";
   bool _otpSent = false;
   bool _validateAndSave() {
-    final FormState? form = _formKey.currentState;
+    final FormState? form = _formKey1.currentState;
     if (form!.validate()) {
       return true;
     } else {
@@ -76,7 +76,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Widget _chagePasswordForm(BuildContext context) {
     return Form(
-      key: _formKey,
+      key: _formKey1,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
