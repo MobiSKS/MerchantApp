@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:dtplusmerchant/Screens/financials/settlement_screen.dart';
 import 'package:dtplusmerchant/Screens/home.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
@@ -14,7 +16,7 @@ class Dashboard extends StatefulWidget {
   State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> {
+class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
@@ -23,6 +25,24 @@ class _DashboardState extends State<Dashboard> {
     const Contacts(),
     Container(),
   ];
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    log('state = $state');
+  }
+
+  getBuildNumber() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    String version = packageInfo.version;
+    String code = packageInfo.buildNumber;
+    log(version);
+    log(code);
+  }
 
   @override
   Widget build(BuildContext context) {

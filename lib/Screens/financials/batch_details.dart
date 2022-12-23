@@ -14,7 +14,9 @@ class BatchDetails extends StatefulWidget {
 class _BatchDetailsState extends State<BatchDetails> {
   List<String> transactionList = ['1', '2', '3', '4'];
   DateTime selectedDate = DateTime.now();
-  final TextEditingController _terminalController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
+
+  final TextEditingController _merchantController = TextEditingController();
   final TextEditingController _batchIdController = TextEditingController();
   final TextEditingController _fromDateController = TextEditingController();
   final TextEditingController _toDateController = TextEditingController();
@@ -23,8 +25,8 @@ class _BatchDetailsState extends State<BatchDetails> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      resizeToAvoidBottomInset: true,
-      appBar:normalAppBar(context, title:'Batch Details'),
+      resizeToAvoidBottomInset: false,
+      appBar: normalAppBar(context, title: 'Earning Details'),
       body: _body(context),
     ));
   }
@@ -32,23 +34,14 @@ class _BatchDetailsState extends State<BatchDetails> {
   Widget _body(BuildContext context) { 
     return Column(
       children: [
-        _searchFilter(),
         Padding(
-          padding: const EdgeInsets.only(top: 20),
-          child: Container(
-            width: screenWidth(context),
-            height: screenHeight(context) * 0.06,
-            color: Colors.indigo.shade200,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 15),
-              child: boldText(AppStrings.searchResult,
-                  color: Colors.black, ),
-            ),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: searchWidget(context, _searchController,
+              hintText: 'Search Transaction',
+              onTap: showSearchFilter,
+              onChanged: () {}),
         ),
-        SizedBox(
-          height: screenHeight(context) * 0.03,
-        ),
+        SizedBox(height: screenHeight(context) * 0.03),
         Expanded(
             child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -58,26 +51,70 @@ class _BatchDetailsState extends State<BatchDetails> {
     );
   }
 
+  void showSearchFilter() {
+    showModalBottomSheet<void>(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        context: context,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+              builder: ((BuildContext context, StateSetter setState) {
+            return SizedBox(
+              // height: screenHeight(context) * 0.45,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 30, bottom: 20),
+                    child: semiBoldText('Search Filter',
+                        color: Colors.black, fontSize: 25),
+                  ),
+                  Divider(
+                    color: Colors.grey.shade900,
+                  ),
+                  const SizedBox(height: 20),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: _searchFilter()),
+                ],
+              ),
+            );
+          }));
+        });
+  }
+
   Widget _searchFilter() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: screenHeight(context) * 0.04),
-          simpleTextField(context, _fromDateController, AppStrings.fromDate,
-              showIcon: true, onTap: () {
-            Utils.selectDatePopup(context, selectedDate, _fromDateController);
-          }),
+          SizedBox(height: screenHeight(context) * 0.023),
+          semiBoldText(
+            'From Date',
+            color: Colors.grey.shade700,
+            fontSize: 18,
+          ),
+          GestureDetector(
+            onTap: () => Utils.selectDatePopup(
+                context, selectedDate, _fromDateController),
+            child: dateTextField(context, _fromDateController, 'From Date',
+                showLabel: false, showIcon: true, enabled: false),
+          ),
+          SizedBox(height: screenHeight(context) * 0.02),
+          semiBoldText('To Date', color: Colors.grey.shade700, fontSize: 18),
+          GestureDetector(
+            onTap: () =>
+                Utils.selectDatePopup(context, selectedDate, _toDateController),
+            child: dateTextField(context, _toDateController, 'To Date',
+                showIcon: true, enabled: false),
+          ),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _toDateController, AppStrings.toDate,
-              showIcon: true, onTap: () {
-            Utils.selectDatePopup(context, selectedDate, _toDateController);
-          }),
+          simpleTextField(context, _merchantController, "Merchnat Id"),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _terminalController, AppStrings.terminalID),
-          SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(context, _batchIdController, AppStrings.batchID),
-          SizedBox(height: screenHeight(context) * 0.04),
+          SizedBox(height: screenHeight(context) * 0.06),
           customButton(context, AppStrings.search, onTap: () {})
         ],
       ),
@@ -101,7 +138,8 @@ class _BatchDetailsState extends State<BatchDetails> {
           padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
           width: screenWidth(context),
           decoration: BoxDecoration(
-              color: Colors.blueGrey.shade100,
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: Column(
@@ -110,53 +148,95 @@ class _BatchDetailsState extends State<BatchDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  boldText(AppStrings.batchSummary,
-                      color: Colors.black,
-                      fontSize: 16,
-                   ),
+                  normalText(
+                    'Customer Name : Rajnish Kumar',
+                    color: Colors.black,
+                    fontSize: 15,
+                  ),
                   Row(
                     children: [
-                      normalText(AppStrings.viewDetail,
-                         ),
-                      const SizedBox(
-                        width: 5,
+                      normalText(
+                        'Transaction Type : Earning',
+                        fontSize: 15,
+                        color: Colors.black,
                       ),
-                      const Icon(Icons.arrow_forward_ios,
-                          size: 15, color: Colors.black)
                     ],
                   )
                 ],
               ),
               Divider(color: Colors.indigo.shade400),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      normalText(AppStrings.batchStatus,
-                          color: Colors.black,
-                          textAlign: TextAlign.start,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          normalText('Transaction Source',
+                              color: Colors.black,
+                              textAlign: TextAlign.start,
+                              fontSize: 17),
+                          const SizedBox(height: 2),
+                          semiBoldText(
+                            'Dealer Contribution-Vas',
+                            color: Colors.black,
+                            fontSize: 16,
                           ),
-                      boldText(AppStrings.status,
-                          color: Colors.black,
-                          fontSize: 16),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          normalText('Slab(Paisa per ltr)',
+                              color: Colors.black,
+                              textAlign: TextAlign.start,
+                              fontSize: 17),
+                          const SizedBox(height: 2),
+                          semiBoldText(
+                            '5.00',
+                            color: Colors.black,
+                            fontSize: 16,
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   SizedBox(height: screenHeight(context) * 0.01),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      normalText(AppStrings.numberOfTransaction,
-                          color: Colors.black,
-                          textAlign: TextAlign.start,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          normalText('Earning Amount',
+                              color: Colors.black,
+                              textAlign: TextAlign.start,
+                              fontSize: 17),
+                          semiBoldText(
+                            '0.05',
+                            color: Colors.black,
+                            fontSize: 16,
                           ),
-                      boldText('30',
-                          color: Colors.black,
-                          fontSize: 16,
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          normalText('Sale Amount          ',
+                              color: Colors.black,
+                              textAlign: TextAlign.start,
+                              fontSize: 17),
+                          semiBoldText(
+                            '100.00',
+                            color: Colors.black,
+                            fontSize: 16,
                           ),
+                        ],
+                      ),
                     ],
                   ),
                   SizedBox(height: screenHeight(context) * 0.01),
@@ -172,7 +252,7 @@ class _BatchDetailsState extends State<BatchDetails> {
 
   Widget _transactionID() {
     return Container(
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 7, bottom: 7),
       decoration: BoxDecoration(
           color: Colors.indigo.shade300,
           borderRadius: const BorderRadius.only(
@@ -181,10 +261,10 @@ class _BatchDetailsState extends State<BatchDetails> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          normalText('${AppStrings.batchID}: BIDI123456',
-              color: Colors.black,),
-          normalText('${AppStrings.terminalID}: TRMID123456',
-              color: Colors.black, ),
+          normalText('Customer ID: 4010000018',
+              color: Colors.white, fontSize: 13),
+          normalText('Transaction Date: 22/12/2022',
+              color: Colors.white, fontSize: 13),
         ],
       ),
     );

@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => TransactionsProvider()),
         ChangeNotifierProvider(create: (context) => FinancialsProvider()),
         ChangeNotifierProvider(create: (context) => LocationProvider()),
-      ],
+      ], 
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         builder: (context, child) => ResponsiveWrapper.builder(
