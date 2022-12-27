@@ -2,8 +2,10 @@
 
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
+import '../../common/decimal_input_formatter.dart';
 import '../../const/app_strings.dart';
 import '../../util/font_family_helper.dart';
 import '../../util/uiutil.dart';
@@ -101,6 +103,23 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
         controller: _amountController,
         validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
         keyboardType: TextInputType.number,
+          inputFormatters: [
+            DecimalTextInputFormatter(decimalRange: 2),
+            LengthLimitingTextInputFormatter(6),
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+            FilteringTextInputFormatter.deny(RegExp(r'^0+')),
+            TextInputFormatter.withFunction((oldValue, newValue) {
+              try {
+                final text = newValue.text;
+                if (text.isNotEmpty) double.parse(text);
+                return newValue;
+                // ignore: empty_catches0
+              } catch (e) {
+               alertPopUp(context, 'Some thing went wrong');
+              }
+              return oldValue;
+            }),
+          ],
         decoration: InputDecoration(
             labelText: 'Enter Amount',
             labelStyle: TextStyle(
@@ -124,8 +143,11 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
           _requestFocus(context, myFocusNode1);
         },
         focusNode: myFocusNode1,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(16)
+        ],
         controller: _giftVoucherController,
-        validator: (val) => val!.isEmpty ? 'Please enter Gift Voucher' : null,
+        validator: (val) => (val!.isEmpty || val.length !=16) ? 'Please enter valid Gift Voucher' : null,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
             labelText: 'Enter Gift Voucher',

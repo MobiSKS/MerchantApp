@@ -52,13 +52,13 @@ class _GiftVoucherReceiptState extends State<GiftVoucherReceipt> {
 
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
-   var retailCity = _sharedPref.user!.data!.objOutletDetails![0].retailOutletCity;
+   var outLetDetail = _sharedPref.user!.data!.objOutletDetails![0];
     List<ReceiptDetail> receptDetail1 = [
       ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: ''),
+      ReceiptDetail(title: AppStrings.rocNum, value: widget.giftVoucher.data![0].rocNo),
       ReceiptDetail(title:'VOUCHER NO', value: widget.voucherNo),
     ];
     List<ReceiptDetail> receptDetail2 = [
@@ -92,8 +92,8 @@ class _GiftVoucherReceiptState extends State<GiftVoucherReceipt> {
                   receiptHeader(context,
                       copyType: _copyType,
                       custDetail: custDetail,
-                      outletName: widget.giftVoucher.data![0].retailOutletName,
-                       roc: retailCity!,
+                      outletName: outLetDetail.retailOutletName,
+                       roc: outLetDetail.retailOutletCity!,
                       ),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.02),

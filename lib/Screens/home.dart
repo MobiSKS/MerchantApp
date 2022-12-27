@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:dtplusmerchant/Screens/financials/batch_details.dart';
 import 'package:dtplusmerchant/Screens/financials/card_balance_screen.dart';
 import 'package:dtplusmerchant/Screens/financials/credit_sale_outstanding.dart';
@@ -7,8 +9,10 @@ import 'package:dtplusmerchant/Screens/transactions/card_fee.dart';
 import 'package:dtplusmerchant/Screens/transactions/credit_sale_complete.dart';
 import 'package:dtplusmerchant/Screens/transactions/pay_merchant.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
+import 'package:dtplusmerchant/provider/transactions_provider.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../const/image_resources.dart';
 import '../const/injection.dart';
 import '../preferences/shared_preference.dart';
@@ -61,7 +65,9 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: _body(context),
+      child: SizedBox(
+        height:screenHeight(context)*0.799,
+        child: _body(context)),
     );
   }
 
@@ -83,6 +89,7 @@ class _HomeState extends State<Home> {
                 _transactiongridView(context),
                 SizedBox(height: screenHeight(context) * 0.005),
                 _banner(context),
+               
               ],
             ),
           ],
@@ -237,7 +244,6 @@ class _HomeState extends State<Home> {
     return GestureDetector(
       onTap: () {
         if (_transactionsOptions[index].optionName! == AppStrings.sale) {
-        
           Navigator.pushNamed(context, "/paymentAcceptance");
         } else if (_transactionsOptions[index].optionName! ==
             AppStrings.cardFee) {
@@ -276,7 +282,8 @@ class _HomeState extends State<Home> {
     );
   }
 
-  void _navigateToFinancialScreens(int index) {
+  void _navigateToFinancialScreens(int index) async {
+    var prov = Provider.of<TransactionsProvider>(context, listen: false);
     if (_financialOptions[index].optionName! == AppStrings.settlements) {
       Navigator.push(
         context,
@@ -289,6 +296,8 @@ class _HomeState extends State<Home> {
         MaterialPageRoute(builder: (context) => const BatchDetails()),
       );
     } else if (_financialOptions[index].optionName! == AppStrings.cardBalance) {
+      await prov.deleteCardEnquirydata();
+
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const CardBalanceScreen()),

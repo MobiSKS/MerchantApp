@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null, prefer_collection_literals
+
 class QRStatusModel {
   bool? success;
   int? statusCode;
@@ -5,7 +7,7 @@ class QRStatusModel {
   String? message;
   String? methodName;
   List<Data>? data;
-  Null? modelState;
+  Null modelState;
 
   QRStatusModel(
       {this.success,
@@ -25,23 +27,23 @@ class QRStatusModel {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -99,22 +101,22 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['QRRequestId'] = this.qRRequestId;
-    data['Amount'] = this.amount;
-    data['InvoiceDateTime'] = this.invoiceDateTime;
-    data['TerminalId'] = this.terminalId;
-    data['BatchNo'] = this.batchNo;
-    data['ROCNo'] = this.rOCNo;
-    data['MobileNo'] = this.mobileNo;
-    data['CardNo'] = this.cardNo;
-    data['Product'] = this.product;
-    data['RSP'] = this.rSP;
-    data['Volume'] = this.volume;
-    data['Balance'] = this.balance;
-    data['TxnId'] = this.txnId;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['QRRequestId'] = qRRequestId;
+    data['Amount'] = amount;
+    data['InvoiceDateTime'] = invoiceDateTime;
+    data['TerminalId'] = terminalId;
+    data['BatchNo'] = batchNo;
+    data['ROCNo'] = rOCNo;
+    data['MobileNo'] = mobileNo;
+    data['CardNo'] = cardNo;
+    data['Product'] = product;
+    data['RSP'] = rSP;
+    data['Volume'] = volume;
+    data['Balance'] = balance;
+    data['TxnId'] = txnId;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

@@ -26,7 +26,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
   final PageController pageController = PageController();
   int pageIndex = 0;
   final _fromDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
   double columnPadding = 20;
   final settlementdata1 = ValueNotifier<List<SettleTransactionDetails>>([]);
   List<SettleTransactionDetails> settlementdata = [];
@@ -127,7 +127,10 @@ class _SettlementScreenState extends State<SettlementScreen> {
                       ],
                     )
                   : financialpro.settlementModel != null
-                      ? Expanded(child: _settlementData(list:financialpro.settlementModel!.data!.settleMentDetails!))
+                      ? Expanded(
+                          child: _settlementData(
+                              list: financialpro
+                                  .settlementModel!.data!.settleMentDetails!))
                       : Column(
                           children: [
                             SizedBox(height: screenHeight(context) * 0.30),
@@ -153,7 +156,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
     }
   }
 
-  Widget _settlementData({List<SettleMentDetails> ?list}) {
+  Widget _settlementData({List<SettleMentDetails>? list}) {
     return ValueListenableBuilder(
         valueListenable: settlementdata1,
         builder: (_, value, __) => settlementdata1.value.isEmpty
@@ -164,16 +167,20 @@ class _SettlementScreenState extends State<SettlementScreen> {
                 ],
               )
             : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: screenHeight(context) * 0.01),
-                     semiBoldText('Total Amount: $rupeeSign ${list!.first.totalAmout}'),
-                    const SizedBox(height:5),
-                  semiBoldText('No. of settlements: ${list.first.noOfSettlement}'),
-                 SizedBox(height: screenHeight(context) * 0.03),
+                  semiBoldText(
+                      'Total Amount: $rupeeSign ${list!.first.totalAmout}'),
+                  const SizedBox(height: 5),
+                  semiBoldText(
+                      'No. of settlements: ${list.first.noOfSettlement}'),
+                  semiBoldText(
+                      'Settlement Date: ${_fromDateController.text.isEmpty ? Utils.convertDateFormatInDDMMYY(DateTime.now()) : _fromDateController.text}'),
+                  SizedBox(height: screenHeight(context) * 0.03),
                   Expanded(
                     child: CustomList(
-                        list: value,
+                        list: value.reversed.toList(),
                         itemSpace: 10,
                         child: (data, index) {
                           return Column(
@@ -188,7 +195,10 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                     //           )),
                                     // );
                                   },
-                                  child: _settlementList(context, data,)),
+                                  child: _settlementList(
+                                    context,
+                                    data,
+                                  )),
                               const SizedBox(height: 10),
                               Divider(
                                 color: Colors.grey.shade700,

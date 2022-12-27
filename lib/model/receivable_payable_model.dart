@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_typing_uninitialized_variables
+
 class ReceivablePayableModel {
   bool? success;
   int? statusCode;
@@ -25,7 +27,7 @@ class ReceivablePayableModel {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     if(json['Model_State'] != null) {
@@ -34,7 +36,7 @@ class ReceivablePayableModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Success'] = success;
     data['Status_Code'] = statusCode;
     data['Internel_Status_Code'] = internelStatusCode;
@@ -74,7 +76,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['SrNumber'] = srNumber;
     data['TerminalId'] = terminalId;
     data['BatchId'] = batchId;

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null
+
 class TransactionSummaryModel {
   bool? success;
   int? statusCode;
@@ -5,7 +7,7 @@ class TransactionSummaryModel {
   String? message;
   String? methodName;
   Data? data;
-  Null? modelState;
+  Null modelState;
 
   TransactionSummaryModel(
       {this.success,
@@ -22,21 +24,21 @@ class TransactionSummaryModel {
     internelStatusCode = json['Internel_Status_Code'];
     message = json['Message'];
     methodName = json['Method_Name'];
-    data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
+    data = json['Data'] != null ?  Data.fromJson(json['Data']) : null;
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.toJson();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -52,27 +54,27 @@ class Data {
       getTransactionsSaleSummary = <GetTransactionsSaleSummary>[];
       json['GetTransactionsSaleSummary'].forEach((v) {
         getTransactionsSaleSummary!
-            .add(new GetTransactionsSaleSummary.fromJson(v));
+            .add( GetTransactionsSaleSummary.fromJson(v));
       });
     }
     if (json['GetTransactionsDetailSummary'] != null) {
       getTransactionsDetailSummary = <GetTransactionsDetailSummary>[];
       json['GetTransactionsDetailSummary'].forEach((v) {
         getTransactionsDetailSummary!
-            .add(new GetTransactionsDetailSummary.fromJson(v));
+            .add( GetTransactionsDetailSummary.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.getTransactionsSaleSummary != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (getTransactionsSaleSummary != null) {
       data['GetTransactionsSaleSummary'] =
-          this.getTransactionsSaleSummary!.map((v) => v.toJson()).toList();
+          getTransactionsSaleSummary!.map((v) => v.toJson()).toList();
     }
-    if (this.getTransactionsDetailSummary != null) {
+    if (getTransactionsDetailSummary != null) {
       data['GetTransactionsDetailSummary'] =
-          this.getTransactionsDetailSummary!.map((v) => v.toJson()).toList();
+          getTransactionsDetailSummary!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -104,13 +106,13 @@ class GetTransactionsSaleSummary {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['AccountNumber'] = this.accountNumber;
-    data['CustomerName'] = this.customerName;
-    data['CustomerId'] = this.customerId;
-    data['Sale'] = this.sale;
-    data['ReloadCcmsCash'] = this.reloadCcmsCash;
-    data['CcmsRecharge'] = this.ccmsRecharge;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['AccountNumber'] = accountNumber;
+    data['CustomerName'] = customerName;
+    data['CustomerId'] = customerId;
+    data['Sale'] = sale;
+    data['ReloadCcmsCash'] = reloadCcmsCash;
+    data['CcmsRecharge'] = ccmsRecharge;
     return data;
   }
 }
@@ -180,26 +182,26 @@ class GetTransactionsDetailSummary {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['SrNumber'] = this.srNumber;
-    data['TerminalId'] = this.terminalId;
-    data['MerchantId'] = this.merchantId;
-    data['RetailOutletName'] = this.retailOutletName;
-    data['AccountNumber'] = this.accountNumber;
-    data['BatchIdandROC'] = this.batchIdandROC;
-    data['VechileNo'] = this.vechileNo;
-    data['TxnDate'] = this.txnDate;
-    data['TxnType'] = this.txnType;
-    data['ProductName'] = this.productName;
-    data['Price'] = this.price;
-    data['Volume'] = this.volume;
-    data['Currency'] = this.currency;
-    data['ServiceCharge'] = this.serviceCharge;
-    data['Amount'] = this.amount;
-    data['Discount'] = this.discount;
-    data['OdometerReading'] = this.odometerReading;
-    data['Status'] = this.status;
-    data['MobileNo'] = this.mobileNo;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['SrNumber'] = srNumber;
+    data['TerminalId'] = terminalId;
+    data['MerchantId'] = merchantId;
+    data['RetailOutletName'] = retailOutletName;
+    data['AccountNumber'] = accountNumber;
+    data['BatchIdandROC'] = batchIdandROC;
+    data['VechileNo'] = vechileNo;
+    data['TxnDate'] = txnDate;
+    data['TxnType'] = txnType;
+    data['ProductName'] = productName;
+    data['Price'] = price;
+    data['Volume'] = volume;
+    data['Currency'] = currency;
+    data['ServiceCharge'] = serviceCharge;
+    data['Amount'] = amount;
+    data['Discount'] = discount;
+    data['OdometerReading'] = odometerReading;
+    data['Status'] = status;
+    data['MobileNo'] = mobileNo;
     return data;
   }
 }

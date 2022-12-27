@@ -26,6 +26,7 @@ class CardBalanceScreen extends StatefulWidget {
 class _CardBalanceScreenState extends State<CardBalanceScreen> {
   bool _otpReceived = false;
   final _mobileController = TextEditingController();
+  bool _hideSearchField = false;
   final otpController = OtpFieldController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String? otp;
@@ -59,13 +60,13 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              SizedBox(height: screenHeight(context) * 0.03),
-              _enterMobileNo(context),
+             !_hideSearchField? SizedBox(height: screenHeight(context) * 0.03):Container(),
+            !_hideSearchField?  _enterMobileNo(context):Container(),
               _otpReceived ? enterOTP(context) : Container(),
-              SizedBox(height: screenHeight(context) * 0.06),
-              customButton(context, AppStrings.submit, onTap: () {
+        ! _hideSearchField?     SizedBox(height: screenHeight(context) * 0.06):Container(),
+             ! _hideSearchField?      customButton(context, AppStrings.submit, onTap: () {
                 submit();
-              }),
+              }):Container(),
             ]),
           ),
           _otpReceived
@@ -192,24 +193,30 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     Data data,
   ) {
     List<CommonList> cardBalanceEntity = [
-      CommonList(key: 'Date/Time', value: ''),
       CommonList(key: 'Card No.', value: data.cardNoOutput),
-       CommonList(key: 'Card Balance', value: '$rupeeSign ${data.cardBalance}'),
+      CommonList(key: 'Card Balance', value: '$rupeeSign ${data.cardBalance}0'),
       CommonList(
-          key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}'),
+          key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}0'),
       CommonList(
-          key: 'Monthly Spends', value: '$rupeeSign ${data.monthlySpent}'),
+          key: 'Monthly Spends', value: '$rupeeSign ${data.monthlySpent}0'),
       CommonList(
           key: 'Monthly Limit Balance',
-          value: '$rupeeSign ${data.monthlyLimitBal}'),
-      CommonList(key: 'Daily Limit', value: '$rupeeSign ${data.dailyLimit}'),
-      CommonList(key: 'CCMS Limit', value:data.cCMSLimit == 'Unlimited' || data.cCMSLimit=='-'?'${data.cCMSLimit}' :'$rupeeSign ${data.cCMSLimit}'),
+          value: '$rupeeSign ${data.monthlyLimitBal}0'),
+      CommonList(key: 'Daily Limit', value: '$rupeeSign ${data.dailyLimit}0'),
       CommonList(
-          key: 'CCMS Limit Balance', value:data.cCMSLimitBal == 'Unlimited' || data.cCMSLimitBal=='-'?'${data.cCMSLimitBal}' :'$rupeeSign ${data.cCMSLimitBal}'),
-      CommonList(key: 'Daily Spends', value: '$rupeeSign ${data.dailySpent}'),
+          key: 'CCMS Limit',
+          value: data.cCMSLimit == 'Unlimited' || data.cCMSLimit == '-'
+              ? '${data.cCMSLimit}'
+              : '$rupeeSign ${data.cCMSLimit}0'),
+      CommonList(
+          key: 'CCMS Limit Balance',
+          value: data.cCMSLimitBal == 'Unlimited' || data.cCMSLimitBal == '-'
+              ? '${data.cCMSLimitBal}'
+              : '$rupeeSign ${data.cCMSLimitBal}0'),
+      CommonList(key: 'Daily Spends', value: '$rupeeSign ${data.dailySpent}0'),
       CommonList(
           key: 'Daily Limit Balance',
-          value: '$rupeeSign ${data.dailyLimitBal}'),
+          value: '$rupeeSign ${data.dailyLimitBal}0'),
     ];
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
@@ -225,11 +232,11 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         semiBoldText(data.key!,
-                            color: Colors.black, fontSize: 18),
+                            color: Colors.black, fontSize: 16),
                         semiBoldText(
                           data.value!,
                           color: Colors.blueGrey,
-                          fontSize: 18,
+                          fontSize: 16,
                         )
                       ],
                     ),
@@ -271,6 +278,7 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
         showToast(transactionPro.cardEnquiryResponseModel!.message!, false);
         setState(() {
           _otpReceived = false;
+          _hideSearchField = true;
         });
       } else {}
     }

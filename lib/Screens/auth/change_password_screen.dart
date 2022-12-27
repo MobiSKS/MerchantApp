@@ -118,7 +118,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           keyboardType: TextInputType.number,
           otpFieldStyle: OtpFieldStyle(
               enabledBorderColor: Colors.grey.shade700,
-              disabledBorderColor: Colors.grey.shade700 //(here)
+              disabledBorderColor: Colors.grey.shade700 
               ),
           onCompleted: (pin) {
             setState(() {
@@ -137,7 +137,12 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
   Future<void> generateOTP(AuthViewModel authViewM) async {
     if (_validateAndSave()) {
-      if (_newPassword.text == _confirmPassword.text) {
+      if (_oldPassword.text == _newPassword.text) {
+        alertPopUp(context, "Old Password and new password can't be same");
+      } else if (_newPassword.text != _confirmPassword.text) {
+        alertPopUp(
+            context, "New password and confirm password should be same ");
+      } else if (_newPassword.text == _confirmPassword.text) {
         await authViewM.changePasswordOTP(context,
             confirmNewPass: _confirmPassword.text,
             newPass: _newPassword.text,
@@ -145,20 +150,17 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         if (authViewM.changePasswordOTp != null &&
             authViewM.changePasswordOTp!.internelStatusCode == 1000) {
           showToast('${authViewM.changePasswordOTp!.data![0].oTP}', false);
-          // alertPopUp(
-          //   context,
-          //   '${authViewM.changePasswordOTp!.data![0].reason}',
-          //  );
+
           if (authViewM.changePasswordOTp!.data![0].oTP != null) {
             setState(() {
               _otpSent = true;
             });
           }
         }
-      }else {
-      alertPopUp(context, 'New password and confirm password is different');
+      } else {
+        alertPopUp(context, 'New password and confirm password is different');
+      }
     }
-    } 
   }
 
   Future<void> verifyOTP(AuthViewModel authViewM) async {

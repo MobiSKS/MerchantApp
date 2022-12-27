@@ -291,6 +291,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
   }
 
   Widget _selectPaymentType(BuildContext context) {
+    // ignore: unused_local_variable
     var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
     return Container(
       decoration: BoxDecoration(
@@ -386,6 +387,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         timerController = CountdownTimerController(
             endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 31,
             onEnd: onEnd);
+            setState(() {
+              _resendOTP = false;
+            });
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
       }

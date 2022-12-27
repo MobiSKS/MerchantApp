@@ -1,15 +1,13 @@
-// ignore_for_file: prefer_void_to_null, prefer_collection_literals
-
-class ChangePasswordOTp {
+class TransactionSlip {
   bool? success;
   int? statusCode;
   int? internelStatusCode;
   String? message;
   String? methodName;
   List<Data>? data;
-  Null modelState;
+  Null? modelState;
 
-  ChangePasswordOTp(
+  TransactionSlip(
       {this.success,
       this.statusCode,
       this.internelStatusCode,
@@ -18,7 +16,7 @@ class ChangePasswordOTp {
       this.data,
       this.modelState});
 
-  ChangePasswordOTp.fromJson(Map<String, dynamic> json) {
+  TransactionSlip.fromJson(Map<String, dynamic> json) {
     success = json['Success'];
     statusCode = json['Status_Code'];
     internelStatusCode = json['Internel_Status_Code'];
@@ -27,14 +25,14 @@ class ChangePasswordOTp {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add( Data.fromJson(v));
+        data!.add(new Data.fromJson(v));
       });
     }
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  <String, dynamic>{};
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['Success'] = success;
     data['Status_Code'] = statusCode;
     data['Internel_Status_Code'] = internelStatusCode;
@@ -49,21 +47,48 @@ class ChangePasswordOTp {
 }
 
 class Data {
-  String? oTP;
+  String? merchantId;
+  String? terminalId;
+  String? cardNo;
+  double? amount;
+  String? referenceNo;
+  String? invoiceDate;
+  int? invoiceNo;
   int? status;
-  String? reason;
+  Null? reason;
 
-  Data({this.oTP, this.status, this.reason});
+  Data(
+      {this.merchantId,
+      this.terminalId,
+      this.cardNo,
+      this.amount,
+      this.referenceNo,
+      this.invoiceDate,
+      this.invoiceNo,
+      this.status,
+      this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
-    oTP = json['OTP'];
+    merchantId = json['MerchantId'];
+    terminalId = json['TerminalId'];
+    cardNo = json['CardNo'];
+    amount = json['Amount'];
+    referenceNo = json['ReferenceNo'];
+    invoiceDate = json['InvoiceDate'];
+    invoiceNo = json['InvoiceNo'];
     status = json['Status'];
     reason = json['Reason'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data =  Map<String, dynamic>();
-    data['OTP'] = oTP;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MerchantId'] = merchantId;
+    data['TerminalId'] = terminalId;
+    data['CardNo'] = cardNo;
+    data['Amount'] = amount;
+    data['ReferenceNo'] = referenceNo;
+    data['InvoiceDate'] = invoiceDate;
+    data['InvoiceNo'] = invoiceNo;
     data['Status'] = status;
     data['Reason'] = reason;
     return data;

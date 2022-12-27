@@ -184,7 +184,7 @@ class _ProfileState extends State<Profile> {
           normalText(
               index == 3
                   ? AppStrings.contactPersonDetail
-                  : AppStrings.otherDetails,
+                  : AppStrings.contactPersonDetail,
               textAlign: TextAlign.center,
               fontSize: 16.0)
         ],

@@ -1,7 +1,9 @@
 import 'package:dtplusmerchant/Screens/auth/auth_view_model.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_countdown_timer/countdown_timer_controller.dart';
 import 'package:flutter_countdown_timer/flutter_countdown_timer.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -131,7 +133,7 @@ Widget customButton(BuildContext context, String? text, {Function? onTap}) {
 }
 
 Widget countDownTimer(BuildContext context, int seconds, controller,
-    {Color color = Colors.white}) {   
+    {Color color = Colors.white}) {
   return Countdown(
     seconds: seconds,
     controller: controller,
@@ -163,9 +165,9 @@ Widget title(context, String text) {
   );
 }
 
-Widget header(BuildContext context) {
+Widget header(BuildContext context, {bool transheader = false}) {
   return Padding(
-    padding: const EdgeInsets.only(left: 15, right: 15, top: 15, bottom: 15),
+    padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,8 +176,12 @@ Widget header(BuildContext context) {
           children: [
             IconButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  if (transheader) {
+                    Navigator.pop(context);
+                  } else {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, '/dashboard', (Route<dynamic> route) => false);
+                  }
                 },
                 icon: const Icon(Icons.arrow_back_ios_new,
                     color: Colors.black, size: 28)),
@@ -352,7 +358,9 @@ Widget simpleTextField(
             return null;
           }
         }
+        return null;
       },
+      inputFormatters: [LengthLimitingTextInputFormatter(10)],
       controller: controller,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
@@ -505,7 +513,8 @@ Widget receiptHeader(BuildContext context,
       SizedBox(height: screenHeight(context) * 0.02),
       Image.asset(ImageResources.hpLogoReceipt, height: 80),
       SizedBox(height: screenHeight(context) * 0.010),
-      semiBoldText(copyType!, color: Colors.black, fontSize: 18.0),
+      semiBoldText(Utils.checkNullValue(copyType!),
+          color: Colors.black, fontSize: 18.0),
       SizedBox(height: screenHeight(context) * 0.003),
       semiBoldText(custDetail!.header1!, color: Colors.black, fontSize: 18.0),
       SizedBox(height: screenHeight(context) * 0.003),

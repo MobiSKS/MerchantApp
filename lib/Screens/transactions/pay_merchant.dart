@@ -2,6 +2,7 @@
 
 import 'package:dtplusmerchant/Screens/transactions/paycode_receipt.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../const/image_resources.dart';
@@ -184,9 +185,12 @@ class _PayMerchantState extends State<PayMerchant> {
           onTap: () {
             _requestFocus(myFocusNode);
           },
+          inputFormatters: [
+            LengthLimitingTextInputFormatter(6)
+          ],
           focusNode: myFocusNode,
           controller: _payCodeController,
-          validator: (val) => val!.isEmpty ? 'Please enter Paycode' : null,
+          validator: (val) => (val!.isEmpty ||val.length !=6) ? 'Please enter valid Paycode' : null,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
               labelText: 'Enter Pay Code',

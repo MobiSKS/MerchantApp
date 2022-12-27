@@ -2,9 +2,10 @@
 import 'package:dtplusmerchant/Screens/financials/transaction_summary_detail.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
-import 'package:dtplusmerchant/model/transaction_detail_model.dart';
+import 'package:dtplusmerchant/model/transaction_slip.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../provider/financials_provider.dart';
@@ -52,15 +53,14 @@ class _TransactionDetailsState extends State<TransactionDetails> {
               onChanged: onChanged),
           const SizedBox(height: 15),
           Expanded(
-            child: BaseView<FinancialsProvider>(
-              onModelReady: (model) async {
+            child: BaseView<FinancialsProvider>(onModelReady: (model) async {
               await model.getTransactionType(context);
-              await model.getTransactionDetail(context);
+              await model.getTransactionSlip(context);
             }, builder: (context, financeViewM, child) {
-              transDdata = financeViewM.isLoading ||
-                      financeViewM.transactionDetailModel == null
-                  ? []
-                  : financeViewM.transactionDetailModel!.data!;
+              transDdata =
+                  financeViewM.isLoading || financeViewM.transactionSlip == null
+                      ? []
+                      : financeViewM.transactionSlip!.data!;
               transDdata1.value = transDdata;
               return financeViewM.isLoading
                   ? Column(
@@ -69,7 +69,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                         const CircularProgressIndicator(),
                       ],
                     )
-                  : financeViewM.transactionDetailModel != null
+                  : financeViewM.transactionSlip != null
                       ? SingleChildScrollView(child: _transactionDetail())
                       : Column(
                           children: [
@@ -87,7 +87,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   void onChanged() {
     if (_tDSearchController.text.isNotEmpty) {
       transDdata1.value = transDdata
-          .where((e) => e.nameOnCard!
+          .where((e) => e.cardNo!
               .toUpperCase()
               .contains(_tDSearchController.text.toUpperCase()))
           .toList();
@@ -131,11 +131,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Widget _listItem(BuildContext context, Data data) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => TransactionSummarydetail(data: data)),
-        );
+        showTransactionDetail(data);
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,19 +141,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              // CircleAvatar(
-              //   backgroundColor: Utils.getRamdomColor(),
-              //   child: Center(
-              //       child: semiBoldText(Utils.getNameInitials(data.nameOnCard),
-              //           color: Colors.white, fontSize: 20)),
-              // ),
               SizedBox(width: screenWidth(context) * 0.03),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                 semiBoldText('Card no: ${data.cardNo!}',
+                semiBoldText('Card no: ${data.cardNo!}',
                     color: Colors.black, fontSize: 18.0),
-                // semiBoldText(data.nameOnCard!,
-                //     color: Colors.grey.shade800, fontSize: 18.0),
-                 const SizedBox(height: 5),
+                const SizedBox(height: 5),
                 semiBoldText('TID : ${data.terminalId!}',
                     color: Colors.grey.shade500, fontSize: 18.0),
                 const SizedBox(height: 5),
@@ -166,7 +154,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     Row(
                       children: [
                         semiBoldText(
-                          data.transactionDate!,
+                          data.invoiceDate!,
                           fontSize: 18.0,
                           color: Colors.grey.shade500,
                         ),
@@ -174,14 +162,13 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     ),
                   ],
                 ),
-                  
               ]),
             ],
           ),
           Row(
             children: [
               semiBoldText(
-                '₹ ${data.amount!}',
+                '₹ ${data.amount!}0',
                 color: Colors.grey.shade800,
               ),
               const SizedBox(width: 8)
@@ -190,6 +177,22 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         ],
       ),
     );
+  }
+
+  Future<void> showTransactionDetail(Data data) async {
+    var prov = Provider.of<FinancialsProvider>(context, listen: false);
+
+    await prov.getTransactionDetail(context, txnId: data.referenceNo,terminalId: data.terminalId);
+    if (prov.transactionDetailModel != null &&
+        prov.transactionDetailModel!.internelStatusCode == 1000) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => TransactionSummarydetail(
+                  transDetail: prov.transactionDetailModel!,
+                )),
+      );
+    }
   }
 
   void showSearchFilter() {
@@ -269,44 +272,39 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   }
 
   Future<void> getTransFilterData() async {
+    DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+
     FinancialsProvider fPro =
         Provider.of<FinancialsProvider>(context, listen: false);
     if (_fromDateController.text.isNotEmpty &&
         _toDateController.text.isNotEmpty) {
-      showLoader(context);
-      await fPro.getTransactionDetail(context,
-          fromDate: Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
-          toDate:  Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
-          transType: _selectedType,
-          terminalId: _terminalIdController.text);
-      dismissLoader(context);
-
-      if (fPro.transactionDetailModel != null &&
-          fPro.transactionDetailModel!.internelStatusCode == 1000) {
-        _tDSearchController.clear();
-        Navigator.pop(context);
+      if (dateFormat
+              .parse(_fromDateController.text)
+              .compareTo(dateFormat.parse(_toDateController.text)) >
+          0) {
+        alertPopUp(context, 'Please enter To Date greater than From date');
       } else {
-        Navigator.pop(context);
+        showLoader(context);
+        await fPro.getTransactionSlip(context,
+            fromDate: Utils.convertDateFormatInYYMMDD(
+                dateS: _fromDateController.text),
+            toDate:
+                Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
+            transType: _selectedType,
+            terminalId: _terminalIdController.text);
+        dismissLoader(context);
+
+        if (fPro.transactionDetailModel != null &&
+            fPro.transactionDetailModel!.internelStatusCode == 1000) {
+          _tDSearchController.clear();
+          Navigator.pop(context);
+        } else {
+          Navigator.pop(context);
+        }
       }
     } else {
       transDdata1.value = [];
       alertPopUp(context, 'Please enter from and to date');
-    }
-  }
-
-  Future<void> getTransactionDetail(FinancialsProvider financialPro) async {
-    if ((_fromDateController.text.isNotEmpty &&
-            _toDateController.text.isNotEmpty) &&
-        _selectedType.isNotEmpty) {
-      await financialPro.getTransactionDetail(context,
-          fromDate: _fromDateController.text,
-          toDate: _toDateController.text,
-          terminalId: _terminalIdController.text,
-          transType: _selectedType);
-
-      if (financialPro.transactionDetailModel!.internelStatusCode == 1000) {}
-    } else {
-      alertPopUp(context, 'Please fill all required details');
     }
   }
 

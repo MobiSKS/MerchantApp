@@ -51,13 +51,14 @@ class _PayCodeReceiptState extends State<PayCodeReceipt> {
 
   Widget _body(BuildContext context) {
     var custDetail = _sharedPref.user!.data!.objGetMerchantDetail![0];
+    var outLetDetail = _sharedPref.user!.data!.objOutletDetails![0];
     List<ReceiptDetail> receptDetail1 = [
       ReceiptDetail(title: AppStrings.dateTime, value: Utils.dateTimeFormat()),
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
       ReceiptDetail(title: AppStrings.rocNum, value: widget.payCodeResp.data!.first.rocNo),
-      ReceiptDetail(title: AppStrings.mobileNo, value: custDetail.mobileNo),
+      ReceiptDetail(title: 'CARD NO.', value:widget.payCodeResp.data!.first.cardNoOutput),
     ];
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(
@@ -90,7 +91,7 @@ class _PayCodeReceiptState extends State<PayCodeReceipt> {
                   receiptHeader(context,
                       copyType: _copyType,
                       custDetail: custDetail,
-                      outletName: widget.payCodeResp.data![0].retailOutletName),
+                      outletName: outLetDetail.retailOutletName!),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.02),
                   boldText('PAYCODE',

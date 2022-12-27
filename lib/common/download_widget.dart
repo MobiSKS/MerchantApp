@@ -12,7 +12,7 @@ import 'package:path_provider/path_provider.dart';
                   
 Future<void> captureAndSharePng(BuildContext context, GlobalKey key,
     {bool pop = true,
-    String message = "Receipt Downloaded Successfully"}) async {
+    String message = "Receipt Successfully saved in Gallery"}) async {
   await downloadScreenshot(key);
 
   if (pop) {

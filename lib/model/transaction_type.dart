@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_collection_literals, prefer_void_to_null
+
 class TransactionType {
   bool? success;
   int? statusCode;
@@ -5,7 +7,7 @@ class TransactionType {
   String? message;
   String? methodName;
   List<Data>? data;
-  Null? modelState;
+  Null modelState;
 
   TransactionType(
       {this.success,
@@ -25,23 +27,23 @@ class TransactionType {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -58,9 +60,9 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['TransactionID'] = this.transactionID;
-    data['TransactionType'] = this.transactionType;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['TransactionID'] = transactionID;
+    data['TransactionType'] = transactionType;
     return data;
   }
 }

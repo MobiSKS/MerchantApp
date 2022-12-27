@@ -1,4 +1,5 @@
-import 'package:dtplusmerchant/const/app_strings.dart';
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:flutter/material.dart';
 

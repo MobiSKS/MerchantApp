@@ -1,3 +1,4 @@
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../../const/app_strings.dart';
@@ -32,7 +33,7 @@ class RetailOutletAddress extends StatelessWidget {
           value: data.objOutletDetails![0].retailOutletAddress2 ?? ""),
       MerchantDetail(
           key: 'Address 3',
-          value: data.objOutletDetails![0].retailOutletAddress3 ?? ''),
+          value: Utils.checkNullValue(data.objOutletDetails![0].retailOutletAddress3)),
       MerchantDetail(
           key: 'City', value: data.objOutletDetails![0].retailOutletCity),
       MerchantDetail(key: 'District', value: data.objOutletDetails!.first.districtNAme),

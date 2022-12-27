@@ -40,7 +40,7 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
         child: Column(
           children: [
             header(context),
-            SizedBox(height: screenHeight(context) * 0.02),
+            SizedBox(height: screenHeight(context) * 0.01),
             receiptTitle(context, _key),
             SizedBox(height: screenHeight(context) * 0.02),
             _body(context),
@@ -64,9 +64,11 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
       ReceiptDetail(
           title: AppStrings.terminalID, value: custDetail.terminalId!),
       ReceiptDetail(title: AppStrings.batchNum, value: custDetail.batchNo),
-      ReceiptDetail(title: AppStrings.rocNum, value: widget.creditCompResp.data![0].rOCNo),
       ReceiptDetail(
-          title: 'CTRL CARD NO.',
+          title: AppStrings.rocNum,
+          value: widget.creditCompResp.data![0].rOCNo),
+      ReceiptDetail(
+          title: 'CARD NO.',
           value: widget.creditCompResp.data![0].cardNoOutput),
     ];
     List<ReceiptDetail> receptDetail2 = [
@@ -94,11 +96,12 @@ class _CreditCompleteReceiptState extends State<CreditCompleteReceipt> {
                   receiptHeader(context,
                       copyType: _copyType.value,
                       custDetail: custDetail,
-                      outletName:
-                          widget.creditCompResp.data![0].retailOutletName),
+                      outletName: _sharedPref
+                          .user!.data!.objOutletDetails![0].retailOutletCity!),
                   receiptDetail(context, receptDetail1),
                   SizedBox(height: screenHeight(context) * 0.020),
-                  boldText('SALE', color: Colors.black, fontSize: 20.0),
+                  semiBoldText('CREDIT SALE COMPLETE',
+                      color: Colors.black, fontSize: 20.0),
                   SizedBox(height: screenHeight(context) * 0.02),
                   receiptDetail(context, receptDetail2),
                   receiptFooter(context, custDetail: custDetail),

@@ -5,10 +5,12 @@ import 'package:dtplusmerchant/Screens/transactions/credit_complete_receipt.dart
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/otp_field_style.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
+import '../../common/decimal_input_formatter.dart';
 import '../../const/app_strings.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/uiutil.dart';
@@ -80,8 +82,8 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: screenHeight(context) * 0.07),
-        boldText(
+        SizedBox(height: screenHeight(context) * 0.03),
+        semiBoldText(
           AppStrings.enterOTP,
           color: Colors.grey.shade600,
         ),
@@ -98,7 +100,7 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
   }) {
     return OTPTextField(
       controller: controller,
-      length: 6,
+      length: 4,
       width: screenWidth(context),
       fieldWidth: 50,
       style: TextStyle(fontSize: 18, color: color),
@@ -149,27 +151,31 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
     var transactionPro =
         Provider.of<TransactionsProvider>(context, listen: false);
     if (_validate()) {
-      await transactionPro.saleByTerminal(
-        context,
-        otp: otp,
-        cardNum: _cardNumberController.text,
-        formFactor: 4,
-        transType: 522,
-        invoiceAmount: double.parse(_amountController.text),
-      );
-      if (transactionPro.saleByTeminalResponse!.internelStatusCode == 1000) {
-        showToast('Payment Successfull', false);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CreditCompleteReceipt(
-                    creditCompResp: transactionPro.saleByTeminalResponse!,
-                  )),
-        );
+      if (otp!.length != 4) {
+        alertPopUp(context, 'Invalid Otp');
       } else {
-        setState(() {
-          otpReceived = false;
-        });
+        await transactionPro.saleByTerminal(
+          context,
+          otp: otp,
+          cardNum: _cardNumberController.text,
+          formFactor: 4,
+          transType: 522,
+          invoiceAmount: double.parse(_amountController.text),
+        );
+        if (transactionPro.saleByTeminalResponse!.internelStatusCode == 1000) {
+          showToast('Payment Successfull', false);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => CreditCompleteReceipt(
+                      creditCompResp: transactionPro.saleByTeminalResponse!,
+                    )),
+          );
+        } else {
+          setState(() {
+            otpReceived = false;
+          });
+        }
       }
     }
   }
@@ -180,8 +186,8 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
     });
   }
 
-  FocusNode myFocusNode1 =  FocusNode();
-  FocusNode myFocusNode2 =  FocusNode();
+  FocusNode myFocusNode1 = FocusNode();
+  FocusNode myFocusNode2 = FocusNode();
   Widget _enterCardNumber(BuildContext context) {
     return SizedBox(
       width: screenWidth(context),
@@ -191,12 +197,15 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
         },
         focusNode: myFocusNode1,
         controller: _cardNumberController,
-        validator: (val) => val!.isEmpty ? 'Please enter card number' : null,
+        validator: (val) => (val!.isEmpty || val.length < 10)
+            ? 'Please enter valid control card number'
+            : null,
+        inputFormatters: [LengthLimitingTextInputFormatter(10)],
         keyboardType: TextInputType.number,
         style: const TextStyle(
             fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
         decoration: InputDecoration(
-            labelText: 'Enter Card Number',
+            labelText: 'Enter Control Card Number',
             labelStyle: TextStyle(
                 fontFamily: FontFamilyHelper.sourceSansSemiBold,
                 fontSize: myFocusNode1.hasFocus ||
@@ -223,6 +232,21 @@ class _CreditSaleComplete extends State<CreditSaleComplete> {
             fontFamily: FontFamilyHelper.sourceSansRegular, fontSize: 18),
         validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
         keyboardType: TextInputType.number,
+        inputFormatters: [
+          DecimalTextInputFormatter(decimalRange: 2),
+          LengthLimitingTextInputFormatter(6),
+          FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+          FilteringTextInputFormatter.deny(RegExp(r'^0+')),
+          TextInputFormatter.withFunction((oldValue, newValue) {
+            try {
+              final text = newValue.text;
+              if (text.isNotEmpty) double.parse(text);
+              return newValue;
+              // ignore: empty_catches
+            } catch (e) {}
+            return oldValue;
+          }),
+        ],
         decoration: InputDecoration(
             labelText: 'Enter Amount',
             labelStyle: TextStyle(

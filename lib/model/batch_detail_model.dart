@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null
+
 class BatchDetailModel {
   bool? success;
   int? statusCode;
@@ -5,7 +7,7 @@ class BatchDetailModel {
   String? message;
   String? methodName;
   List<Data>? data;
-  Null? modelState;
+  Null  modelState;
 
   BatchDetailModel(
       {this.success,
@@ -25,7 +27,7 @@ class BatchDetailModel {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     modelState = json['Model_State'];
@@ -33,15 +35,15 @@ class BatchDetailModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -90,19 +92,19 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['InvoiceNo'] = this.invoiceNo;
-    data['CardNo'] = this.cardNo;
-    data['TransactionDate'] = this.transactionDate;
-    data['TransactionType'] = this.transactionType;
-    data['InvoiceAmount'] = this.invoiceAmount;
-    data['ProductName'] = this.productName;
-    data['FuelPrice'] = this.fuelPrice;
-    data['ServiceCharge'] = this.serviceCharge;
-    data['CcmsCashBalance'] = this.ccmsCashBalance;
-    data['VoidedRoc'] = this.voidedRoc;
-    data['VoidedByRoc'] = this.voidedByRoc;
-    data['Volume'] = this.volume;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['InvoiceNo'] = invoiceNo;
+    data['CardNo'] = cardNo;
+    data['TransactionDate'] = transactionDate;
+    data['TransactionType'] = transactionType;
+    data['InvoiceAmount'] = invoiceAmount;
+    data['ProductName'] = productName;
+    data['FuelPrice'] = fuelPrice;
+    data['ServiceCharge'] = serviceCharge;
+    data['CcmsCashBalance'] = ccmsCashBalance;
+    data['VoidedRoc'] = voidedRoc;
+    data['VoidedByRoc'] = voidedByRoc;
+    data['Volume'] = volume;
     return data;
   }
 }

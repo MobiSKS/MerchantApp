@@ -91,7 +91,7 @@ class AppStrings {
   static const String volume = "VOLUME";
   static const String balance = "BALANCE";
   static const String txnID = "TXN ID";
-  static const String dateTime = "DATE/TIME";
+  static const String dateTime = "DATE";
   static const String customerCopy = "CUSTOMER COPY";
   static const String product = "PRODUCT";
   static const String summary = "Summary";

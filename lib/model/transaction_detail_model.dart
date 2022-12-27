@@ -25,120 +25,156 @@ class TransactionDetailModel {
     if (json['Data'] != null) {
       data = <Data>[];
       json['Data'].forEach((v) {
-        data!.add(new Data.fromJson(v));
+        data!.add(Data.fromJson(v));
       });
     }
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
 
 class Data {
-  int? batchId;
-  int? invoiceNo;
-  String? toDate;
-  String? retailOutletName;
+  int? srNumber;
+  String? rOCNo;
+  String? transTypeId;
   String? terminalId;
+  String? merchantId;
   String? cardNo;
-  String? nameOnCard;
-  String? transactionDate;
-  String? transactionType;
-  String? product;
-  String? price;
+  String? retailOutletName;
+  String? txnDate;
+  String? productName;
+  String? rSP;
   String? volume;
-  String? currency;
-  double? amount;
-  String? serviceCharge;
-  String? driveStars;
-  String? voidedByRoc;
-  String? voidedRoc;
-  String? fSMName;
+  String? nameOnCard;
+  double? invoiceAmount;
+  String? discount;
   String? mobileNo;
-  String? status;
+  String? txnID;
+  String? batchId;
+  String? retailOutletCity;
+  String? retailOutletLocation;
+  String? retailOutletAddress;
+  Null? retailOutletDistrict;
+  String? retailOutletState;
+  double? financeChargesValue;
+  String? odometerReading;
+  int? recordTypeId;
+  String? recordTypeName;
+  int? noOfCards;
+  String? transTypeName;
+  int? status;
+  String? reason;
 
   Data(
-      {this.batchId,
-      this.invoiceNo,
-      this.toDate,
-      this.retailOutletName,
+      {this.srNumber,
+      this.rOCNo,
+      this.transTypeId,
       this.terminalId,
+      this.merchantId,
       this.cardNo,
-      this.nameOnCard,
-      this.transactionDate,
-      this.transactionType,
-      this.product,
-      this.price,
+      this.retailOutletName,
+      this.txnDate,
+      this.productName,
+      this.rSP,
       this.volume,
-      this.currency,
-      this.amount,
-      this.serviceCharge,
-      this.driveStars,
-      this.voidedByRoc,
-      this.voidedRoc,
-      this.fSMName,
+      this.nameOnCard,
+      this.invoiceAmount,
+      this.discount,
       this.mobileNo,
-      this.status});
+      this.txnID,
+      this.batchId,
+      this.retailOutletCity,
+      this.retailOutletLocation,
+      this.retailOutletAddress,
+      this.retailOutletDistrict,
+      this.retailOutletState,
+      this.financeChargesValue,
+      this.odometerReading,
+      this.recordTypeId,
+      this.recordTypeName,
+      this.noOfCards,
+      this.transTypeName,
+      this.status,
+      this.reason});
 
   Data.fromJson(Map<String, dynamic> json) {
-    batchId = json['BatchId'];
-    invoiceNo = json['InvoiceNo'];
-    toDate = json['ToDate'];
-    retailOutletName = json['RetailOutletName'];
+    srNumber = json['SrNumber'];
+    rOCNo = json['ROCNo'];
+    transTypeId = json['TransTypeId'];
     terminalId = json['TerminalId'];
+    merchantId = json['MerchantId'];
     cardNo = json['CardNo'];
-    nameOnCard = json['NameOnCard'];
-    transactionDate = json['TransactionDate'];
-    transactionType = json['TransactionType'];
-    product = json['Product'];
-    price = json['Price'];
+    retailOutletName = json['RetailOutletName'];
+    txnDate = json['TxnDate'];
+    productName = json['ProductName'];
+    rSP = json['RSP'];
     volume = json['Volume'];
-    currency = json['Currency'];
-    amount = json['Amount'];
-    serviceCharge = json['ServiceCharge'];
-    driveStars = json['DriveStars'];
-    voidedByRoc = json['VoidedByRoc'];
-    voidedRoc = json['VoidedRoc'];
-    fSMName = json['FSMName'];
+    nameOnCard = json['NameOnCard'];
+    invoiceAmount = json['InvoiceAmount'];
+    discount = json['Discount'];
     mobileNo = json['MobileNo'];
+    txnID = json['TxnID'];
+    batchId = json['BatchId'];
+    retailOutletCity = json['RetailOutletCity'];
+    retailOutletLocation = json['RetailOutletLocation'];
+    retailOutletAddress = json['RetailOutletAddress'];
+    retailOutletDistrict = json['RetailOutletDistrict'];
+    retailOutletState = json['RetailOutletState'];
+    financeChargesValue = json['FinanceChargesValue'];
+    odometerReading = json['OdometerReading'];
+    recordTypeId = json['RecordTypeId'];
+    recordTypeName = json['RecordTypeName'];
+    noOfCards = json['NoOfCards'];
+    transTypeName = json['TransTypeName'];
     status = json['Status'];
+    reason = json['Reason'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['BatchId'] = this.batchId;
-    data['InvoiceNo'] = this.invoiceNo;
-    data['ToDate'] = this.toDate;
-    data['RetailOutletName'] = this.retailOutletName;
-    data['TerminalId'] = this.terminalId;
-    data['CardNo'] = this.cardNo;
-    data['NameOnCard'] = this.nameOnCard;
-    data['TransactionDate'] = this.transactionDate;
-    data['TransactionType'] = this.transactionType;
-    data['Product'] = this.product;
-    data['Price'] = this.price;
-    data['Volume'] = this.volume;
-    data['Currency'] = this.currency;
-    data['Amount'] = this.amount;
-    data['ServiceCharge'] = this.serviceCharge;
-    data['DriveStars'] = this.driveStars;
-    data['VoidedByRoc'] = this.voidedByRoc;
-    data['VoidedRoc'] = this.voidedRoc;
-    data['FSMName'] = this.fSMName;
-    data['MobileNo'] = this.mobileNo;
-    data['Status'] = this.status;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['SrNumber'] = srNumber;
+    data['ROCNo'] = rOCNo;
+    data['TransTypeId'] = transTypeId;
+    data['TerminalId'] = terminalId;
+    data['MerchantId'] = merchantId;
+    data['CardNo'] = cardNo;
+    data['RetailOutletName'] = retailOutletName;
+    data['TxnDate'] = txnDate;
+    data['ProductName'] = productName;
+    data['RSP'] = rSP;
+    data['Volume'] = volume;
+    data['NameOnCard'] = nameOnCard;
+    data['InvoiceAmount'] = invoiceAmount;
+    data['Discount'] = discount;
+    data['MobileNo'] = mobileNo;
+    data['TxnID'] = txnID;
+    data['BatchId'] = batchId;
+    data['RetailOutletCity'] = retailOutletCity;
+    data['RetailOutletLocation'] = retailOutletLocation;
+    data['RetailOutletAddress'] = retailOutletAddress;
+    data['RetailOutletDistrict'] = retailOutletDistrict;
+    data['RetailOutletState'] = retailOutletState;
+    data['FinanceChargesValue'] = financeChargesValue;
+    data['OdometerReading'] = odometerReading;
+    data['RecordTypeId'] = recordTypeId;
+    data['RecordTypeName'] = recordTypeName;
+    data['NoOfCards'] = noOfCards;
+    data['TransTypeName'] = transTypeName;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

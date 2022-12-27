@@ -27,7 +27,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   final TextEditingController _paymentSearchController =
       TextEditingController();
   final TextEditingController _fromDateController = TextEditingController(
-      text: Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()));
+      text: Utils.convertDateFormatInDDMMYY( DateTime.now()));
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -111,10 +111,13 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   const SizedBox(height: 5),
                   semiBoldText(
                       'No. of Payments: ${paymentDetail.first.noOfPayments}'),
+                            const SizedBox(height: 5),
+                  semiBoldText(
+                      'Date: ${_fromDateController.text.isEmpty?  Utils.convertDateFormatInDDMMYY(DateTime.now()):_fromDateController.text}'),
                   SizedBox(height: screenHeight(context) * 0.03),
                   Expanded(
                     child: CustomList(
-                        list: value,
+                        list: value.reversed.toList(),
                         itemSpace: 5,
                         child: (TransactionDetails data, index) {
                           return Column(

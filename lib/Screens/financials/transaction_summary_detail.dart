@@ -10,10 +10,10 @@ import '../../model/receipt_detal.dart';
 import '../../preferences/shared_preference.dart';
 
 class TransactionSummarydetail extends StatefulWidget {
-  final Data data;
+  final TransactionDetailModel transDetail;
   const TransactionSummarydetail({
     super.key,
-    required this.data,
+    required this.transDetail,
   });
 
   @override
@@ -33,7 +33,7 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            header(context),
+            header(context,transheader: true),
             SizedBox(height: screenHeight(context) * 0.02),
             receiptTitle(context, _key),
             _body(context),
@@ -46,23 +46,25 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
 
   Widget _body(BuildContext context) {
     var merchant = _sharedPref.user!.data!.objGetMerchantDetail!.first;
-
+  var detail = widget.transDetail.data![0];
     List<ReceiptDetail> transDetail = [
-      ReceiptDetail(title: 'Date', value:Utils.checkNullValue(widget.data.transactionDate) ),
-      ReceiptDetail(title: 'Batch No.', value:  Utils.checkNullValue( widget.data.batchId.toString())),
-      ReceiptDetail(title: 'ROC No.', value: ''),
-      ReceiptDetail(title: 'Mobile No.', value: Utils.checkNullValue(widget.data.mobileNo)),
-      ReceiptDetail(title: 'Card No.', value: widget.data.cardNo),
+      ReceiptDetail(title: 'Date', value:Utils.checkNullValue(detail.txnDate) ),
+      ReceiptDetail(title: 'Batch No.', value:  Utils.checkNullValue( detail.batchId.toString())),
+      ReceiptDetail(title: 'ROC No.', value: Utils.checkNullValue(detail.rOCNo)),
+      ReceiptDetail(title: 'Mobile No.', value: Utils.checkNullValue(detail.mobileNo)),
+      ReceiptDetail(title: 'Card No.', value: detail.cardNo),
       ReceiptDetail(
-          title: 'Transaction Type', value: Utils.checkNullValue(widget.data.transactionType)),
-      ReceiptDetail(title: 'Product', value: '${widget.data.product}'),
-      ReceiptDetail(title: 'Amount', value: '$rupeeSign ${widget.data.amount}'),
-      ReceiptDetail(title: 'RSP', value: ''),
-      ReceiptDetail(title: 'Volume', value: '${widget.data.volume}'),
-      ReceiptDetail(title: 'Balance', value: ''),
-      ReceiptDetail(title: 'Txn ID', value: ''),
+          title: 'Transaction Type', value: Utils.checkNullValue(Utils.checkNullValue(detail.transTypeName))),
+      ReceiptDetail(title: 'Product', value: '${detail.productName}'),
+      ReceiptDetail(title: 'Amount', value: '$rupeeSign ${detail.invoiceAmount}'),
+      ReceiptDetail(title: 'RSP', value: detail.rSP),
+      ReceiptDetail(title: 'Volume', value: '${detail.volume}'),
+      ReceiptDetail(title: 'Txn ID', value: detail.txnID),
     ];
+    if(detail.mobileNo!.isEmpty){
+      transDetail.removeAt(3);
 
+    }
     return Screenshot(
       controller: screenshotController,
       child: RepaintBoundary(

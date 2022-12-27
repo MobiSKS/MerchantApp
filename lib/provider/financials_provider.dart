@@ -1,9 +1,9 @@
 import 'dart:developer';
-import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/model/batch_detail_model.dart';
 import 'package:dtplusmerchant/model/credit_outstanding_model.dart';
 import 'package:dtplusmerchant/model/settlement_model.dart';
+import 'package:dtplusmerchant/model/transaction_slip.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +23,6 @@ import 'location_provider.dart';
 
 class FinancialsProvider extends ChangeNotifier {
   ApiServices apiServices = ApiServices();
-  final Dio _dio = Injection.injector.get<Dio>();
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -37,6 +36,9 @@ class FinancialsProvider extends ChangeNotifier {
 
   TransactionDetailModel? _transactionDetailModel;
   TransactionDetailModel? get transactionDetailModel => _transactionDetailModel;
+
+  TransactionSlip? _transactionSlip;
+  TransactionSlip? get transactionSlip => _transactionSlip;
 
   TransactionType? _transactionType;
   TransactionType? get transactionType => _transactionType;
@@ -55,7 +57,7 @@ class FinancialsProvider extends ChangeNotifier {
   PaymentModel? get paymentModel => _paymentModel;
 
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
-    showLoader(context);
+  _isLoading =true;
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
@@ -68,8 +70,8 @@ class FinancialsProvider extends ChangeNotifier {
     Map param = {
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
-      "UserId": userId,
-      "Userip": user.data?.objGetMerchantDetail?.first.merchantId,
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
+      "Userip": ip,
     };
 
     try {
@@ -77,16 +79,18 @@ class FinancialsProvider extends ChangeNotifier {
           UrlConstant.creditSaleOutstandingDetail,
           body: param,
           requestHeader: header);
-      dismissLoader(context);
+_isLoading = false;
       if (response['Success']) {
         _creditOutstandingModel = CreditOutstandingModel.fromJson(response);
       } else {
+        _isLoading = false;
         _creditOutstandingModel = null;
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
     } catch (e) {
+      _isLoading = false;
       return alertPopUp(context, e.toString());
     }
   }
@@ -127,13 +131,22 @@ class FinancialsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> getTransactionDetail(context,
-      {String terminalId = "",
-      String? fromDate,
-      String? toDate,
-      String? transType}) async {
-    _isLoading = true;
-    var ip = await Utils.getIp();
+  Future<void> getTransactionDetail(context, {String? txnId,String ?terminalId}) async {
+   showLoader(context);
+    String? ip;
+    String? lat;
+    String? long;
+
+    var locPro = Provider.of<LocationProvider>(context, listen: false);
+    if (locPro.lat == null) {
+      Position position = await Geolocator.getCurrentPosition();
+      lat = position.latitude.toString();
+      long = position.longitude.toString();
+      ip = await Utils.getIp();
+      locPro.setValues(position: position, ip: ip);
+      notifyListeners();
+    }
+
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
 
@@ -145,30 +158,32 @@ class FinancialsProvider extends ChangeNotifier {
     Map body = {
       "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
-      "Userip": ip,
-      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
+      "Userip": locPro.ip?? ip,
+      "Latitude": locPro.lat?? lat,
+      "Longitude": locPro.long?? long,
+      "AppVersion": "string",
       "TerminalId": terminalId,
-      "TransactionType": transType,
-      "FromDate":
-          fromDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
-      "ToDate":
-          toDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "MerchantID": user.data?.objGetMerchantDetail?.first.merchantId,
+      "TxnNo": txnId
     };
+
     log(body.toString());
-    log('=====>Transtype $transType}');
+
     try {
-      var response = await apiServices.post(UrlConstant.transactionDetail,
-          body: body, requestHeader: header);
+      var response = await apiServices.post(
+          UrlConstant.duplicateTransactionDetail,
+          body: body,
+          requestHeader: header);
+          dismissLoader(context);
+      log(response.toString());
       if (response['Success']) {
         _isLoading = false;
         _transactionDetailModel = TransactionDetailModel.fromJson(response);
       } else if (response['Status_Code'] != 200) {
         _isLoading = false;
-        _transactionDetailModel = TransactionDetailModel.fromJson(response);
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
-        _transactionDetailModel = TransactionDetailModel.fromJson(response);
         _isLoading = false;
       }
       notifyListeners();
@@ -256,7 +271,7 @@ class FinancialsProvider extends ChangeNotifier {
       "Useragent": Utils.checkOs(),
       "Userip": ip ?? locPro.ip,
       "Latitude": lat ?? locPro.lat,
-      "Longitude": lat ?? locPro.long,
+      "Longitude": long ?? locPro.long,
       "LoginType": "string",
       "IMEI": "string",
       "DeviceOSversion": "string",
@@ -359,7 +374,7 @@ class FinancialsProvider extends ChangeNotifier {
       "Useragent": Utils.checkOs(),
       "Userip": ip ?? locPro.ip,
       "Latitude": lat ?? locPro.lat,
-      "Longitude": lat ?? locPro.long,
+      "Longitude": long ?? locPro.long,
       "LoginType": "string",
       "IMEI": "string",
       "DeviceOSversion": "string",
@@ -384,6 +399,68 @@ class FinancialsProvider extends ChangeNotifier {
             doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
         _paymentModel = null;
+        _isLoading = false;
+      }
+      notifyListeners();
+    } catch (e) {
+      _isLoading = false;
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<void> getTransactionSlip(context,
+      {String terminalId = "",
+      String? fromDate,
+      String? toDate,
+      String? transType}) async {
+    _isLoading = true;
+    String? ip;
+    var locPro = Provider.of<LocationProvider>(context, listen: false);
+    if (locPro.ip == null) {
+      ip = await Utils.getIp();
+    }
+
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
+    };
+    header.addAll(commonHeader);
+
+    Map body = {
+      "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
+      "Useragent": Utils.checkOs(),
+      "Userip": locPro.ip ?? ip,
+      "Latitude": locPro.lat,
+      "Longitude": locPro.long,
+      "DeviceOSversion": "string",
+      "DeviceModel": "string",
+      "DeviceToken": "string",
+      "DeviceId": "string",
+      "AppVersion": "string",
+      "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
+      "TerminalId": terminalId,
+      "TransactionType": transType,
+      "FromDate":
+          fromDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "ToDate":
+          toDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+    };
+    log(body.toString());
+    log('=====>Transtype $transType}');
+    try {
+      var response = await apiServices.post(UrlConstant.transationSlip,
+          body: body, requestHeader: header);
+      log(response.toString());
+      if (response['Success']) {
+        _transactionSlip = TransactionSlip.fromJson(response);
+        _isLoading = false;
+      } else if (response['Status_Code'] != 200) {
+        _isLoading = false;
+        alertPopUp(context, response['Message'],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      } else {
         _isLoading = false;
       }
       notifyListeners();

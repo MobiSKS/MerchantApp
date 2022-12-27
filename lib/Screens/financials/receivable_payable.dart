@@ -106,7 +106,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                 children: [
                   SizedBox(height: screenHeight(context) * 0.03),
                   CustomList(
-                      list: value,
+                      list: value.reversed.toList(),
                       itemSpace: 10,
                       child: (data, index) {
                         return Column(
@@ -192,7 +192,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              height: screenHeight(context) * 0.50,
+              height: screenHeight(context) * 0.55,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -205,7 +205,7 @@ class _ReceivablePayableState extends State<ReceivablePayable> {
                   Divider(
                     color: Colors.grey.shade900,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 17),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: _searchFilter()),

@@ -17,7 +17,6 @@ class _BatchDetailsState extends State<BatchDetails> {
   final TextEditingController _searchController = TextEditingController();
 
   final TextEditingController _merchantController = TextEditingController();
-  final TextEditingController _batchIdController = TextEditingController();
   final TextEditingController _fromDateController = TextEditingController();
   final TextEditingController _toDateController = TextEditingController();
 

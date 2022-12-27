@@ -1,12 +1,9 @@
-import 'package:dtplusmerchant/Screens/auth/auth_view_model.dart';
-import 'package:dtplusmerchant/Screens/auth/forgot_password_screen.dart';
 import 'package:dtplusmerchant/Screens/profile/profile.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
 import 'package:dtplusmerchant/preferences/shared_preference.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'Screens/auth/change_password_screen.dart';
 import 'const/injection.dart';
 import 'model/user_model.dart';

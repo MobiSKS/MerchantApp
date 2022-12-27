@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:dtplusmerchant/Screens/financials/settlement_screen.dart';
 import 'package:dtplusmerchant/Screens/home.dart';
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/const/image_resources.dart';
@@ -21,7 +20,7 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
   int _selectedIndex = 0;
   final List<Widget> _widgetOptions = <Widget>[
     const Home(),
-    const SettlementScreen(navbar: true),
+  //  const SettlementScreen(navbar: true),
     const Contacts(),
     Container(),
   ];
@@ -85,19 +84,19 @@ class _DashboardState extends State<Dashboard> with WidgetsBindingObserver {
                     color: Colors.white,
                   )),
             ),
-            BottomNavigationBarItem(
-              icon: Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: Image.asset(ImageResources.statementImage,
-                    height: 24, color: Colors.white),
-              ),
-              label: AppStrings.statement,
-              activeIcon: Padding(
-                padding: const EdgeInsets.only(bottom: 5.0),
-                child: Image.asset(ImageResources.statementImage,
-                    height: 24, color: Colors.white),
-              ),
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Padding(
+            //     padding: const EdgeInsets.only(bottom: 5.0),
+            //     child: Image.asset(ImageResources.statementImage,
+            //         height: 24, color: Colors.white),
+            //   ),
+            //   label: AppStrings.statement,
+            //   activeIcon: Padding(
+            //     padding: const EdgeInsets.only(bottom: 5.0),
+            //     child: Image.asset(ImageResources.statementImage,
+            //         height: 24, color: Colors.white),
+            //   ),
+            // ),
             BottomNavigationBarItem(
               icon: Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),

@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_void_to_null
+
 class PaymentModel {
   bool? success;
   int? statusCode;
@@ -5,7 +7,7 @@ class PaymentModel {
   String? message;
   String? methodName;
   Data? data;
-  Null? modelState;
+  Null modelState;
 
   PaymentModel(
       {this.success,
@@ -22,21 +24,21 @@ class PaymentModel {
     internelStatusCode = json['Internel_Status_Code'];
     message = json['Message'];
     methodName = json['Method_Name'];
-    data = json['Data'] != null ? new Data.fromJson(json['Data']) : null;
+    data = json['Data'] != null ? Data.fromJson(json['Data']) : null;
     modelState = json['Model_State'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName;
     if (this.data != null) {
       data['Data'] = this.data!.toJson();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -52,32 +54,32 @@ class Data {
     if (json['PaymentDetails'] != null) {
       paymentDetails = <PaymentDetails>[];
       json['PaymentDetails'].forEach((v) {
-        paymentDetails!.add(new PaymentDetails.fromJson(v));
+        paymentDetails!.add(PaymentDetails.fromJson(v));
       });
     }
     if (json['TransactionDetails'] != null) {
       transactionDetails = <TransactionDetails>[];
       json['TransactionDetails'].forEach((v) {
-        transactionDetails!.add(new TransactionDetails.fromJson(v));
+        transactionDetails!.add(TransactionDetails.fromJson(v));
       });
     }
     successDetail = json['SuccessDetail'] != null
-        ? new SuccessDetail.fromJson(json['SuccessDetail'])
+        ? SuccessDetail.fromJson(json['SuccessDetail'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.paymentDetails != null) {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (paymentDetails != null) {
       data['PaymentDetails'] =
-          this.paymentDetails!.map((v) => v.toJson()).toList();
+          paymentDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.transactionDetails != null) {
+    if (transactionDetails != null) {
       data['TransactionDetails'] =
-          this.transactionDetails!.map((v) => v.toJson()).toList();
+          transactionDetails!.map((v) => v.toJson()).toList();
     }
-    if (this.successDetail != null) {
-      data['SuccessDetail'] = this.successDetail!.toJson();
+    if (successDetail != null) {
+      data['SuccessDetail'] = successDetail!.toJson();
     }
     return data;
   }
@@ -95,9 +97,9 @@ class PaymentDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['NoOfPayments'] = this.noOfPayments;
-    data['TotalAmout'] = this.totalAmout;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['NoOfPayments'] = noOfPayments;
+    data['TotalAmout'] = totalAmout;
     return data;
   }
 }
@@ -131,14 +133,15 @@ class TransactionDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MerchantId'] = this.merchantId;
-    data['BatchId'] = this.batchId;
-    data['InvoiceNo'] = this.invoiceNo;
-    data['TerminalId'] = this.terminalId;
-    data['TransactionDate'] = this.transactionDate;
-    data['TransactionType'] = this.transactionType;
-    data['Amount'] = this.amount;
+    // ignore: prefer_collection_literals
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['MerchantId'] = merchantId;
+    data['BatchId'] = batchId;
+    data['InvoiceNo'] = invoiceNo;
+    data['TerminalId'] = terminalId;
+    data['TransactionDate'] = transactionDate;
+    data['TransactionType'] = transactionType;
+    data['Amount'] = amount;
     return data;
   }
 }
@@ -155,9 +158,9 @@ class SuccessDetail {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }

@@ -1,5 +1,6 @@
 import 'package:dtplusmerchant/const/app_strings.dart';
 import 'package:dtplusmerchant/util/uiutil.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import '../../const/injection.dart';
 import '../../preferences/shared_preference.dart';
@@ -13,15 +14,16 @@ class Merchantprofile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        semiBoldText(AppStrings.merchantprofile,
-       color: Colors.black, fontSize: 22.0,),
+        semiBoldText(
+          AppStrings.merchantprofile,
+          color: Colors.black,
+          fontSize: 22.0,
+        ),
         const SizedBox(height: 30),
         _listView(context),
       ],
     );
   }
-
-  
 
   Widget _listView(BuildContext context) {
     var data = _sharedPref.user!.data!;
@@ -43,10 +45,11 @@ class Merchantprofile extends StatelessWidget {
           value: data.objGetMerchantDetail!.first.merchantName!),
       MerchantDetail(
           key: 'GST no.',
-          value: data.objOutletDetails!.first.gSTNumber ?? "NA"),
-             MerchantDetail(
+          value: Utils.checkNullValue(data.objOutletDetails!.first.gSTNumber)),
+      MerchantDetail(
           key: 'PAN No.',
-          value: data.objGetMerchantDetail!.first.pancard ?? "NA"),
+          value:
+              Utils.checkNullValue(data.objGetMerchantDetail!.first.pancard)),
     ];
     return SizedBox(
       height: screenHeight(context) * 0.45,
@@ -58,9 +61,12 @@ class Merchantprofile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  normalText(detail[index].key!,
-                      fontSize: 18.0,),
-                  normalText(detail[index].value!, fontSize:17.0,color: Colors.grey.shade800)
+                  normalText(
+                    detail[index].key!,
+                    fontSize: 18.0,
+                  ),
+                  normalText(detail[index].value!,
+                      fontSize: 17.0, color: Colors.grey.shade800)
                 ],
               ),
               const SizedBox(height: 10),

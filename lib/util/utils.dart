@@ -114,7 +114,7 @@ class Utils {
     await ftts.setSpeechRate(0.5); //speed of speech
     await ftts.setVolume(1.0); //volume of speech
     await ftts.setPitch(2.0);
-    var voice = await ftts.getVoices; //pitc of sound
+//pitc of sound
     await ftts.setVoice({"name": "hi-in-x-hia-local", "locale": "hi-IN"});
     int idx = text.indexOf(".");
     List parts = [

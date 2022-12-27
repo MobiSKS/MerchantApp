@@ -7,7 +7,6 @@ import 'package:dtplusmerchant/model/generate_qr_response.dart';
 import 'package:dtplusmerchant/model/gift_voucher_model.dart';
 import 'package:dtplusmerchant/model/otp_response_sale.dart';
 import 'package:dtplusmerchant/model/paycode_response_model.dart';
-import 'package:dtplusmerchant/model/payment_model.dart';
 import 'package:dtplusmerchant/model/qr_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -23,7 +22,6 @@ import '../util/uiutil.dart';
 import '../util/utils.dart';
 
 class TransactionsProvider extends ChangeNotifier {
-  final Dio _dio = Injection.injector.get<Dio>();
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   ApiServices apiServices = ApiServices();
   final bool _isLoading = false;
@@ -58,6 +56,12 @@ class TransactionsProvider extends ChangeNotifier {
 
   QRStatusModel? _qrStatusModel;
   QRStatusModel? get qrStatusModel => _qrStatusModel;
+
+  deleteCardEnquirydata()async{
+    _cardEnquiryResponseModel = null;
+    notifyListeners();
+
+  }
 
  
   Future<void> generateOTPSale(context,
@@ -154,6 +158,7 @@ class TransactionsProvider extends ChangeNotifier {
       "Paycode": ""
     };
     param.addAll(commonReqBody);
+    log(param.toString());
 
     try {
       var response = await apiServices.post(UrlConstant.saleByTerminal,
@@ -550,7 +555,7 @@ class TransactionsProvider extends ChangeNotifier {
       if (response['Internel_Status_Code'] == 1000) {
         _giftVoucherModel = GiftVoucherModel.fromJson(response);
         if (_giftVoucherModel!.internelStatusCode != 1000) {
-          alertPopUp(context, _giftVoucherModel!.data![0].reason!);
+          alertPopUp(context, response["Message"]);
         }
       } else {
         _giftVoucherModel = GiftVoucherModel.fromJson(response);

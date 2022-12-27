@@ -1,7 +1,7 @@
 class CardEnquiryModel {
   bool? success;
-  var statusCode;
-  var internelStatusCode;
+  int? statusCode;
+  int? internelStatusCode;
   String? message;
   String? methodName;
   List<Data>? data;
@@ -34,16 +34,16 @@ class CardEnquiryModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Success'] = this.success;
-    data['Status_Code'] = this.statusCode;
-    data['Internel_Status_Code'] = this.internelStatusCode;
-    data['Message'] = this.message;
-    data['Method_Name'] = this.methodName; 
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['Success'] = success;
+    data['Status_Code'] = statusCode;
+    data['Internel_Status_Code'] = internelStatusCode;
+    data['Message'] = message;
+    data['Method_Name'] = methodName; 
     if (this.data != null) {
       data['Data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    data['Model_State'] = this.modelState;
+    data['Model_State'] = modelState;
     return data;
   }
 }
@@ -92,19 +92,19 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['MonthlyLimit'] = this.monthlyLimit;
-    data['MonthlySpent'] = this.monthlySpent;
-    data['MonthlyLimitBal'] = this.monthlyLimitBal;
-    data['DailyLimit'] = this.dailyLimit;
-    data['DailySpent'] = this.dailySpent;
-    data['DailyLimitBal'] = this.dailyLimitBal;
-    data['CCMSLimit'] = this.cCMSLimit;
-    data['CCMSLimitBal'] = this.cCMSLimitBal;
-    data['CardBalance'] = this.cardBalance;
-    data['CardNoOutput'] = this.cardNoOutput;
-    data['Status'] = this.status;
-    data['Reason'] = this.reason;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['MonthlyLimit'] = monthlyLimit;
+    data['MonthlySpent'] = monthlySpent;
+    data['MonthlyLimitBal'] = monthlyLimitBal;
+    data['DailyLimit'] = dailyLimit;
+    data['DailySpent'] = dailySpent;
+    data['DailyLimitBal'] = dailyLimitBal;
+    data['CCMSLimit'] = cCMSLimit;
+    data['CCMSLimitBal'] = cCMSLimitBal;
+    data['CardBalance'] = cardBalance;
+    data['CardNoOutput'] = cardNoOutput;
+    data['Status'] = status;
+    data['Reason'] = reason;
     return data;
   }
 }
