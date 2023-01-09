@@ -89,7 +89,7 @@ class _ScanQRCodeState extends State<ScanQRCode> {
         child: Scaffold(
             appBar: normalAppBar(context,
                 title: AppStrings.qrPayment, freezeScreen: true),
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.white, 
             body: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,

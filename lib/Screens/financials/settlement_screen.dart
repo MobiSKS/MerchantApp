@@ -3,15 +3,19 @@ import 'package:dtplusmerchant/Screens/financials/payment_screen.dart';
 import 'package:dtplusmerchant/common/custom_list.dart';
 import 'package:dtplusmerchant/common/slide_button.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
+import 'package:dtplusmerchant/model/payment_model.dart';
 import 'package:dtplusmerchant/model/settlement_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
 import 'package:dtplusmerchant/util/utils.dart';
+import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
 import '../../const/app_strings.dart';
 import '../../provider/financials_provider.dart';
 import '../../util/uiutil.dart';
+import "package:collection/collection.dart" as collection;
 
 class SettlementScreen extends StatefulWidget {
   final bool navbar;
@@ -27,10 +31,12 @@ class _SettlementScreenState extends State<SettlementScreen> {
   int pageIndex = 0;
   final _fromDateController = TextEditingController(
       text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
+  final _toDateController = TextEditingController(
+      text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
   double columnPadding = 20;
   final settlementdata1 = ValueNotifier<List<SettleTransactionDetails>>([]);
   List<SettleTransactionDetails> settlementdata = [];
-
+  List<GroupedSettlementData> groupedList = [];
   @override
   void initState() {
     super.initState();
@@ -156,7 +162,24 @@ class _SettlementScreenState extends State<SettlementScreen> {
     }
   }
 
+  groupTransDetailsByBatchId(List<SettleTransactionDetails> settleList) {
+    if (settleList.isNotEmpty) {
+      groupedList.clear();
+      final groups =
+          collection.groupBy(settleList, (SettleTransactionDetails e) {
+        return e.batchId;
+      });
+      groups.forEach((batchId, list) {
+        groupedList
+            .add(GroupedSettlementData(batchId: batchId, settlementList: list));
+      });
+
+      groupedList.toSet().toList();
+    }
+  }
+
   Widget _settlementData({List<SettleMentDetails>? list}) {
+    groupTransDetailsByBatchId(settlementdata1.value);
     return ValueListenableBuilder(
         valueListenable: settlementdata1,
         builder: (_, value, __) => settlementdata1.value.isEmpty
@@ -171,7 +194,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                 children: [
                   SizedBox(height: screenHeight(context) * 0.01),
                   semiBoldText(
-                      'Total Amount: $rupeeSign ${list!.first.totalAmout}'),
+                      'Total Amount: $rupeeSign ${Utils.upToDecimalPoint(list!.first.totalAmout.toString())}'),
                   const SizedBox(height: 5),
                   semiBoldText(
                       'No. of settlements: ${list.first.noOfSettlement}'),
@@ -180,7 +203,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                   SizedBox(height: screenHeight(context) * 0.03),
                   Expanded(
                     child: CustomList(
-                        list: value.reversed.toList(),
+                        list: groupedList.toSet().toList(),
                         itemSpace: 10,
                         child: (data, index) {
                           return Column(
@@ -195,10 +218,7 @@ class _SettlementScreenState extends State<SettlementScreen> {
                                     //           )),
                                     // );
                                   },
-                                  child: _settlementList(
-                                    context,
-                                    data,
-                                  )),
+                                  child: _expandebleWidget(context, data)),
                               const SizedBox(height: 10),
                               Divider(
                                 color: Colors.grey.shade700,
@@ -211,71 +231,116 @@ class _SettlementScreenState extends State<SettlementScreen> {
               ));
   }
 
-  Widget _settlementList(BuildContext context, SettleTransactionDetails data) {
-    return SizedBox(
-      width: screenWidth(context),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            semiBoldText('Batch Id:  ${data.batchId}',
-                color: Colors.grey.shade900, fontSize: 17.0),
-            const SizedBox(height: 5),
-            semiBoldText('Amount: $rupeeSign ${data.amount}',
-                color: Colors.grey.shade600, fontSize: 16.0),
-            const SizedBox(height: 5),
-            Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                      text: 'Terminal Id: ',
-                      style: TextStyle(
-                          color: Colors.grey.shade600,
-                          fontSize: 16,
-                          fontFamily: FontFamilyHelper.sourceSansSemiBold)),
-                  TextSpan(
-                    text: data.terminalId,
-                    style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 16,
-                        fontFamily: FontFamilyHelper.sourceSansSemiBold),
-                  ),
+  Widget _expandebleWidget(
+    BuildContext context,
+    GroupedSettlementData data,
+  ) {
+    return ExpandableNotifier(
+        child: Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(
+          color: Colors.grey.shade400,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: <Widget>[
+          ScrollOnExpand(
+            scrollOnExpand: true,
+            scrollOnCollapse: false,
+            child: ExpandablePanel(
+              theme: const ExpandableThemeData(
+                headerAlignment: ExpandablePanelHeaderAlignment.center,
+                tapBodyToCollapse: true,
+              ),
+              header: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: semiBoldText('Batch ID : ${data.batchId}')),
+              collapsed: semiBoldText(
+                'No. of Payments : ${data.settlementList!.length}',
+              ),
+              expanded: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  CustomList(
+                    list: data.settlementList,
+                    itemSpace: 10,
+                    child: (SettleTransactionDetails data, index) {
+                      return _settlementDetail(data);
+                    },
+                  )
+                  //  _transDetail(data.transSlipList)
                 ],
               ),
+              builder: (_, collapsed, expanded) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: Expandable(
+                    collapsed: collapsed,
+                    expanded: expanded,
+                    theme: const ExpandableThemeData(crossFadePoint: 0),
+                  ),
+                );
+              },
             ),
-            const SizedBox(height: 5),
-            semiBoldText('Merchant Id:  ${data.merchantId}',
-                color: Colors.grey.shade600, fontSize: 16.0),
-            const SizedBox(height: 5),
-            semiBoldText('Transaction date:   ${data.transactionDate}',
-                color: Colors.grey.shade600, fontSize: 16.0),
-            const SizedBox(height: 5),
-            semiBoldText('Transaction Type:  ${data.transactionType}',
-                color: Colors.grey.shade600, fontSize: 16.0),
-            const SizedBox(height: 5),
-          ]),
-          // Row(
-          //   crossAxisAlignment: CrossAxisAlignment.center,
-          //   children: [
-          //     GestureDetector(
-          //         onTap: () {
-          //           Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //                 builder: (context) => SettlementDetail(
-          //                       settlementData: data,
-          //                     )),
-          //           );
-          //         },
-          //         child: const Icon(
-          //           Icons.arrow_forward_ios,
-          //           color: Colors.black,
-          //           size: 30,
-          //         ))
-          //   ],
-          // )
+          ),
         ],
+      ),
+    ));
+  }
+
+  Widget _settlementDetail(SettleTransactionDetails data) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+        side: BorderSide(
+          color: Colors.grey.shade400,
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          semiBoldText(
+              'Amount: $rupeeSign ${Utils.upToDecimalPoint(data.amount.toString())}',
+              color: Colors.grey.shade600,
+              fontSize: 16.0),
+          const SizedBox(height: 5),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                    text: 'Terminal Id: ',
+                    style: TextStyle(
+                        color: Colors.grey.shade600,
+                        fontSize: 16,
+                        fontFamily: FontFamilyHelper.sourceSansSemiBold)),
+                TextSpan(
+                  text: data.terminalId,
+                  style: TextStyle(
+                      color: Colors.grey.shade700,
+                      fontSize: 16,
+                      fontFamily: FontFamilyHelper.sourceSansSemiBold),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 5),
+          semiBoldText('Merchant Id:  ${data.merchantId}',
+              color: Colors.grey.shade600, fontSize: 16.0),
+          const SizedBox(height: 5),
+          semiBoldText('Transaction date:   ${data.transactionDate}',
+              color: Colors.grey.shade600, fontSize: 16.0),
+          const SizedBox(height: 5),
+          semiBoldText('Transaction Type:  ${data.transactionType}',
+              color: Colors.grey.shade600, fontSize: 16.0),
+          const SizedBox(height: 5),
+             semiBoldText('Batch Status:  ${data.batchStatus}',
+              color: Colors.grey.shade600, fontSize: 16.0),
+          const SizedBox(height: 5),
+        ]),
       ),
     );
   }
@@ -303,13 +368,13 @@ class _SettlementScreenState extends State<SettlementScreen> {
                   Divider(
                     color: Colors.grey.shade900,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 50),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        semiBoldText(' Select Date',
+                        semiBoldText('From Date',
                             color: Colors.grey.shade700, fontSize: 18),
                         GestureDetector(
                           onTap: () => Utils.selectDatePopup(
@@ -318,7 +383,19 @@ class _SettlementScreenState extends State<SettlementScreen> {
                               context, _fromDateController, 'From Date',
                               showIcon: true, enabled: false),
                         ),
-                        SizedBox(height: screenHeight(context) * 0.07),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        semiBoldText('To Date',
+                            color: Colors.grey.shade700, fontSize: 18),
+                        GestureDetector(
+                          onTap: () => Utils.selectDatePopup(
+                              context, DateTime.now(), _fromDateController),
+                          child: dateTextField(
+                              context, _fromDateController, 'To Date',
+                              showIcon: true, enabled: false),
+                        ),
+                        SizedBox(height: screenHeight(context) * 0.03),
                         customButton(context, AppStrings.submit, onTap: () {
                           getSettlementFilterData();
                         }),
@@ -334,13 +411,16 @@ class _SettlementScreenState extends State<SettlementScreen> {
   }
 
   Future<void> getSettlementFilterData() async {
+    DateFormat dateFormat = DateFormat("dd-MM-yyyy");
     FinancialsProvider fPro =
         Provider.of<FinancialsProvider>(context, listen: false);
     if (_fromDateController.text.isNotEmpty) {
       showLoader(context);
       await fPro.getSettlementDetail(
         context,
-        date: _fromDateController.text,
+        fromDate:
+            Utils.convertDateFormatInYYMMDD(dateS: _fromDateController.text),
+        toDate: Utils.convertDateFormatInYYMMDD(dateS: _toDateController.text),
       );
       dismissLoader(context);
       if (fPro.transactionDetailModel != null &&

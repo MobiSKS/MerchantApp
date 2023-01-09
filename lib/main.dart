@@ -13,8 +13,12 @@ import 'package:dtplusmerchant/Screens/transactions/type_of_sale_screen.dart';
 import 'package:dtplusmerchant/model/user_model.dart';
 import 'package:dtplusmerchant/provider/financials_provider.dart';
 import 'package:dtplusmerchant/provider/location_provider.dart';
+import 'package:dtplusmerchant/services/firebase_options.dart';
+import 'package:dtplusmerchant/services/push_notification_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'Screens/auth/auth_view_model.dart';
 import 'Screens/auth/login_page.dart';
@@ -23,9 +27,10 @@ import 'preferences/shared_preference.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'provider/transactions_provider.dart';
 
-Future<void> main()async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Injection.initInjection();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(const MyApp());
 }
@@ -38,21 +43,26 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  PushNotificationService notificationHelper = PushNotificationService();
   SharedPref sharedPref = Injection.injector.get<SharedPref>();
   bool _isLoggedIn = false;
   @override
   void initState() {
     super.initState();
+    notificationHelper.setupNotifications();
     _checkLogin();
   }
 
   Future<void> _checkLogin() async {
-     var user = await sharedPref.getPrefrenceData(key: SharedPref.userDetails) as UserModel;
-     if(user !=null && user.data!.objGetMerchantDetail![0].token!=null){
+    var user = await sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+    if (user != null && user.data!.objGetMerchantDetail![0].token != null) {
       setState(() {
         _isLoggedIn = true;
       });
-     }
+    }
   }
 
   @override
@@ -66,7 +76,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => TransactionsProvider()),
         ChangeNotifierProvider(create: (context) => FinancialsProvider()),
         ChangeNotifierProvider(create: (context) => LocationProvider()),
-      ], 
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         builder: (context, child) => ResponsiveWrapper.builder(
@@ -82,7 +92,7 @@ class _MyAppState extends State<MyApp> {
         home: _isLoggedIn ? const Dashboard() : const LoginPage(),
         routes: {
           "/login": (context) => const LoginPage(),
-            "/home": (context) => const Home(),
+          "/home": (context) => const Home(),
           "/dashboard": (context) => const Dashboard(),
           "/typeofSale": (context) => const TypeOfSale(),
           "/editProfile": (context) => const Profile(),

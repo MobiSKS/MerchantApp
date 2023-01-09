@@ -83,7 +83,8 @@ class _SaleReceiptState extends State<SaleReceipt> {
       ReceiptDetail(
           title: AppStrings.rocNum,
           value: widget.saleResponse.data!.first.rOCNo),
-   //   ReceiptDetail(title: AppStrings.mobileNo, value: widget.mobileNo),
+      ReceiptDetail(title: AppStrings.mobileNo, value: widget.mobileNo),
+      ReceiptDetail(title:'Card No' ,value:Utils.checkNullValue(widget.saleResponse.data![0].cardNoOutput!) )
     ];
     List<ReceiptDetail> receptDetail2 = [
       ReceiptDetail(

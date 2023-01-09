@@ -1,7 +1,7 @@
 class UrlConstant {
   static const String baseUrl =
       "http://dtpapi.mloyalcapture.com/api/dtplus/"; // UAT url
-  // "https://dtpapi.mloyalretail.com/api/dtplus/";  //Dev url
+  //  "https://dtpapi.mloyalretail.com/api/dtplus/";  //Dev url
   static const String hpPayLink = "https://www.hppay.in";
   static const String loginApi =
       "merchant/get_merchant_registration_parameters";
@@ -37,6 +37,8 @@ class UrlConstant {
   static const String transationSlip = "merchant/get_merchant_transaction_slip";
   static const String duplicateTransactionDetail =
       "transaction/get_duplicate_transaction";
+  static const String cardFeeAmount = "transaction/card_fee_payment";
+  static const String acknowledgementApi = "transaction/check_update_acknowledgement_status";
 
 //==============================api_key && secret_key=================================
   static const String apiKey = "3C25F265-F86D-419D-9A04-EA74A503C197";

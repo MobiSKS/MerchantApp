@@ -33,7 +33,7 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            header(context,transheader: true),
+            header(context, transheader: true),
             SizedBox(height: screenHeight(context) * 0.02),
             receiptTitle(context, _key),
             _body(context),
@@ -46,24 +46,32 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
 
   Widget _body(BuildContext context) {
     var merchant = _sharedPref.user!.data!.objGetMerchantDetail!.first;
-  var detail = widget.transDetail.data![0];
+    var detail = widget.transDetail.data![0];
     List<ReceiptDetail> transDetail = [
-      ReceiptDetail(title: 'Date', value:Utils.checkNullValue(detail.txnDate) ),
-      ReceiptDetail(title: 'Batch No.', value:  Utils.checkNullValue( detail.batchId.toString())),
-      ReceiptDetail(title: 'ROC No.', value: Utils.checkNullValue(detail.rOCNo)),
-      ReceiptDetail(title: 'Mobile No.', value: Utils.checkNullValue(detail.mobileNo)),
+      ReceiptDetail(title: 'Date', value: Utils.checkNullValue(detail.txnDate)),
+      ReceiptDetail(
+          title: 'Batch No.',
+          value: Utils.checkNullValue(detail.batchId.toString())),
+      ReceiptDetail(
+          title: 'ROC No.', value: Utils.checkNullValue(detail.rOCNo)),
+      ReceiptDetail(
+          title: 'Terminal Id', value: Utils.checkNullValue(detail.terminalId)),
+      ReceiptDetail(
+          title: 'Mobile No.', value: Utils.checkNullValue(detail.mobileNo)),
       ReceiptDetail(title: 'Card No.', value: detail.cardNo),
       ReceiptDetail(
-          title: 'Transaction Type', value: Utils.checkNullValue(Utils.checkNullValue(detail.transTypeName))),
+          title: 'Transaction Type',
+          value:
+              Utils.checkNullValue(Utils.checkNullValue(detail.transTypeName))),
       ReceiptDetail(title: 'Product', value: '${detail.productName}'),
-      ReceiptDetail(title: 'Amount', value: '$rupeeSign ${detail.invoiceAmount}'),
+      ReceiptDetail(
+          title: 'Amount', value: '$rupeeSign ${detail.invoiceAmount}'),
       ReceiptDetail(title: 'RSP', value: detail.rSP),
       ReceiptDetail(title: 'Volume', value: '${detail.volume}'),
       ReceiptDetail(title: 'Txn ID', value: detail.txnID),
     ];
-    if(detail.mobileNo!.isEmpty){
+    if (detail.mobileNo!.isEmpty) {
       transDetail.removeAt(3);
-
     }
     return Screenshot(
       controller: screenshotController,
@@ -76,21 +84,22 @@ class _TransactionSummarydetailState extends State<TransactionSummarydetail> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: screenHeight(context) * 0.02),
-                  SizedBox(height: screenHeight(context) * 0.02),
-                  Image.asset(ImageResources.hpLogoReceipt, height: 100),
-                  SizedBox(height: screenHeight(context) * 0.015),
-                  boldText(merchant.header2!,
+                  const SizedBox(height: 15),
+                  Image.asset(ImageResources.dtplusLogo, height: 80),
+                  semiBoldText(merchant.header2!,
                       color: Colors.black, fontSize: 22.0),
-                  boldText(merchant.merchantName!,
-                      color: Colors.black, fontSize: 22.0),
-                  SizedBox(height: screenHeight(context) * 0.07),
+                  semiBoldText(
+                      _sharedPref.user!.data!.objOutletDetails!.first
+                          .retailOutletName!,
+                      color: Colors.black,
+                      fontSize: 22.0),
+                  SizedBox(height: screenHeight(context) * 0.05),
                   receiptDetail(context, transDetail, itemSapce: 17.0),
                   SizedBox(height: screenHeight(context) * 0.02),
                   receiptFooter(context, custDetail: merchant),
                 ],
-              )),
-        ),
+          )),
+        ),   
       ),
     );
   }

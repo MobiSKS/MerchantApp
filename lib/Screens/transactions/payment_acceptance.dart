@@ -90,7 +90,8 @@ class _PaymentAcceptanceState extends State<PaymentAcceptance> {
   }
 
   Widget _selectPaymentType(BuildContext context) {
-    var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!;
+    var paymentTypeList = _sharedPref.user!.data!.objGetParentTransTypeDetail!
+        .where((e) => (e.transType != 532) && (e.transType != 575));
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,

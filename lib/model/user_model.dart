@@ -146,6 +146,7 @@ class ObjGetMerchantDetail {
   double? batchReloadLimit;
   int? batchSize;
   int? settlementTime;
+  String?lastSettleTime;
   String? remoteDownload;
   String? uRL;
   String? batchNo;
@@ -196,6 +197,7 @@ class ObjGetMerchantDetail {
     header2 = json['Header2'] ?? '';
     footer1 = json['Footer1'] ?? '';
     footer2 = json['Footer2'] ?? '';
+    settlementTime = json['LastSettleTime'];
     contactPersonName = json["ContactPersonName"];
     batchSaleLimit = json['BatchSaleLimit'] ?? '';
     batchReloadLimit = json['BatchReloadLimit'] ?? '';
@@ -228,6 +230,7 @@ class ObjGetMerchantDetail {
     data['BatchSaleLimit'] = batchSaleLimit;
     data['BatchReloadLimit'] = batchReloadLimit;
     data['BatchSize'] = batchSize;
+    data['LastSettleTime'] = lastSettleTime;
     data['SettlementTime'] = settlementTime;
     data['RemoteDownload'] = remoteDownload;
     data['URL'] = uRL;

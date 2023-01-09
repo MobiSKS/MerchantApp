@@ -57,7 +57,7 @@ class FinancialsProvider extends ChangeNotifier {
   PaymentModel? get paymentModel => _paymentModel;
 
   Future<void> getCreditOutstandingDetail(context, {String? userId}) async {
-  _isLoading =true;
+    _isLoading = true;
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
@@ -79,7 +79,7 @@ class FinancialsProvider extends ChangeNotifier {
           UrlConstant.creditSaleOutstandingDetail,
           body: param,
           requestHeader: header);
-_isLoading = false;
+      _isLoading = false;
       if (response['Success']) {
         _creditOutstandingModel = CreditOutstandingModel.fromJson(response);
       } else {
@@ -131,8 +131,9 @@ _isLoading = false;
     }
   }
 
-  Future<void> getTransactionDetail(context, {String? txnId,String ?terminalId}) async {
-   showLoader(context);
+  Future<void> getTransactionDetail(context,
+      {String? txnId, String? terminalId}) async {
+    showLoader(context);
     String? ip;
     String? lat;
     String? long;
@@ -158,9 +159,9 @@ _isLoading = false;
     Map body = {
       "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
       "Useragent": Utils.checkOs(),
-      "Userip": locPro.ip?? ip,
-      "Latitude": locPro.lat?? lat,
-      "Longitude": locPro.long?? long,
+      "Userip": locPro.ip ?? ip,
+      "Latitude": locPro.lat ?? lat,
+      "Longitude": locPro.long ?? long,
       "AppVersion": "string",
       "TerminalId": terminalId,
       "MerchantID": user.data?.objGetMerchantDetail?.first.merchantId,
@@ -174,7 +175,7 @@ _isLoading = false;
           UrlConstant.duplicateTransactionDetail,
           body: body,
           requestHeader: header);
-          dismissLoader(context);
+      dismissLoader(context);
       log(response.toString());
       if (response['Success']) {
         _isLoading = false;
@@ -240,7 +241,8 @@ _isLoading = false;
     }
   }
 
-  Future<void> getSettlementDetail(context, {String? date}) async {
+  Future<void> getSettlementDetail(context,
+      {String? fromDate, String? toDate}) async {
     _isLoading = true;
     var ip;
     var lat;
@@ -262,9 +264,6 @@ _isLoading = false;
       "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
-    if (date != null) {
-      date = Utils.convertDateFormatInYYMMDD(dateS: date);
-    }
 
     Map body = {
       "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
@@ -279,7 +278,10 @@ _isLoading = false;
       "DeviceToken": "string",
       "DeviceId": "string",
       "AppVersion": "string",
-      "Date": date ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "FromDate":
+          fromDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "ToDate":
+          toDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
     };
 
@@ -301,6 +303,9 @@ _isLoading = false;
       notifyListeners();
     } catch (e) {
       _isLoading = false;
+      if (e.toString().contains('BadRequestException')) {
+        return alertPopUp(context, 'Server is under Maintanence');
+      }
       return alertPopUp(context, e.toString());
     }
   }
@@ -343,7 +348,8 @@ _isLoading = false;
     }
   }
 
-  Future<void> getPaymentList(context, {String? date}) async {
+  Future<void> getPaymentList(context,
+      {String? fromDate, String? toDate}) async {
     _isLoading = true;
     var ip;
     var lat;
@@ -365,9 +371,6 @@ _isLoading = false;
       "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
     header.addAll(commonHeader);
-    if (date != null) {
-      date = Utils.convertDateFormatInYYMMDD(dateS: date);
-    }
 
     Map body = {
       "UserId": user.data?.objGetMerchantDetail?.first.merchantId,
@@ -382,7 +385,10 @@ _isLoading = false;
       "DeviceToken": "string",
       "DeviceId": "string",
       "AppVersion": "string",
-      "Date": date ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "FromDate":
+          fromDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
+      "ToDate":
+          toDate ?? Utils.convertDateFormatInYYMMDD(dateT: DateTime.now()),
       "MerchantId": user.data?.objGetMerchantDetail?.first.merchantId,
     };
 
@@ -404,6 +410,9 @@ _isLoading = false;
       notifyListeners();
     } catch (e) {
       _isLoading = false;
+      if (e.toString().contains('BadRequestException')) {
+        return alertPopUp(context, 'Server is under Maintanence');
+      }
       return alertPopUp(context, e.toString());
     }
   }
@@ -458,9 +467,11 @@ _isLoading = false;
         _isLoading = false;
       } else if (response['Status_Code'] != 200) {
         _isLoading = false;
+        _transactionSlip = null;
         alertPopUp(context, response['Message'],
             doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
+        _transactionSlip = null;
         _isLoading = false;
       }
       notifyListeners();

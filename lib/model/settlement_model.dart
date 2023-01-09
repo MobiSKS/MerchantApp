@@ -114,6 +114,8 @@ class SettleTransactionDetails {
   String? terminalId;
   String? transactionDate;
   String? transactionType;
+  String ? batchStatus;
+  String?acknowledgementStatus;
   double? amount;
 
   SettleTransactionDetails(
@@ -122,6 +124,8 @@ class SettleTransactionDetails {
       this.invoiceNo,
       this.terminalId,
       this.transactionDate,
+      this.acknowledgementStatus,
+      this.batchStatus,
       this.transactionType,
       this.amount});
 
@@ -132,6 +136,8 @@ class SettleTransactionDetails {
     terminalId = json['TerminalId'];
     transactionDate = json['TransactionDate'];
     transactionType = json['TransactionType'];
+    batchStatus = json['BatchStatus'];
+    acknowledgementStatus = json['AcknowledgementStatus'];
     amount = json['Amount'];
   }
 
@@ -165,4 +171,14 @@ class SuccessDetails {
     data['Reason'] = reason;
     return data;
   }
+}
+
+class GroupedSettlementData {
+  int? batchId;
+  List<SettleTransactionDetails>? settlementList;
+
+  GroupedSettlementData({
+    this.batchId,
+    this.settlementList,
+  });
 }

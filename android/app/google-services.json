@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "339921639955",
+    "project_id": "dtplusmerchant-app",
+    "storage_bucket": "dtplusmerchant-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:339921639955:android:0adb0c648fa01a3701fde6",
+        "android_client_info": {
+          "package_name": "com.dtplusmerchant"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "339921639955-q9vq2kt9nad4dvh2a4hgd7e2hvencatf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEXz1FePeCntYF8UAN__30D97OOe_7cFw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "339921639955-q9vq2kt9nad4dvh2a4hgd7e2hvencatf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

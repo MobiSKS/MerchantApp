@@ -35,13 +35,18 @@ class Utils {
     }
   }
 
+  static String upToDecimalPoint(String num) {
+    var number = num.split('.');
+    return int.parse(number[0]).toDouble().toStringAsFixed(2);
+  }
+
   static String convertDateFormatInDDMMYY(DateTime date) {
     return DateFormat('dd-MM-yyyy').format(date);
   }
 
 //===========date format ======== exp: 2022-09-17 18:08:23============
   static String dateTimeFormat() {
-    return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    return DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now().subtract(const Duration(seconds: 1)));
   }
 
   static Future<void> selectDatePopup(BuildContext context,
@@ -64,7 +69,7 @@ class Utils {
           child: child!,
         );
       },
-    );
+    );    
 
     if (picked != null) {
       initialDate = picked;

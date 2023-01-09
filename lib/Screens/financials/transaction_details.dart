@@ -30,7 +30,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
   final TextEditingController _toDateController = TextEditingController(
       text: Utils.convertDateFormatInDDMMYY(DateTime.now()));
-
+  List<String> terminalIdList = [];
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -48,7 +48,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
       child: Column(
         children: [
           searchWidget(context, _tDSearchController,
-              hintText: 'Search Transaction',
+              hintText: 'Search Card Number',
               onTap: showSearchFilter,
               onChanged: onChanged),
           const SizedBox(height: 15),
@@ -143,10 +143,10 @@ class _TransactionDetailsState extends State<TransactionDetails> {
             children: [
               SizedBox(width: screenWidth(context) * 0.03),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                semiBoldText('Card no: ${data.cardNo!}',
+                semiBoldText('Card no: ${Utils.checkNullValue(data.cardNo!)}',
                     color: Colors.black, fontSize: 18.0),
                 const SizedBox(height: 5),
-                semiBoldText('TID : ${data.terminalId!}',
+                semiBoldText('TID : ${Utils.checkNullValue(data.terminalId!)}',
                     color: Colors.grey.shade500, fontSize: 18.0),
                 const SizedBox(height: 5),
                 Row(
@@ -154,7 +154,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                     Row(
                       children: [
                         semiBoldText(
-                          data.invoiceDate!,
+                          Utils.checkNullValue(data.invoiceDate!.toString()),
                           fontSize: 18.0,
                           color: Colors.grey.shade500,
                         ),
@@ -182,7 +182,8 @@ class _TransactionDetailsState extends State<TransactionDetails> {
   Future<void> showTransactionDetail(Data data) async {
     var prov = Provider.of<FinancialsProvider>(context, listen: false);
 
-    await prov.getTransactionDetail(context, txnId: data.referenceNo,terminalId: data.terminalId);
+    await prov.getTransactionDetail(context,
+        txnId: data.referenceNo, terminalId: data.terminalId);
     if (prov.transactionDetailModel != null &&
         prov.transactionDetailModel!.internelStatusCode == 1000) {
       Navigator.push(
@@ -205,11 +206,11 @@ class _TransactionDetailsState extends State<TransactionDetails> {
           return StatefulBuilder(
               builder: ((BuildContext context, StateSetter setState) {
             return SizedBox(
-              // height: screenHeight(context) * 0.45,
+             //  height: screenHeight(context) * 0.45,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, bottom: 20),
                     child: semiBoldText('Search Filter',
@@ -218,7 +219,7 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                   Divider(
                     color: Colors.grey.shade900,
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30),
                       child: _searchFilter()),
@@ -258,8 +259,9 @@ class _TransactionDetailsState extends State<TransactionDetails> {
                 showIcon: true, enabled: false),
           ),
           SizedBox(height: screenHeight(context) * 0.01),
-          simpleTextField(
-              context, _terminalIdController, "Terminal Id (Optional) "),
+          _selectTerminalId(context, financialPro),
+          // simpleTextField(
+          //     context, _terminalIdController, "Terminal Id (Optional) "),
           SizedBox(height: screenHeight(context) * 0.01),
           _selectTransactionType(context, financialPro),
           SizedBox(height: screenHeight(context) * 0.06),
@@ -344,5 +346,55 @@ class _TransactionDetailsState extends State<TransactionDetails> {
         ),
       ),
     );
+  }
+
+  Widget _selectTerminalId(
+      BuildContext context, FinancialsProvider financialPro) {
+    addterminalId(financialPro);
+
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(bottom: BorderSide(color: Colors.grey.shade400))),
+      height: 45,
+      child: Center(
+        child: DropdownButtonFormField(
+          decoration: const InputDecoration(
+              enabledBorder: InputBorder.none, enabled: false),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+          ),
+          icon: const Padding(
+            padding: EdgeInsets.only(right: 8.0),
+            child: Icon(Icons.keyboard_arrow_down),
+          ),
+          hint: semiBoldText('Select Terminal Id',
+              color: Colors.grey.shade700, fontSize: 18),
+          value: _terminalIdController.text.isEmpty
+              ? null
+              : _terminalIdController.text,
+          items: terminalIdList.toSet().toList().map((value) {
+            return DropdownMenuItem(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+          onChanged: (value) {
+            setState(() {
+              _terminalIdController.text = value!;
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  addterminalId(FinancialsProvider financialPro) {
+    if (financialPro.transactionSlip != null) {
+      for (int i = 0; i < financialPro.transactionSlip!.data!.length; i++) {
+        terminalIdList.add(financialPro.transactionSlip!.data![i].terminalId!);
+      }
+    }
   }
 }

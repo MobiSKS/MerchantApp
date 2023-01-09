@@ -74,7 +74,7 @@ class Data {
     cardNo = json['CardNo'];
     amount = json['Amount'];
     referenceNo = json['ReferenceNo'];
-    invoiceDate = json['InvoiceDate'];
+    invoiceDate = json['InvoiceDate']?? '';
     invoiceNo = json['InvoiceNo'];
     status = json['Status'];
     reason = json['Reason'];

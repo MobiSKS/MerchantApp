@@ -387,9 +387,9 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         timerController = CountdownTimerController(
             endTime: DateTime.now().millisecondsSinceEpoch + 1000 * 31,
             onEnd: onEnd);
-            setState(() {
-              _resendOTP = false;
-            });
+        setState(() {
+          _resendOTP = false;
+        });
       } else {
         alertPopUp(context, transProvider.otpResponseSale!.message!);
       }
@@ -425,7 +425,18 @@ class _TypeOfSaleState extends State<TypeOfSale> {
         productId: widget.productId!);
     _otpSent.value = false;
     if (transPro.saleByTeminalResponse!.internelStatusCode == 1000) {
+      var resp = transPro.saleByTeminalResponse!.data![0];
+      await transPro.checkAcknowledgementStatus(
+        context,
+        amount: double.parse(resp.invAmt!),
+        invDate: Utils.dateTimeFormat(),
+        invoiceNo: int.parse(resp.rOCNo!),
+        transTypeId: int.parse(widget.transTypeId!),
+        txnId: resp.aPIReferenceNo,
+      );
       showToast('Payment Successfull', false);
+      Utils.textToSpeech(transPro.saleByTeminalResponse!.data![0].invAmt!);
+
       Navigator.pushReplacement<void, void>(
         context,
         MaterialPageRoute<void>(
@@ -472,6 +483,7 @@ class _TypeOfSaleState extends State<TypeOfSale> {
     if (transProvider.fastTagOtpConfirmModel != null &&
         transProvider.fastTagOtpConfirmModel!.internelStatusCode == 1000) {
       showToast('Payment Successfull', false);
+      //  Utils.textToSpeech(transProvider.fastTagOtpConfirmModel!.data!.!);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

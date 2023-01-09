@@ -9,14 +9,18 @@ import '../../model/receipt_detal.dart';
 
 class ReceivablePayableDetailsScreen extends StatefulWidget {
   final dataItem;
-  const ReceivablePayableDetailsScreen( {super.key,@required this.dataItem, });
+  const ReceivablePayableDetailsScreen({
+    super.key,
+    @required this.dataItem,
+  });
 
   @override
   State<ReceivablePayableDetailsScreen> createState() =>
       _ReceivablePayableDetailsScreenState();
 }
 
-class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetailsScreen> {
+class _ReceivablePayableDetailsScreenState
+    extends State<ReceivablePayableDetailsScreen> {
   final ScreenshotController screenshotController = ScreenshotController();
 
   final GlobalKey _key = GlobalKey();
@@ -24,33 +28,33 @@ class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetail
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-          backgroundColor: Colors.white,
-          appBar: normalAppBar(context,title:AppStrings.receivablePayableDetail),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-             
-                _body(context),
-                SizedBox(height: screenHeight(context) * 0.02),
-              ],
-            ),
-          ),
-        ));
+      backgroundColor: Colors.white,
+      appBar: normalAppBar(context, title: AppStrings.receivablePayableDetail),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _body(context),
+            SizedBox(height: screenHeight(context) * 0.02),
+          ],
+        ),
+      ),
+    ));
   }
 
   Widget _body(BuildContext context) {
-
     List<ReceiptDetail> transDetail = [
       ReceiptDetail(title: 'SR No.', value: '${widget.dataItem.srNumber}'),
-      ReceiptDetail(title: 'TerminalId', value: '${widget.dataItem.terminalId}'),
       ReceiptDetail(
-          title: 'BatchId', value: '${widget.dataItem.batchId}'),
-      ReceiptDetail(title: 'Settlement Date', value: '${widget.dataItem.settlementDate.toString().characters.take(10)}'),
-      ReceiptDetail(title: 'Receivable', value: '${widget.dataItem.receivable}'),
+          title: 'TerminalId', value: '${widget.dataItem.terminalId}'),
+      ReceiptDetail(title: 'BatchId', value: '${widget.dataItem.batchId}'),
+      ReceiptDetail(
+          title: 'Settlement Date',
+          value:
+              '${widget.dataItem.settlementDate.toString().characters.take(10)}'),
+      ReceiptDetail(
+          title: 'Receivable', value: '${widget.dataItem.receivable}'),
       ReceiptDetail(title: 'Payable', value: '${widget.dataItem.payable}'),
-      
     ];
-
     return Screenshot(
       controller: screenshotController,
       child: RepaintBoundary(
@@ -69,7 +73,7 @@ class _ReceivablePayableDetailsScreenState extends State<ReceivablePayableDetail
                   boldText('Receivable & Payable',
                       color: Colors.black, fontSize: 24.0),
                   SizedBox(height: screenHeight(context) * 0.04),
-                  receiptDetail(context, transDetail,itemSapce: 17.0),
+                  receiptDetail(context, transDetail, itemSapce: 17.0),
                 ],
               )),
         ),

@@ -1,5 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:dtplusmerchant/const/common_param.dart';
 import 'package:dtplusmerchant/model/card_fee_response_model.dart';
 import 'package:dtplusmerchant/util/font_family_helper.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../base/base_view.dart';
@@ -18,6 +22,7 @@ class _CardFeeState extends State<CardFee> {
   FocusNode focus1 = FocusNode();
   final TextEditingController _formNoController = TextEditingController();
   bool showdata = false;
+  bool showSearchFilter = true;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -49,14 +54,21 @@ class _CardFeeState extends State<CardFee> {
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           children: [
-            SizedBox(height: screenHeight(context) * 0.04),
-            simpleTextField(context, _formNoController, AppStrings.enterFormNo,
-                focusNode: focus1, onClick: _requestFocus1),
-            SizedBox(height: screenHeight(context) * 0.07),
-            customButton(context, AppStrings.submit, onTap: () {
-              submit();
-            }),
-            SizedBox(height: screenHeight(context) * 0.04),
+            showSearchFilter
+                ? Column(
+                    children: [
+                      SizedBox(height: screenHeight(context) * 0.04),
+                      simpleTextField(
+                          context, _formNoController, AppStrings.enterFormNo,
+                          focusNode: focus1, onClick: _requestFocus1),
+                      SizedBox(height: screenHeight(context) * 0.07),
+                      customButton(context, AppStrings.submit, onTap: () {
+                        submit();
+                      }),
+                      SizedBox(height: screenHeight(context) * 0.04),
+                    ],
+                  )
+                : Container(),
             showdata
                 ? _cardFeeWidget(transPro.cardFeeResponseModel)
                 : Container(),
@@ -70,7 +82,7 @@ class _CardFeeState extends State<CardFee> {
     var cardFeeProvider =
         Provider.of<TransactionsProvider>(context, listen: false);
     if (_formNoController.text.isNotEmpty) {
-      await cardFeeProvider.cardFeePaynment(
+      await cardFeeProvider.cardFeeAmount(
         context,
         formNumber: int.parse(_formNoController.text).toUnsigned(64),
       );
@@ -78,6 +90,7 @@ class _CardFeeState extends State<CardFee> {
           cardFeeProvider.cardFeeResponseModel!.internelStatusCode == 1000) {
         setState(() {
           showdata = true;
+          showSearchFilter = false;
         });
       }
     } else {
@@ -104,15 +117,16 @@ class _CardFeeState extends State<CardFee> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          semiBoldText(AppStrings.formNo,
-                              color: Colors.black,
-                              textAlign: TextAlign.start,
-                              fontFamily: FontFamilyHelper.sourceSansRegular),
+                          semiBoldText(
+                            AppStrings.formNo,
+                            color: Colors.black,
+                            textAlign: TextAlign.start,
+                          ),
                           semiBoldText(_formNoController.text,
                               color: Colors.black, fontSize: 16),
                         ],
                       ),
-                      SizedBox(width: screenWidth(context) * 0.10),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -126,20 +140,36 @@ class _CardFeeState extends State<CardFee> {
                       ),
                     ],
                   ),
-                  SizedBox(height: screenHeight(context) * 0.01),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       semiBoldText('Amount',
                           color: Colors.black, textAlign: TextAlign.start),
                       boldText(
-                        cardFee.data!.first.amount!.toString(),
+                        '$rupeeSign ${Utils.upToDecimalPoint(cardFee.data!.first.amount!.toString())}',
                         color: Colors.black,
                         fontSize: 16,
                       ),
                     ],
                   ),
-                  const SizedBox(width: 25),
+                   SizedBox(height:screenHeight(context)*0.10),
+                  Row(
+                    children: [
+                      Expanded(
+                          child: customButton(context, 'CANCEL', onTap: () {
+                        setState(() {
+                          showdata = false;
+                          showSearchFilter = true;
+                        });
+                      })),
+                   const   SizedBox(width:50),
+                      Expanded(
+                          child: customButton(context, 'ACCEPT', onTap: () {
+                        acceptPayment(cardFee);
+                      })),
+                    ],
+                  ),
                   SizedBox(height: screenHeight(context) * 0.01),
                 ],
               ),
@@ -150,4 +180,25 @@ class _CardFeeState extends State<CardFee> {
     );
   }
 
+  Future<void> acceptPayment(CardFeeResponseModel cardFee) async {
+    var cardFeeProvider =
+        Provider.of<TransactionsProvider>(context, listen: false);
+    if (_formNoController.text.isNotEmpty) {
+      await cardFeeProvider.cardFeeAcceptance(context,
+          formNo: int.parse(_formNoController.text).toUnsigned(64).toString(),
+          amount: cardFee.data!.first.amount,
+          noOfCaRds: cardFee.data!.first.noofCards);
+      if (cardFeeProvider.cardFeePayment != null &&
+          cardFeeProvider.cardFeePayment!.internelStatusCode == 1000) {
+        alertPopUp(
+            context, 'Card amount received');
+        setState(() {
+          showdata = false;
+          showSearchFilter = true;
+        });
+      }
+    } else {
+      alertPopUp(context, 'Please enter form number');
+    }
+  }
 }

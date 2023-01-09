@@ -1,4 +1,4 @@
-package com.example.dtplusmerchant
+package com.dtplusmerchant
 
 import io.flutter.embedding.android.FlutterActivity
 

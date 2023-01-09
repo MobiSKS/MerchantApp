@@ -38,7 +38,6 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
     }, builder: (context, financialProv, child) {
       return financialProv.isLoading
           ? Column(
-          
               children: [
                 SizedBox(height: screenHeight(context) * 0.35),
                 Row(
@@ -91,7 +90,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
           padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
           width: screenWidth(context),
           decoration: BoxDecoration(
-              color: Colors.blueGrey.shade100,
+              color: Colors.blueGrey.shade50,
               borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(20), topLeft: Radius.circular(20))),
           child: Column(
@@ -103,7 +102,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
                   semiBoldText(
                     AppStrings.creditSaleOuts,
                     color: Colors.black,
-                    fontSize: 17,
+                    fontSize: 15,
                   ),
                 ],
               ),
@@ -141,6 +140,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
               'Customer Name',
               color: Colors.black,
               textAlign: TextAlign.start,
+              fontSize: 16
             ),
             normalText(data.individualOrgName!,
                 color: Colors.black, fontSize: 16),
@@ -154,6 +154,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
               'Outstanding',
               color: Colors.black,
               textAlign: TextAlign.start,
+              fontSize: 16
             ),
             normalText(
               "₹${data.outstanding}",
@@ -177,6 +178,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
               'Credit Close Limit',
               color: Colors.black,
               textAlign: TextAlign.start,
+              fontSize: 16
             ),
             normalText("$rupeeSign${data.creditCloseLimit}",
                 color: Colors.black, fontSize: 16),
@@ -190,6 +192,7 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
               'CCMS Balance Status',
               color: Colors.black,
               textAlign: TextAlign.start,
+              fontSize: 16
             ),
             normalText(
               data.cCMSBalanceStatus!,
@@ -216,10 +219,12 @@ class _CreditSaleOutStandingState extends State<CreditSaleOutStanding> {
           normalText(
             'CustomerId: ${data.customerId}',
             color: Colors.white,
+            fontSize: 15
           ),
           normalText(
             'Limit Balance: ${data.limitBalance}',
             color: Colors.white,
+            fontSize: 15
           ),
         ],
       ),

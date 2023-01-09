@@ -71,8 +71,7 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
     if (paymentDetails != null) {
-      data['PaymentDetails'] =
-          paymentDetails!.map((v) => v.toJson()).toList();
+      data['PaymentDetails'] = paymentDetails!.map((v) => v.toJson()).toList();
     }
     if (transactionDetails != null) {
       data['TransactionDetails'] =
@@ -112,6 +111,8 @@ class TransactionDetails {
   String? transactionDate;
   String? transactionType;
   double? amount;
+  String? batchStatus;
+  String?acknowledgementStatus ;
 
   TransactionDetails(
       {this.merchantId,
@@ -120,6 +121,8 @@ class TransactionDetails {
       this.terminalId,
       this.transactionDate,
       this.transactionType,
+      this.batchStatus,
+      this.acknowledgementStatus,
       this.amount});
 
   TransactionDetails.fromJson(Map<String, dynamic> json) {
@@ -130,6 +133,8 @@ class TransactionDetails {
     transactionDate = json['TransactionDate'];
     transactionType = json['TransactionType'];
     amount = json['Amount'];
+    batchStatus = json['BatchStatus'];
+    acknowledgementStatus = json['AcknowledgementStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -142,6 +147,8 @@ class TransactionDetails {
     data['TransactionDate'] = transactionDate;
     data['TransactionType'] = transactionType;
     data['Amount'] = amount;
+    data['BatchStatus '] = batchStatus;
+    data['acknowledgementStatus'] =acknowledgementStatus;
     return data;
   }
 }
@@ -163,4 +170,11 @@ class SuccessDetail {
     data['Reason'] = reason;
     return data;
   }
+}
+
+class GroupedTransactionSlip {
+  int? batchId;
+  List<TransactionDetails>? transSlipList;
+
+  GroupedTransactionSlip({this.batchId, this.transSlipList});
 }

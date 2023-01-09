@@ -18,7 +18,8 @@ class ImageResources {
   static const String merchantIdBg = "assets/images/merchantId_bg.png";
   static const String notificationIconM = "assets/images/noti_m.png";
   static const String tickImage = "assets/images/hp-tick.gif";
-
+  static const String dtplusLogo = "assets/images/dtplus-logo.png";
+   static const String dtplusLogo2 = "assets/images/dtplus-logo2.png";
 //==============================App Icon Name=========================================
 
   static const String callIcon = "assets/icons/call_blue.png";

@@ -1,11 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:dtplusmerchant/Screens/transactions/paycode_receipt.dart';
+import 'package:dtplusmerchant/preferences/shared_preference.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../const/app_strings.dart';
 import '../../const/image_resources.dart';
+import '../../const/injection.dart';
 import '../../provider/transactions_provider.dart';
 import '../../util/font_family_helper.dart';
 import '../../util/uiutil.dart';
@@ -20,10 +23,13 @@ class PayMerchant extends StatefulWidget {
 
 class _PayMerchantState extends State<PayMerchant> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
   final _payCodeController = TextEditingController();
   late String selectedMode;
   FocusNode myFocusNode = FocusNode();
+  bool _both = false;
+  bool _gv = false;
+  bool _pc = false;
   @override
   void initState() {
     super.initState();
@@ -38,21 +44,86 @@ class _PayMerchantState extends State<PayMerchant> {
     }
   }
 
+  int getLength() {
+    int? length;
+    var transType = _sharedPref.user!.data!.objGetTransTypeDetail!;
+    for (var transId in transType) {
+      if (transId.transType == 532) {
+        if (transId.transType == 575) {
+          length = 2;
+        } else {
+          length = 1;
+        }
+      } else {
+        length = 1;
+      }
+    }
+    return length!;
+  }
+
+  List<Widget> getChildren() {
+    List<Widget> widget = [];
+    var transType = _sharedPref.user!.data!.objGetTransTypeDetail!;
+    var filteredList = transType
+        .where((e) => e.transType == 532 || e.transType == 575)
+        .toList();
+
+    for (var transId in filteredList) {
+      if (transId.transType == 532) {
+        if (transId.transType == 575) {
+          widget = <Widget>[
+            _payCodeWidget(),
+            const GiftVoucherScreen(),
+          ];
+        } else {
+          widget = <Widget>[
+            _payCodeWidget(),
+          ];
+        }
+      } else {
+        widget = <Widget>[
+          const GiftVoucherScreen(),
+        ];
+      }
+    }
+    return widget.toSet().toList();
+  }
+
+  List<Widget> getTabs() {
+    List<Widget> widget = [];
+    var transType = _sharedPref.user!.data!.objGetTransTypeDetail!;
+    var filteredList = transType
+        .where((e) => e.transType == 532 || e.transType == 575)
+        .toList();
+    for (var transId in filteredList) {
+      if (transId.transType == 532) {
+        if (transId.transType == 575) {
+          widget = <Widget>[
+            const Tab(text: "Pay Code"),
+            const Tab(text: "Gift Voucher")
+          ];
+        } else {
+          widget = <Widget>[
+            const Tab(text: "Pay Code"),
+          ];
+        }
+      } else {
+        widget = <Widget>[const Tab(text: "Gift Voucher")];
+      }
+    }
+    return widget.toSet().toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: DefaultTabController(
-          length: 2,
+          length: getLength(),
           child: Scaffold(
               appBar: payCodeAppBar(),
               resizeToAvoidBottomInset: true,
               backgroundColor: Colors.white,
-              body: TabBarView(
-                children: [
-                  _payCodeWidget(),
-                  const GiftVoucherScreen(),
-                ],
-              ))),
+              body: TabBarView(children: getChildren()))),
     );
   }
 
@@ -135,14 +206,13 @@ class _PayMerchantState extends State<PayMerchant> {
             width: screenWidth(context),
             height: screenHeight(context) * 0.06,
             color: Colors.blue.shade100,
-            child: const TabBar(
-              labelColor: Colors.black,
-              indicatorColor: Colors.black,
-              labelStyle: TextStyle(
-                  fontSize: 22,
-                  fontFamily: FontFamilyHelper.sourceSansSemiBold),
-              tabs: [Tab(text: "Pay Code"), Tab(text: "Gift Voucher")],
-            ),
+            child: TabBar(
+                labelColor: Colors.black,
+                indicatorColor: Colors.black,
+                labelStyle: const TextStyle(
+                    fontSize: 22,
+                    fontFamily: FontFamilyHelper.sourceSansSemiBold),
+                tabs: getTabs()),
           )
         ],
       ),
@@ -157,7 +227,10 @@ class _PayMerchantState extends State<PayMerchant> {
         context,
         payCode: _payCodeController.text,
       );
-      if (transactionPro.paycodeResponseModel!.internelStatusCode == 1000) {
+      if (transactionPro.paycodeResponseModel != null &&
+          transactionPro.paycodeResponseModel!.internelStatusCode == 1000) {
+        Utils.textToSpeech(
+            transactionPro.paycodeResponseModel!.data![0].invAmt!);
         showToast('Payment Successfull', false);
         Navigator.pushReplacement(
           context,
@@ -186,11 +259,14 @@ class _PayMerchantState extends State<PayMerchant> {
             _requestFocus(myFocusNode);
           },
           inputFormatters: [
-            LengthLimitingTextInputFormatter(6)
+            LengthLimitingTextInputFormatter(6),
+            FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
           ],
           focusNode: myFocusNode,
           controller: _payCodeController,
-          validator: (val) => (val!.isEmpty ||val.length !=6) ? 'Please enter valid Paycode' : null,
+          validator: (val) => (val!.isEmpty || val.length != 6)
+              ? 'Please enter valid Paycode'
+              : null,
           keyboardType: TextInputType.number,
           decoration: InputDecoration(
               labelText: 'Enter Pay Code',

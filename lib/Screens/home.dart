@@ -29,12 +29,13 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
+
   final List<GridOption> _financialOptions = [
     GridOption(
         optionName: AppStrings.transactionDetails,
         optionIcon: ImageResources.transactionDetail),
     GridOption(
-        optionName: AppStrings.settlements,
+        optionName: 'Payment & Settlements',
         optionIcon: ImageResources.settlementIcon),
     GridOption(
         optionName: AppStrings.receivablePayableDetail,
@@ -49,25 +50,51 @@ class _HomeState extends State<Home> {
         optionName: AppStrings.cardBalance,
         optionIcon: ImageResources.cardBalance),
   ];
-  final List<GridOption> _transactionsOptions = [
-    GridOption(
-        optionName: AppStrings.sale, optionIcon: ImageResources.saleIcon),
-    GridOption(
-        optionName: AppStrings.payMerchant,
-        optionIcon: ImageResources.payMerchantIcon),
-    GridOption(
-        optionName: AppStrings.creditSaleComplete,
-        optionIcon: ImageResources.creditSettle),
-    GridOption(
-        optionName: AppStrings.cardFee, optionIcon: ImageResources.cardFee),
-  ];
+  final List<GridOption> _transactionsOptions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getTransactionMenu();
+  }
+
+  void getTransactionMenu() {
+    var transMenu = _sharedPref.user!.data!.objGetTransTypeDetail!;
+    for (var transTypeId in transMenu) {
+      if (transTypeId.transType == 501) {
+        _transactionsOptions.add(
+          GridOption(
+              optionName: AppStrings.sale, optionIcon: ImageResources.saleIcon),
+        );
+      } else if (transTypeId.transType == 532 || transTypeId.transType == 575) {
+        _transactionsOptions.add(
+          GridOption(
+              optionName: AppStrings.payMerchant,
+              optionIcon: ImageResources.payMerchantIcon),
+        );
+      } else if (transTypeId.transType == 522) {
+        _transactionsOptions.add(
+          GridOption(
+              optionName: AppStrings.creditSaleComplete,
+              optionIcon: ImageResources.creditSettle),
+        );
+      } else if (transTypeId.transType == 534) {
+        _transactionsOptions.add(
+          GridOption(
+              optionName: AppStrings.cardFee,
+              optionIcon: ImageResources.cardFee),
+        );
+      }
+    }
+
+    _transactionsOptions.toSet().toList();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: SizedBox(
-        height:screenHeight(context)*0.799,
-        child: _body(context)),
+          height: screenHeight(context) * 0.799, child: _body(context)),
     );
   }
 
@@ -89,7 +116,6 @@ class _HomeState extends State<Home> {
                 _transactiongridView(context),
                 SizedBox(height: screenHeight(context) * 0.005),
                 _banner(context),
-               
               ],
             ),
           ],
@@ -212,6 +238,7 @@ class _HomeState extends State<Home> {
   }
 
   Widget _transactiongridView(BuildContext context) {
+    _transactionsOptions.toSet().toList();
     return Card(
       shape: RoundedRectangleBorder(
         side: const BorderSide(color: Color(0xffcecfd1), width: 1),
@@ -231,7 +258,8 @@ class _HomeState extends State<Home> {
                 shrinkWrap: true,
                 crossAxisSpacing: 0,
                 mainAxisSpacing: 0,
-                children: List.generate(_transactionsOptions.length, (index) {
+                children: List.generate(
+                    _transactionsOptions.toSet().toList().length, (index) {
                   return _transactionsGridWidget(context, index);
                 })),
           ],
@@ -284,7 +312,7 @@ class _HomeState extends State<Home> {
 
   void _navigateToFinancialScreens(int index) async {
     var prov = Provider.of<TransactionsProvider>(context, listen: false);
-    if (_financialOptions[index].optionName! == AppStrings.settlements) {
+    if (_financialOptions[index].optionName! == 'Payment & Settlements') {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const SettlementScreen()),

@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:dtplusmerchant/base/api_services.dart';
 import 'package:dtplusmerchant/const/common_param.dart';
+import 'package:dtplusmerchant/model/card_fee_payment.dart';
 import 'package:dtplusmerchant/model/fast_tag_otp_response.dart';
 import 'package:dtplusmerchant/model/generate_qr_response.dart';
 import 'package:dtplusmerchant/model/gift_voucher_model.dart';
@@ -10,6 +11,7 @@ import 'package:dtplusmerchant/model/paycode_response_model.dart';
 import 'package:dtplusmerchant/model/qr_status_model.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:provider/provider.dart';
 import '../../const/injection.dart';
 import '../const/url_constant.dart';
 import '../model/card_enquiry_model.dart';
@@ -20,6 +22,7 @@ import '../model/user_model.dart';
 import '../preferences/shared_preference.dart';
 import '../util/uiutil.dart';
 import '../util/utils.dart';
+import 'location_provider.dart';
 
 class TransactionsProvider extends ChangeNotifier {
   final SharedPref _sharedPref = Injection.injector.get<SharedPref>();
@@ -57,13 +60,14 @@ class TransactionsProvider extends ChangeNotifier {
   QRStatusModel? _qrStatusModel;
   QRStatusModel? get qrStatusModel => _qrStatusModel;
 
-  deleteCardEnquirydata()async{
+  CardFeePayment? _cardFeePayment;
+  CardFeePayment? get cardFeePayment => _cardFeePayment;
+
+  deleteCardEnquirydata() async {
     _cardEnquiryResponseModel = null;
     notifyListeners();
-
   }
 
- 
   Future<void> generateOTPSale(context,
       {String mobileNo = '',
       double invoiceAmount = 0.0,
@@ -121,11 +125,12 @@ class TransactionsProvider extends ChangeNotifier {
       int formFactor = 3,
       int productId = 0}) async {
     showLoader(context);
+    var pro = Provider.of<LocationProvider>(context, listen: false);
     var ip = await Utils.getIp();
     Position position = await Geolocator.getCurrentPosition();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
         as UserModel;
-
+    pro.setValues(ip: ip, position: position);
     Map<String, String> header = {
       "Authorization": 'Bearer ${user.data?.objGetMerchantDetail?.first.token}',
     };
@@ -299,7 +304,7 @@ class TransactionsProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> cardFeePaynment(context, {int? formNumber}) async {
+  Future<void> cardFeeAmount(context, {int? formNumber}) async {
     showLoader(context);
     var ip = await Utils.getIp();
     var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
@@ -310,14 +315,16 @@ class TransactionsProvider extends ChangeNotifier {
     header.addAll(commonHeader);
     Position position = await Geolocator.getCurrentPosition();
     Map param = {
-      "Latitude": position.latitude,
-      "Longitude": position.longitude,
       "UserId": Utils.merchantId,
       "Useragent": Utils.checkOs(),
       "Userip": ip,
-      "Formno": formNumber,
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
+      "AppVersion": "string",
+      "FormNumber": formNumber
     };
 
+    log(param.toString());
     try {
       var response = await apiServices.post(UrlConstant.cardFeePayment,
           body: param, requestHeader: header);
@@ -446,13 +453,13 @@ class TransactionsProvider extends ChangeNotifier {
       dismissLoader(context);
       if (response['Internel_Status_Code'] == 1000) {
         _paycodeResponseModel = PaycodeResponseModel.fromJson(response);
-        if (_paycodeResponseModel!.internelStatusCode != 1000) {
-          alertPopUp(context, _paycodeResponseModel!.data![0].reason!);
-        }
+      } else if (response['Internel_Status_Code'] == 401) {
+        _paycodeResponseModel = null;
+        alertPopUp(context, response["Message"],
+            doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
         _paycodeResponseModel = PaycodeResponseModel.fromJson(response);
-        alertPopUp(context, _paycodeResponseModel!.data![0].reason!,
-            doLogout: response['Status_Code'] == 401 ? true : false);
+        alertPopUp(context, _paycodeResponseModel!.data![0].reason!);
       }
       notifyListeners();
     } catch (e) {
@@ -497,7 +504,7 @@ class TransactionsProvider extends ChangeNotifier {
         }
       } else {
         _cardEnquiryResponseModel = null;
-        alertPopUp(context, response["Data"][0]["Reason"],
+        alertPopUp(context, response["Message"],
             doLogout: response['Status_Code'] == 401 ? true : false);
       }
       notifyListeners();
@@ -557,14 +564,121 @@ class TransactionsProvider extends ChangeNotifier {
         if (_giftVoucherModel!.internelStatusCode != 1000) {
           alertPopUp(context, response["Message"]);
         }
+      } else if (response['Internel_Status_Code'] == 401) {
+        _giftVoucherModel = null;
+        alertPopUp(context, response["Reason"],
+            doLogout: response['Status_Code'] == 401 ? true : false);
       } else {
         _giftVoucherModel = GiftVoucherModel.fromJson(response);
-        alertPopUp(context, _giftVoucherModel!.data![0].reason!,
-            doLogout: response['Status_Code'] == 401 ? true : false);
+        alertPopUp(context, _giftVoucherModel!.data![0].reason!);
       }
       notifyListeners();
     } catch (e) {
       return alertPopUp(context, e.toString());
     }
+  }
+
+  Future<void> cardFeeAcceptance(context,
+      {String? formNo, var amount, int? noOfCaRds}) async {
+    showLoader(context);
+    var ip = await Utils.getIp();
+    Position position = await Geolocator.getCurrentPosition();
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+    Map param = {
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Useragent": Utils.checkOs,
+      "Userip": ip,
+      "Latitude": position.latitude,
+      "Longitude": position.longitude,
+      "AppVersion": "string",
+      "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
+      "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
+      "Formno": formNo,
+      "Batchid": 0,
+      "Noofcards": noOfCaRds,
+      "Invoiceamount": amount,
+      "Transtype": "",
+      "Invoiceid": "",
+      "Invoicedate": Utils.dateTimeFormat(),
+      "Sourceid": 0,
+      "CreatedBy": "string",
+      "Stan": 0,
+      "Formfactor": 0
+    };
+
+    param.addAll(commonReqBody);
+
+    try {
+      var response = await apiServices.post(UrlConstant.cardFeeAmount,
+          body: param, requestHeader: header);
+          log(response.toString());
+      dismissLoader(context);
+      if (response['Internel_Status_Code'] == 1000) {
+        _cardFeePayment = CardFeePayment.fromJson(response);
+        if (_cardFeePayment!.internelStatusCode != 1000) {
+          alertPopUp(context, response["Message"]);
+        }
+      } else if (response['Internel_Status_Code'] == 401) {
+        _cardFeePayment = null;
+        alertPopUp(context, response["Reason"],
+            doLogout: response['Status_Code'] == 401 ? true : false);
+      } else {
+        _cardFeePayment = CardFeePayment.fromJson(response);
+        alertPopUp(context, _cardFeePayment!.data![0].reason!);
+      }
+      notifyListeners();
+    } catch (e) {
+      return alertPopUp(context, e.toString());
+    }
+  }
+
+  Future<bool> checkAcknowledgementStatus(context,
+      {String? invDate,
+      double? amount,
+      int? transTypeId,
+      int? invoiceNo,
+      String? txnId}) async {
+    var locPro = Provider.of<LocationProvider>(context, listen: false);
+    var user = await _sharedPref.getPrefrenceData(key: SharedPref.userDetails)
+        as UserModel;
+
+    Map<String, String> header = {
+      "Authorization": 'Bearer ${user.data!.objGetMerchantDetail![0].token}',
+    };
+    header.addAll(commonHeader);
+    Map param = {
+      "UserId": user.data!.objGetMerchantDetail![0].merchantId,
+      "Useragent": Utils.checkOs,
+      "Userip": locPro.ip,
+      "Latitude": locPro.lat,
+      "Longitude": locPro.long,
+      "AppVersion": "string",
+      "Merchantid": user.data!.objGetMerchantDetail![0].merchantId,
+      "Terminalid": user.data!.objGetMerchantDetail![0].terminalId,
+      "TransTypeId": transTypeId,
+      "InvoiceDate": invDate,
+      "InvoiceNo": invoiceNo,
+      "InvoiceAmount": amount,
+      "APIReferenceNo": txnId,
+    };
+
+    param.addAll(commonReqBody);
+    log(param.toString());
+    try {
+      var response = await apiServices.post(UrlConstant.acknowledgementApi,
+          body: param, requestHeader: header);
+      log(response.toString());
+      if (response['Internel_Status_Code'] == 1000) {
+        return true;
+      }
+      notifyListeners();
+    } catch (e) {}
+    return true;
   }
 }

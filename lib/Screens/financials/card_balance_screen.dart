@@ -60,39 +60,21 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 30),
             child:
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-             !_hideSearchField? SizedBox(height: screenHeight(context) * 0.03):Container(),
-            !_hideSearchField?  _enterMobileNo(context):Container(),
+              !_hideSearchField
+                  ? SizedBox(height: screenHeight(context) * 0.03)
+                  : Container(),
+              !_hideSearchField ? _enterMobileNo(context) : Container(),
               _otpReceived ? enterOTP(context) : Container(),
-        ! _hideSearchField?     SizedBox(height: screenHeight(context) * 0.06):Container(),
-             ! _hideSearchField?      customButton(context, AppStrings.submit, onTap: () {
-                submit();
-              }):Container(),
+              !_hideSearchField
+                  ? SizedBox(height: screenHeight(context) * 0.06)
+                  : Container(),
+              !_hideSearchField
+                  ? customButton(context, AppStrings.submit, onTap: () {
+                      submit();
+                    })
+                  : Container(),
             ]),
           ),
-          _otpReceived
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Container(
-                    width: screenWidth(context),
-                    height: screenHeight(context) * 0.06,
-                    color: Colors.indigo.shade200,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 30,
-                          ),
-                          child: semiBoldText(
-                            'Card Balance Detail',
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )
-              : Container(),
           SizedBox(height: screenHeight(context) * 0.02),
           (transactionPro.cardEnquiryResponseModel != null &&
                   transactionPro.cardEnquiryResponseModel!.internelStatusCode ==
@@ -188,35 +170,39 @@ class _CardBalanceScreenState extends State<CardBalanceScreen> {
     );
   }
 
+  
+
   Widget _cardBalanceDetail(
     BuildContext context,
     Data data,
   ) {
     List<CommonList> cardBalanceEntity = [
       CommonList(key: 'Card No.', value: data.cardNoOutput),
-      CommonList(key: 'Card Balance', value: '$rupeeSign ${data.cardBalance}0'),
       CommonList(
-          key: 'Monthly Limit', value: '$rupeeSign ${data.monthlyLimit}0'),
+          key: 'Card Balance',
+          value: '$rupeeSign ${Utils.upToDecimalPoint(data.cardBalance.toString())}'),
       CommonList(
-          key: 'Monthly Spends', value: '$rupeeSign ${data.monthlySpent}0'),
+          key: 'Monthly Limit', value: '$rupeeSign ${Utils.upToDecimalPoint(data.monthlyLimit.toString()) }'),
+      CommonList(
+          key: 'Monthly Spends', value: '$rupeeSign ${Utils.upToDecimalPoint(data.monthlySpent.toString())}'),
       CommonList(
           key: 'Monthly Limit Balance',
-          value: '$rupeeSign ${data.monthlyLimitBal}0'),
-      CommonList(key: 'Daily Limit', value: '$rupeeSign ${data.dailyLimit}0'),
+          value: '$rupeeSign ${Utils.upToDecimalPoint(data.monthlyLimitBal.toString())}'),
+      CommonList(key: 'Daily Limit', value: '$rupeeSign ${Utils.upToDecimalPoint(data.dailyLimit.toString())}'),
       CommonList(
           key: 'CCMS Limit',
           value: data.cCMSLimit == 'Unlimited' || data.cCMSLimit == '-'
               ? '${data.cCMSLimit}'
-              : '$rupeeSign ${data.cCMSLimit}0'),
+              : '$rupeeSign ${Utils.upToDecimalPoint(data.cCMSLimit.toString())}'),
       CommonList(
           key: 'CCMS Limit Balance',
           value: data.cCMSLimitBal == 'Unlimited' || data.cCMSLimitBal == '-'
               ? '${data.cCMSLimitBal}'
-              : '$rupeeSign ${data.cCMSLimitBal}0'),
-      CommonList(key: 'Daily Spends', value: '$rupeeSign ${data.dailySpent}0'),
+              : '$rupeeSign ${Utils.upToDecimalPoint(data.monthlyLimitBal.toString())}'),
+      CommonList(key: 'Daily Spends', value: '$rupeeSign ${Utils.upToDecimalPoint(data.dailySpent.toString())}'),
       CommonList(
           key: 'Daily Limit Balance',
-          value: '$rupeeSign ${data.dailyLimitBal}0'),
+          value: '$rupeeSign ${Utils.upToDecimalPoint(data.dailyLimitBal.toString())}'),
     ];
     return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),

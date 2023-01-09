@@ -235,7 +235,9 @@ alertPopUp(BuildContext context, String message, {bool doLogout = false}) {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(height: 25),
-                    semiBoldText(message,
+                    semiBoldText(
+                      doLogout?"Session Expired":
+                      message,
                         fontSize: 18,
                         color: Colors.black,
                         textAlign: TextAlign.center),
@@ -511,7 +513,7 @@ Widget receiptHeader(BuildContext context,
   return Column(
     children: [
       SizedBox(height: screenHeight(context) * 0.02),
-      Image.asset(ImageResources.hpLogoReceipt, height: 80),
+      Image.asset(ImageResources.dtplusLogo, height: 80),
       SizedBox(height: screenHeight(context) * 0.010),
       semiBoldText(Utils.checkNullValue(copyType!),
           color: Colors.black, fontSize: 18.0),

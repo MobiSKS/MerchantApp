@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:dtplusmerchant/provider/transactions_provider.dart';
+import 'package:dtplusmerchant/util/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -76,9 +77,12 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
     TransactionsProvider transPro =
         Provider.of<TransactionsProvider>(context, listen: false);
     if (_validate()) {
-      await transPro.payByGiftVoucher(context,amount: double.parse(_amountController.text),voucherCode: _giftVoucherController.text);
-      if(transPro.giftVoucherModel!.internelStatusCode==1000){
-            Navigator.pushReplacement(
+      await transPro.payByGiftVoucher(context,
+          amount: double.parse(_amountController.text),
+          voucherCode: _giftVoucherController.text);
+      if (transPro.giftVoucherModel!.internelStatusCode == 1000) {
+        Utils.textToSpeech(transPro.giftVoucherModel!.data![0].invAmt!);
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => GiftVoucherReceipt(
@@ -86,9 +90,7 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
                     voucherNo: _giftVoucherController.text,
                   )),
         );
-
       }
-      
     }
   }
 
@@ -103,34 +105,34 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
         controller: _amountController,
         validator: (val) => val!.isEmpty ? 'Please enter amount' : null,
         keyboardType: TextInputType.number,
-          inputFormatters: [
-            DecimalTextInputFormatter(decimalRange: 2),
-            LengthLimitingTextInputFormatter(6),
-            FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
-            FilteringTextInputFormatter.deny(RegExp(r'^0+')),
-            TextInputFormatter.withFunction((oldValue, newValue) {
-              try {
-                final text = newValue.text;
-                if (text.isNotEmpty) double.parse(text);
-                return newValue;
-                // ignore: empty_catches0
-              } catch (e) {
-               alertPopUp(context, 'Some thing went wrong');
-              }
-              return oldValue;
-            }),
-          ],
+        inputFormatters: [
+          DecimalTextInputFormatter(decimalRange: 2),
+          LengthLimitingTextInputFormatter(6),
+          FilteringTextInputFormatter.allow(RegExp(r"[0-9.]")),
+          FilteringTextInputFormatter.deny(RegExp(r'^0+')),
+          TextInputFormatter.withFunction((oldValue, newValue) {
+            try {
+              final text = newValue.text;
+              if (text.isNotEmpty) double.parse(text);
+              return newValue;
+            } catch (e) {
+              // alertPopUp(context, 'Something went wrong');
+            }
+            return oldValue;
+          }),
+        ],
         decoration: InputDecoration(
-            labelText: 'Enter Amount',
-            labelStyle: TextStyle(
-                fontFamily: FontFamilyHelper.sourceSansSemiBold,
-                fontSize: myFocusNode.hasFocus ||
-                        _giftVoucherController.text.isNotEmpty
-                    ? 23
-                    : 18,
-                color: myFocusNode.hasFocus
-                    ? Colors.grey.shade700
-                    : Colors.grey.shade700)),
+          labelText: 'Enter Amount',
+          labelStyle: TextStyle(
+              fontFamily: FontFamilyHelper.sourceSansSemiBold,
+              fontSize:
+                  myFocusNode.hasFocus || _giftVoucherController.text.isNotEmpty
+                      ? 23
+                      : 18,
+              color: myFocusNode.hasFocus
+                  ? Colors.grey.shade700
+                  : Colors.grey.shade700),
+        ),
       ),
     );
   }
@@ -144,10 +146,13 @@ class _GiftVoucherScreenState extends State<GiftVoucherScreen> {
         },
         focusNode: myFocusNode1,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(16)
+          LengthLimitingTextInputFormatter(16),
+          FilteringTextInputFormatter.allow(RegExp(r"[0-9]")),
         ],
         controller: _giftVoucherController,
-        validator: (val) => (val!.isEmpty || val.length !=16) ? 'Please enter valid Gift Voucher' : null,
+        validator: (val) => (val!.isEmpty || val.length != 16)
+            ? 'Please enter valid Gift Voucher'
+            : null,
         keyboardType: TextInputType.number,
         decoration: InputDecoration(
             labelText: 'Enter Gift Voucher',
